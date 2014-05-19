@@ -1,4 +1,4 @@
-mccarthy-lisp
+McCarthy Lisp
 =============
 
-A toy lisp inspired by McCarthy's paper
+A toy lisp inspired by McCarthy's paper.
