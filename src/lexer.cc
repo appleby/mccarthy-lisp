@@ -3,9 +3,18 @@
 namespace mclisp
 {
 
-int Lexer::nextToken()
+Token Lexer::nextToken()
 {
-  return 0;
+  char c;
+  in_ >> std::skipws >> c;
+
+  if (in_.eof())
+    return kEof;
+
+  if (c == '(')
+    return kCons;
+
+  return kBadToken;
 }
 
 }; // namespace mclisp
