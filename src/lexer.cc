@@ -8,7 +8,7 @@ namespace
 
 inline bool IsDelim(int c)
 {
-  return c == '.' || c == ',' || c == '(' || c == ')' || c == EOF;
+  return c == '.' || c == ',' || c == '(' || c == ')' || c == '\n' || c == EOF;
 }
 
 inline void RTrim(std::string& s, const std::string ws=" \n\r\t")
