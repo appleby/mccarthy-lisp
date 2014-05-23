@@ -30,7 +30,7 @@ int Repl::loop()
 
 }; //end namespace
 
-int main(int argc, const char **argv)
+int main()
 {
   Repl repl;
   return repl.loop();

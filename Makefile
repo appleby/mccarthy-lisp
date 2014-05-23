@@ -1,6 +1,6 @@
 CXX=clang++
 CPPFLAGS+=-I $(srcdir)
-CXXFLAGS+=-std=c++11
+CXXFLAGS+=-g -Wall -Wextra -std=c++11
 
 srcdir=./src
 srcs=$(wildcard $(srcdir)/*.cc)
@@ -14,7 +14,7 @@ test_objs=$(patsubst %.cc, %.o, $(test_srcs))
 gtestdir=$(testdir)/gtest-1.7.0
 gtestlib=$(gtestdir)/make/gtest_main.a
 gtest_CPPFLAGS= -isystem $(gtestdir)/include $(CPPFLAGS)
-gtest_CXXFLAGS= -g -Wall -Wextra -pthread $(CXXFLAGS)
+gtest_CXXFLAGS= -pthread $(CXXFLAGS)
 gtest_headers = $(gtestdir)/include/gtest/*.h \
                 $(gtestdir)/include/gtest/internal/*.h
 
