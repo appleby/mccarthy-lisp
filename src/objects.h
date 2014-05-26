@@ -1,8 +1,9 @@
 #ifndef OBJECTS_H_
 #define OBJECTS_H_
 
-#include <string>
 #include <iostream>
+#include <string>
+#include <typeinfo>
 
 namespace mclisp
 {
@@ -10,11 +11,16 @@ namespace mclisp
 class Sexp
 {
   public:
-    virtual bool operator==(const Sexp* other) const = 0;
-    virtual operator bool() const;
+    virtual ~Sexp() {};
+    explicit operator bool() const;
 };
 
-class Atom : public Sexp {};
+class Atom : public Sexp
+{
+  public:
+    virtual ~Atom() {};
+};
+
 class Symbol : public Atom
 {
   private:
@@ -23,18 +29,6 @@ class Symbol : public Atom
   public:
     explicit Symbol(const std::string& name) : name_(name) {};
     explicit Symbol(const char* name) : name_(name) {};
-
-    bool operator==(const Symbol& other) const
-    { 
-      std::cout << "========" << std::endl;
-      return name_ == other.name_; 
-    }
-    virtual bool operator==(const Sexp* other) const
-    { 
-      std::cout << "=======*" << std::endl;
-      const Symbol* so = dynamic_cast<const Symbol*>(other);
-      return so && *this == *so;
-    }
 
     std::string name() const { return name_; }
 };
@@ -50,20 +44,51 @@ class Cons : public Sexp
 
   public:
     Cons(const Sexp* car, const Sexp* cdr) : car_(car), cdr_(cdr) {};
+    Cons(const Sexp& car, const Sexp& cdr) : car_(&car), cdr_(&cdr) {};
 
-    const Sexp* car() const { return car_; }
-    const Sexp* cdr() const { return cdr_; }
-
-    bool operator==(const Cons& other) const
-    {
-      return car_ == other.car_ && cdr_ == other.cdr_;
-    }
-    virtual bool operator==(const Sexp* other) const
-    { 
-      const Cons* co = dynamic_cast<const Cons*>(other);
-      return co && *this == *co;
-    }
+    const Sexp& car() const { return *car_; }
+    const Sexp& cdr() const { return *cdr_; }
 };
+
+#define MCLISP_DEF_DERIVED_OPS(arg_type) \
+inline bool operator!=(arg_type lhs, arg_type rhs){return !operator==(lhs,rhs);} \
+inline bool operator> (arg_type lhs, arg_type rhs){return  operator< (rhs,lhs);} \
+inline bool operator<=(arg_type lhs, arg_type rhs){return !operator> (lhs,rhs);} \
+inline bool operator>=(arg_type lhs, arg_type rhs){return !operator< (lhs,rhs);}
+
+inline bool operator==(const Symbol& lhs, const Symbol& rhs) { return lhs.name() == rhs.name(); }
+inline bool operator< (const Symbol& lhs, const Symbol& rhs) { return lhs.name() < rhs.name(); }
+MCLISP_DEF_DERIVED_OPS(const Symbol&);
+
+// These need to be forward declared so they can be used by the corresponding
+// operators for the Cons type (since car and cdr are Sexps).
+inline bool operator==(const Sexp& lhs, const Sexp& rhs);
+inline bool operator<(const Sexp& lhs, const Sexp& rhs);
+
+inline bool operator==(const Cons& lhs, const Cons& rhs) {return lhs.car() == rhs.car() && lhs.cdr() == rhs.cdr();}
+inline bool operator< (const Cons& lhs, const Cons& rhs) {return lhs.car() < rhs.car() || (lhs.car() == rhs.car() && lhs.cdr() < rhs.cdr());}
+MCLISP_DEF_DERIVED_OPS(const Cons&);
+
+// Sexp operators attempt to cast both args to the same concrete subtype and
+// defer to the operator overloaded on that type.
+#define MCLISP_DEF_SEXP_LOGICAL_OP(op) \
+inline bool op(const Sexp& lhs, const Sexp& rhs) { \
+  try { \
+    const Symbol& sym_lhs = dynamic_cast<const Symbol&>(lhs); \
+    const Symbol& sym_rhs = dynamic_cast<const Symbol&>(rhs); \
+    return op(sym_lhs, sym_rhs); \
+  } catch (std::bad_cast) {} \
+  try { \
+    const Cons& cons_lhs = dynamic_cast<const Cons&>(lhs); \
+    const Cons& cons_rhs = dynamic_cast<const Cons&>(rhs); \
+    return op(cons_lhs, cons_rhs); \
+  } catch (std::bad_cast) {} \
+  return false; \
+}
+
+MCLISP_DEF_SEXP_LOGICAL_OP(operator==);
+MCLISP_DEF_SEXP_LOGICAL_OP(operator<);
+MCLISP_DEF_DERIVED_OPS(const Sexp&);
 
 } // namespace mclisp
 #endif // OBJECTS_H_
