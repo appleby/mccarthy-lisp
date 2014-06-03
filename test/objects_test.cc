@@ -47,8 +47,10 @@ TEST(ObjectTest, SymbolEqual)
 
 TEST(ObjectTest, SymbolNotEqual)
 {
+  Symbol a("a");
   Symbol A("A");
   Symbol B("B");
+  EXPECT_NE(A, a);
   EXPECT_NE(A, B);
 }
 
