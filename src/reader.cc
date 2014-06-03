@@ -24,6 +24,31 @@ void Reader::AcceptToken(Token expected_token)
     throw BadTokenError(token, expected_token);
 }
 
+const Symbol& Reader::Intern(std::string name)
+{
+  ToUpper(name);
+  return Intern(Symbol(name));
+}
+
+const Symbol& Reader::Intern(const Symbol& symbol)
+{
+  auto pair = symbols_.emplace(symbol.name(), symbol);
+  return pair.first->second;
+}
+
+void Reader::Init()
+{
+
+  // At the moment, this is pointless since the Symbols are copied/moved into
+  // the symbols_ map. We could just as well wait for the reader to read NIL or
+  // T and only intern them then. Symbol equality is implemented by delegating
+  // to string= on Symbol::name, so this copying-intern doesn't break anything.
+  // Once the allocator/gc are implemented, we should instead intern pointers to
+  // symbols so we can implement Symbol equality as pointer equality.
+  Intern(kNil);
+  Intern(kT);
+}
+
 const Cons& Reader::ReadCons()
 {
   const Sexp& car = Read();
@@ -36,17 +61,7 @@ const Cons& Reader::ReadCons()
 
 const Symbol& Reader::ReadSymbol()
 {
-  std::string symbolName = lexer_.current_token();
-  ToUpper(symbolName);
-
-  // TODO: Intern symbols
-  if (symbolName == "NIL")
-    return kNil;
-  if (symbolName == "T")
-    return kT;
-
-  symbols_.emplace_front(symbolName);
-  return symbols_.front();
+  return Intern(lexer_.current_token());
 }
 
 const Sexp& Reader::Read()

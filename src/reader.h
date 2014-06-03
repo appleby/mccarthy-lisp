@@ -3,6 +3,7 @@
 
 #include <istream>
 #include <list>
+#include <map>
 #include <stdexcept>
 #include <string>
 
@@ -40,16 +41,19 @@ class Reader
 {
   private:
     Lexer lexer_;
-    std::list<Symbol> symbols_;
+    std::map<std::string, Symbol> symbols_;
     std::list<Cons> conses_;
 
     void AcceptToken(Token token);
     const Cons& ReadCons();
     const Symbol& ReadSymbol();
+    const Symbol& Intern(std::string name);
+    const Symbol& Intern(const Symbol& symbol);
+    void Init();  // Intern NIL and T.
 
   public:
-    explicit Reader(std::istream& in=std::cin) : lexer_(in) {};
-    explicit Reader(const std::string& in) : lexer_(in) {};
+    explicit Reader(std::istream& in=std::cin) : lexer_(in) { Init(); };
+    explicit Reader(const std::string& in) : lexer_(in) { Init(); };
 
     const Sexp& Read();
 };
