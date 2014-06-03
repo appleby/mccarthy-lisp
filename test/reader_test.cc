@@ -13,7 +13,19 @@ TEST(ReaderTest, DefaultCtor)
 TEST(ReaderTest, ReadSymbol)
 {
   Reader reader("symbol");
-  EXPECT_EQ(Symbol("symbol"), reader.Read());
+  EXPECT_EQ(Symbol("SYMBOL"), reader.Read());
+}
+
+TEST(ReaderTest, ReadNil)
+{
+  Reader reader("NIL");
+  EXPECT_EQ(kNil, reader.Read());
+}
+
+TEST(ReaderTest, ReadT)
+{
+  Reader reader("T");
+  EXPECT_EQ(kT, reader.Read());
 }
 
 TEST(ReaderTest, ReadCons)
@@ -35,4 +47,10 @@ TEST(ReaderTest, ReadBadConsNoDot)
 {
   Reader reader("(A B)");
   EXPECT_THROW(reader.Read(), BadTokenError);
+}
+
+TEST(ReaderTest, ReadBadConsNoCar)
+{
+  Reader reader("( . B)");
+  EXPECT_THROW(reader.Read(), ReadError);
 }
