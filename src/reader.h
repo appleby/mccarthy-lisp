@@ -47,7 +47,7 @@ class Reader
     void AcceptToken(Token token);
     const Cons& ReadCons();
     const Symbol& ReadSymbol();
-    const Symbol& Intern(std::string name);
+    const Symbol& Intern(const std::string& name);
     const Symbol& Intern(const Symbol& symbol);
     void Init();  // Intern NIL and T.
 

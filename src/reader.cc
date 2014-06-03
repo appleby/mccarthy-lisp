@@ -1,14 +1,19 @@
 #include <algorithm>
 #include <cctype>
+#include <iostream>
 
 #include "reader.h"
 
 namespace
 {
-void ToUpper(std::string& s)
+
+// The parameter is mutated, and therefore must be passed by value.
+std::string ToUpper(std::string s)
 {
   std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+  return s;
 }
+
 } // namespace
 
 namespace mclisp
@@ -24,10 +29,9 @@ void Reader::AcceptToken(Token expected_token)
     throw BadTokenError(token, expected_token);
 }
 
-const Symbol& Reader::Intern(std::string name)
+const Symbol& Reader::Intern(const std::string& name)
 {
-  ToUpper(name);
-  return Intern(Symbol(name));
+  return Intern(Symbol(ToUpper(name)));
 }
 
 const Symbol& Reader::Intern(const Symbol& symbol)
