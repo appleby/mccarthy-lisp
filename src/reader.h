@@ -4,11 +4,13 @@
 #include <istream>
 #include <list>
 #include <map>
+#include <set>
 #include <stdexcept>
 #include <string>
 
 #include "lexer.h"
 #include "objects.h"
+#include "utils.h"
 
 namespace mclisp
 {
@@ -35,6 +37,9 @@ class BadTokenError: public ReadError
     explicit BadTokenError(Token actual, Token expected) :
       ReadError(err_prefix_ + "expected " + std::to_string(expected) +
                 ", but found: " + std::to_string(actual)) {};
+    explicit BadTokenError(Token actual, std::set<Token> expected) :
+      ReadError(err_prefix_ + "expected " + container_to_string<>(expected) +
+                ", but found: " + std::to_string(actual)) {};
 };
 
 class Reader
@@ -45,6 +50,7 @@ class Reader
     std::list<Cons> conses_;
 
     void AcceptToken(Token token);
+    Token AcceptTokens(std::set<Token> tokens);
     const Cons& ReadCons();
     const Symbol& ReadSymbol();
     const Symbol& Intern(const std::string& name);

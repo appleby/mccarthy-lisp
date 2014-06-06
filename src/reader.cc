@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <cctype>
-#include <iostream>
+#include <cstdarg>
 
 #include "reader.h"
 
@@ -27,6 +27,16 @@ void Reader::AcceptToken(Token expected_token)
   Token token = lexer_.nextToken();
   if (token != expected_token)
     throw BadTokenError(token, expected_token);
+}
+
+Token Reader::AcceptTokens(std::set<Token> tokens)
+{
+  Token token = lexer_.nextToken();
+
+  if (tokens.find(token) == tokens.end())
+    throw BadTokenError(token, tokens);
+
+  return token;
 }
 
 const Symbol& Reader::Intern(const std::string& name)
@@ -56,10 +66,22 @@ void Reader::Init()
 const Cons& Reader::ReadCons()
 {
   const Sexp& car = Read();
-  AcceptToken(kDot);
-  const Sexp& cdr = Read();
-  AcceptToken(kCloseParen);
-  conses_.emplace_front(car, cdr);
+  const Sexp* cdr = nullptr;
+  Token token = AcceptTokens({kDot, kComma, kCloseParen});
+
+  if (token == kDot)
+  {
+    cdr = &Read();
+    AcceptToken(kCloseParen);
+  }
+  else if (token == kComma)
+  {
+    cdr = &ReadCons();
+  }
+  else if (token == kCloseParen)
+    cdr = &kNil;
+
+  conses_.emplace_front(car, *cdr);
   return conses_.front();
 }
 

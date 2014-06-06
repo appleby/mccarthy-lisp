@@ -16,6 +16,20 @@ TEST(ReaderTest, ReadSymbol)
   EXPECT_EQ(Symbol("SYMBOL"), reader.Read());
 }
 
+TEST(ReaderTest, ReadSymbolWithSpaces)
+{
+  Reader reader("APPLE PIE NUMBER 3");
+  Symbol applePieNumber3("APPLE PIE NUMBER 3");
+  EXPECT_EQ(applePieNumber3, reader.Read());
+}
+
+TEST(ReaderTest, ReadUpcasesSymbols)
+{
+  Reader reader("uPpErCaSe");
+  Symbol uppercase("UPPERCASE");
+  EXPECT_EQ(uppercase, reader.Read());
+}
+
 TEST(ReaderTest, ReadNil)
 {
   Reader reader("NIL");
@@ -61,12 +75,6 @@ TEST(ReaderTest, ReadBadConsNoOpenParen)
 TEST(ReaderTest, ReadBadConsNoCloseParen)
 {
   Reader reader("(A . B");
-  EXPECT_THROW(reader.Read(), BadTokenError);
-}
-
-TEST(ReaderTest, ReadBadConsNoDot)
-{
-  Reader reader("(A B)");
   EXPECT_THROW(reader.Read(), BadTokenError);
 }
 
@@ -197,6 +205,12 @@ TEST(ReaderTest, ReadBadListNoCloseParen)
 TEST(ReaderTest, ReadBadNestedListNoOpenParen)
 {
   Reader reader("(A, B . C))");
+  Symbol A("A");
+  Symbol B("B");
+  Symbol C("C");
+  Cons C1(B, C);
+  Cons C2(A, C1);
+  EXPECT_EQ(C2, reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }
 
