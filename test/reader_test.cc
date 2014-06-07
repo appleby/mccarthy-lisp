@@ -42,6 +42,18 @@ TEST(ReaderTest, ReadT)
   EXPECT_EQ(kT, reader.Read());
 }
 
+TEST(ReaderTest, ReadBadSymbolNoEarMuffs)
+{
+  Reader reader("*bad*");
+  EXPECT_THROW(reader.Read(), ReadError);
+}
+
+TEST(ReaderTest, ReadBadSymbolNoHyphens)
+{
+  Reader reader("bad-symbol");
+  EXPECT_THROW(reader.Read(), ReadError);
+}
+
 TEST(ReaderTest, ReadCons)
 {
   Reader reader("(A . B)");
