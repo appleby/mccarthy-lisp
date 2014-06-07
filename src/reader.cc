@@ -97,7 +97,7 @@ const Sexp& Reader::Read()
   {
     case kSymbol: return ReadSymbol();
     case kOpenParen: return ReadCons();
-    case kEof: return kNil;
+    case kEof: return kNil; // TODO: return Eof object.
     default:
       throw ReadError("Expected start of Cons or Symbol, found: "
                       + std::to_string(token));
