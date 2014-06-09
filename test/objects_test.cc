@@ -161,3 +161,48 @@ TEST(ObjectTest, ConsRelationalOps)
   EXPECT_FALSE(C1 < C4);
   EXPECT_FALSE(C1 > C4);
 }
+
+class ObjectPrintSymbolsTest : public ::testing::TestWithParam<std::string> {};
+
+INSTANTIATE_TEST_CASE_P(
+ PrintSymbols, ObjectPrintSymbolsTest,
+ ::testing::Values("A", "some symbol", "Another 1"));
+
+TEST_P(ObjectPrintSymbolsTest, PrintSymbol)
+{
+  std::ostringstream oss;
+  Symbol symbol(GetParam());
+  oss << symbol;
+  EXPECT_EQ(GetParam(), oss.str());
+}
+
+TEST(ObjectTest, PrintConses)
+{
+  std::ostringstream ossC1;
+  std::ostringstream ossC3;
+  Symbol A("A");
+  Symbol B("B");
+  Symbol C("C");
+  Symbol D("D");
+  Cons C1(A, B);
+  Cons C2(C, D);
+  Cons C3(C1, C2);
+  ossC1 << C1;
+  ossC3 << C3;
+  EXPECT_EQ("(A . B)", ossC1.str());
+  EXPECT_EQ("((A . B) . (C . D))", ossC3.str());
+}
+
+TEST(ObjectTest, PrintNil)
+{
+  std::ostringstream oss;
+  oss << kNil;
+  EXPECT_EQ("NIL", oss.str());
+}
+
+TEST(ObjectTest, PrintT)
+{
+  std::ostringstream oss;
+  oss << kT;
+  EXPECT_EQ("T", oss.str());
+}

@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& os, const Symbol& symbol)
 
 std::ostream& operator<<(std::ostream& os, const Cons& cons)
 {
-  return os << "(" << cons.car() << "." << cons.cdr() << ")";
+  return os << "(" << cons.car() << " . " << cons.cdr() << ")";
 }
 
 } // namespace mclisp
