@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "reader.h"
+
 namespace
 {
 
@@ -8,21 +10,26 @@ class Repl
   std::istream& in_;
   std::ostream& out_;
   std::string prompt_ = "mclisp> ";
+  mclisp::Reader reader_;
 
   public:
-    Repl(std::istream& in=std::cin, std::ostream& out=std::cout) : in_(in), out_(out) {};
+    explicit Repl(std::istream& in=std::cin, std::ostream& out=std::cout):
+      in_(in), out_(out), reader_(in_) {};
+
     int loop();
 };
 
 int Repl::loop()
 {
-  std::string val;
-
-  while (val != "quit")
+  std::ostringstream oss;
+  while (oss.str() != "QUIT" && oss.str() != "(QUIT . NIL)")
   {
     out_ << prompt_;
-    in_ >> val;
-    out_ << val << std::endl;
+    oss.str("");
+    oss.clear();
+    const mclisp::Sexp& exp = reader_.Read();
+    oss << exp;
+    out_ << exp << std::endl;
   }
   return 0;
 }
