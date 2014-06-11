@@ -10,7 +10,6 @@ public:
     ConsCell(): car_(nullptr), cdr_(nullptr) {}
     ConsCell(ConsCell* car, ConsCell* cdr): car_(car), cdr_(cdr) {}
 
-private:
     ConsCell* car_;
     ConsCell* cdr_;
 };
