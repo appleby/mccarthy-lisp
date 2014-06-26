@@ -7,34 +7,34 @@ TEST(ObjectTest, NilIsFalse)
 {
   // Explicit bool cast is required here. See
   // https://code.google.com/p/googletest/issues/detail?id=429
-  EXPECT_FALSE(bool(mclisp::kNil));
+  EXPECT_FALSE(bool(mclisp::koNil));
 }
 
 TEST(ObjectTest, TisTrue)
 {
   // Explicit bool cast is required here. See
   // https://code.google.com/p/googletest/issues/detail?id=429
-  EXPECT_TRUE(bool(mclisp::kT));
+  EXPECT_TRUE(bool(mclisp::koT));
 }
 
 TEST(ObjectTest, NotNilIsTrue)
 {
-  EXPECT_TRUE(!mclisp::kNil);
+  EXPECT_TRUE(!mclisp::koNil);
 }
 
 TEST(ObjectTest, NotTisFalse)
 {
-  EXPECT_FALSE(!mclisp::kT);
+  EXPECT_FALSE(!mclisp::koT);
 }
 
 TEST(ObjectTest, NilEqNil)
 {
-  EXPECT_EQ(mclisp::kNil, mclisp::kNil);
+  EXPECT_EQ(mclisp::koNil, mclisp::koNil);
 }
 
 TEST(ObjectTest, TEqT)
 {
-  EXPECT_EQ(mclisp::kT, mclisp::kT);
+  EXPECT_EQ(mclisp::koT, mclisp::koT);
 }
 
 TEST(ObjectTest, SymbolEqual)
@@ -196,13 +196,13 @@ TEST(ObjectTest, PrintConses)
 TEST(ObjectTest, PrintNil)
 {
   std::ostringstream oss;
-  oss << kNil;
+  oss << koNil;
   EXPECT_EQ("NIL", oss.str());
 }
 
 TEST(ObjectTest, PrintT)
 {
   std::ostringstream oss;
-  oss << kT;
+  oss << koT;
   EXPECT_EQ("T", oss.str());
 }

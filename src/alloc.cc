@@ -4,8 +4,45 @@
 
 #include "alloc.h"
 
+namespace
+{
+
+mclisp::ConsAllocator* kAllocator = nullptr;
+ 
+} // namespace
+
 namespace mclisp
 {
+
+namespace Alloc
+{
+
+void Init()
+{
+  if (kAllocator == nullptr)
+    kAllocator = new mclisp::ConsAllocator;
+}
+
+void Shutdown()
+{
+  delete kAllocator;
+}
+
+const ConsCell* AtomMagic()
+{
+  if (kAllocator == nullptr)
+    Init();
+  return kAllocator->oob_pointer();
+}
+
+ConsCell* Allocate()
+{
+  if (kAllocator == nullptr)
+    Init();
+  return kAllocator->Allocate();
+}
+
+} // namespace Alloc
 
 ConsAllocator::ConsAllocator()
 {

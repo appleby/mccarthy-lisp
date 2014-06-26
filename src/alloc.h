@@ -21,6 +21,7 @@ public:
   void Deallocate(ConsCell* p);
 
   inline size_type max_size() const { return free_list_.size(); }
+  inline const ConsCell* oob_pointer() const { return &heap_.front() - 1; }
   static constexpr size_type max_heap_size() { return kMaxHeapSize; }
 
 private:
@@ -29,6 +30,16 @@ private:
   std::list<ConsCell*> free_list_;
   std::array<ConsCell, kMaxHeapSize> heap_;
 };
+
+namespace Alloc
+{
+
+void Init();
+void Shutdown();
+const mclisp::ConsCell* AtomMagic();
+mclisp::ConsCell* Allocate();
+
+} // namespace Alloc
 
 } // namespace mclisp
 

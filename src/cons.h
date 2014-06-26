@@ -1,6 +1,8 @@
 #ifndef MCLISP_CONS_H_
 #define MCLISP_CONS_H_
 
+#include <string>
+
 namespace mclisp
 {
 
@@ -13,6 +15,14 @@ public:
     ConsCell* car_;
     ConsCell* cdr_;
 };
+
+extern const ConsCell* kNil;
+extern const ConsCell* kT;
+
+const ConsCell* MakeSymbol(const std::string& name);
+const ConsCell* MakeCons(const ConsCell* car, const ConsCell* cdr);
+
+const std::string SymbolName(const ConsCell* symbol);
 
 } // namespace mclisp
 

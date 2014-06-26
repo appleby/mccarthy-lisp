@@ -34,8 +34,8 @@ class Symbol : public Atom
     std::string name() const { return name_; }
 };
 
-extern const Symbol kNil;
-extern const Symbol kT;
+extern const Symbol koNil;
+extern const Symbol koT;
 
 class Cons : public Sexp
 {

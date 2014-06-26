@@ -39,58 +39,50 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
   return token;
 }
 
-const Symbol& Reader::Intern(const std::string& name)
+const ConsCell* Reader::Intern(const std::string& name)
 {
-  return Intern(Symbol(ToUpper(name)));
+  return Intern(MakeSymbol(ToUpper(name)));
 }
 
-const Symbol& Reader::Intern(const Symbol& symbol)
+const ConsCell* Reader::Intern(const ConsCell* symbol)
 {
-  auto pair = symbols_.emplace(symbol.name(), symbol);
+  auto pair = symbols_.emplace(SymbolName(symbol), symbol);
   return pair.first->second;
 }
 
 void Reader::Init()
 {
-
-  // At the moment, this is pointless since the Symbols are copied/moved into
-  // the symbols_ map. We could just as well wait for the reader to read NIL or
-  // T and only intern them then. Symbol equality is implemented by delegating
-  // to string= on Symbol::name, so this copying-intern doesn't break anything.
-  // Once the allocator/gc are implemented, we should instead intern pointers to
-  // symbols so we can implement Symbol equality as pointer equality.
-  Intern(kNil);
-  Intern(kT);
+  kNil = Intern("NIL");
+  kT = Intern("T");
 }
 
-const Cons& Reader::ReadCons()
+const ConsCell* Reader::ReadCons()
 {
-  const Sexp& car = Read();
-  const Sexp* cdr = nullptr;
+  const ConsCell* car = Read();
+  const ConsCell* cdr = nullptr;
   Token token = AcceptTokens({kDot, kComma, kCloseParen});
 
   if (token == kDot)
   {
-    cdr = &Read();
+    cdr = Read();
     AcceptToken(kCloseParen);
   }
   else if (token == kComma)
   {
-    cdr = &ReadCons();
+    cdr = ReadCons();
   }
   else if (token == kCloseParen)
-    cdr = &kNil;
+    cdr = kNil;
 
-  conses_.emplace_front(car, *cdr);
-  return conses_.front();
+  return MakeCons(car, cdr);
 }
 
-const Symbol& Reader::ReadSymbol()
+const ConsCell* Reader::ReadSymbol()
 {
   return Intern(lexer_.current_token());
 }
 
-const Sexp& Reader::Read()
+const ConsCell* Reader::Read()
 {
   Token token = lexer_.nextToken();
   switch (token)

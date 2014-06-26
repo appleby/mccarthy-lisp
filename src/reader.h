@@ -8,8 +8,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "cons.h"
 #include "lexer.h"
-#include "objects.h"
 #include "utils.h"
 
 namespace mclisp
@@ -46,22 +46,21 @@ class Reader
 {
   private:
     Lexer lexer_;
-    std::map<std::string, Symbol> symbols_;
-    std::list<Cons> conses_;
+    std::map<std::string, const ConsCell *> symbols_;
 
     void AcceptToken(Token token);
     Token AcceptTokens(std::set<Token> tokens);
-    const Cons& ReadCons();
-    const Symbol& ReadSymbol();
-    const Symbol& Intern(const std::string& name);
-    const Symbol& Intern(const Symbol& symbol);
+    const ConsCell* ReadCons();
+    const ConsCell* ReadSymbol();
+    const ConsCell* Intern(const std::string& name);
+    const ConsCell* Intern(const ConsCell* symbol);
     void Init();  // Intern NIL and T.
 
   public:
     explicit Reader(std::istream& in=std::cin) : lexer_(in) { Init(); };
     explicit Reader(const std::string& in) : lexer_(in) { Init(); };
 
-    const Sexp& Read();
+    const ConsCell* Read();
 };
 
 } // namespace mclisp

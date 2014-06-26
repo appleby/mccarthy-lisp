@@ -2,12 +2,12 @@
 
 namespace mclisp
 {
-const Symbol kT("T");
-const Symbol kNil("NIL");
+const Symbol koT("T");
+const Symbol koNil("NIL");
 
 Sexp::operator bool() const
 {
-  return this != &kNil;
+  return this != &koNil;
 }
 
 // Logical and relational operators (==, !=, <, >, <=, >=)
