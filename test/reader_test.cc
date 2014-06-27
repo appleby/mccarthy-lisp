@@ -9,29 +9,10 @@ using namespace mclisp;
 TEST(ReaderTest, DefaultCtor)
 {
   Reader reader("");
+  EXPECT_NE(kT, nullptr);
   EXPECT_NE(kNil, nullptr);
   EXPECT_EQ(kNil, reader.Read());
 }
-
-//TEST(ReaderTest, ReadSymbol)
-//{
-//  Reader reader("symbol");
-//  EXPECT_EQ(Symbol("SYMBOL"), reader.Read());
-//}
-
-//TEST(ReaderTest, ReadSymbolWithSpaces)
-//{
-//  Reader reader("APPLE PIE NUMBER 3");
-//  Symbol applePieNumber3("APPLE PIE NUMBER 3");
-//  EXPECT_EQ(applePieNumber3, reader.Read());
-//}
-
-//TEST(ReaderTest, ReadUpcasesSymbols)
-//{
-//  Reader reader("uPpErCaSe");
-//  Symbol uppercase("UPPERCASE");
-//  EXPECT_EQ(uppercase, reader.Read());
-//}
 
 TEST(ReaderTest, ReadNil)
 {
@@ -43,6 +24,24 @@ TEST(ReaderTest, ReadT)
 {
   Reader reader("T");
   EXPECT_EQ(kT, reader.Read());
+}
+
+TEST(ReaderTest, ReadSymbol)
+{
+  Reader reader("symbol");
+  EXPECT_EQ(reader.Intern("symbol"), reader.Read());
+}
+
+TEST(ReaderTest, ReadSymbolWithSpaces)
+{
+  Reader reader("APPLE PIE NUMBER 3");
+  EXPECT_EQ(reader.Intern("APPLE PIE NUMBER 3"), reader.Read());
+}
+
+TEST(ReaderTest, ReadUpcasesSymbols)
+{
+  Reader reader("uPpErCaSe");
+  EXPECT_EQ(reader.Intern("UPPERCASE"), reader.Read());
 }
 
 TEST(ReaderTest, ReadBadSymbolNoEarMuffs)

@@ -18,7 +18,7 @@ ConsCell* AtomMagic()
 
 std::string Barf(ConsCell * const * c)
 {
-  return std::string(reinterpret_cast<const char *>(c));
+  return std::string(reinterpret_cast<const char *>(c), sizeof c);
 }
 
 std::string Slurp(ConsCell** c, const std::string& s)

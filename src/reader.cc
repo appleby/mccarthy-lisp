@@ -39,6 +39,12 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
   return token;
 }
 
+void Reader::Init()
+{
+  kNil = Intern("NIL");
+  kT = Intern("T");
+}
+
 const ConsCell* Reader::Intern(const std::string& name)
 {
   return Intern(MakeSymbol(ToUpper(name)));
@@ -48,12 +54,6 @@ const ConsCell* Reader::Intern(const ConsCell* symbol)
 {
   auto pair = symbols_.emplace(SymbolName(symbol), symbol);
   return pair.first->second;
-}
-
-void Reader::Init()
-{
-  kNil = Intern("NIL");
-  kT = Intern("T");
 }
 
 const ConsCell* Reader::ReadCons()

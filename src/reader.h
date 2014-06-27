@@ -52,14 +52,14 @@ class Reader
     Token AcceptTokens(std::set<Token> tokens);
     const ConsCell* ReadCons();
     const ConsCell* ReadSymbol();
-    const ConsCell* Intern(const std::string& name);
-    const ConsCell* Intern(const ConsCell* symbol);
     void Init();  // Intern NIL and T.
 
   public:
     explicit Reader(std::istream& in=std::cin) : lexer_(in) { Init(); };
     explicit Reader(const std::string& in) : lexer_(in) { Init(); };
 
+    const ConsCell* Intern(const std::string& name);
+    const ConsCell* Intern(const ConsCell* symbol);
     const ConsCell* Read();
 };
 
