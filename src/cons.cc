@@ -125,12 +125,55 @@ inline bool Symbolp(const ConsCell* c)
   return c->car_ == AtomMagic();
 }
 
+inline bool Consp(const ConsCell* c)
+{
+  return !Symbolp(c);
+}
+
 const std::string SymbolName(const ConsCell* symbol)
 {
   if (!Symbolp(symbol))
     // TODO Throw better error.
     throw std::logic_error("Attempt to call SymbolName on a non-symbol.");
   return StringFromPname(Get(kPname, symbol->cdr_));
+}
+
+// Logical and relational operators (==, !=, <, >, <=, >=)
+bool operator==(const ConsCell& lhs, const ConsCell& rhs)
+{
+  if (Symbolp(&lhs) && Symbolp(&rhs))
+    return &lhs == &rhs;
+
+  if (Consp(&lhs) && Consp(&rhs))
+    return *lhs.car_ == *rhs.car_ && *lhs.cdr_ == *rhs.cdr_;
+
+  return false;
+}
+
+bool operator< (const ConsCell& lhs, const ConsCell& rhs)
+{
+  if (Symbolp(&lhs) && Symbolp(&rhs))
+    return SymbolName(&lhs) < SymbolName(&rhs);
+
+  if (Consp(&lhs) && Consp(&rhs))
+    return (*lhs.car_ < *rhs.car_ ||
+            (*lhs.car_ == *rhs.car_ && *lhs.cdr_ < *rhs.cdr_));
+
+  return false;
+}
+bool operator!=(const ConsCell& lhs, const ConsCell& rhs){return !operator==(lhs,rhs);}
+bool operator> (const ConsCell& lhs, const ConsCell& rhs){return  operator< (rhs,lhs);}
+bool operator<=(const ConsCell& lhs, const ConsCell& rhs){return !operator> (lhs,rhs);}
+bool operator>=(const ConsCell& lhs, const ConsCell& rhs){return !operator< (lhs,rhs);}
+
+std::ostream& operator<<(std::ostream& os, const ConsCell& cons)
+{
+  if (Symbolp(&cons))
+    return os << SymbolName(&cons);
+
+  // FIXME
+  //return os << "(" << *cons.car_ << " . " << *cons.cdr_ << ")";
+  return os;
 }
 
 } // namespace mclisp

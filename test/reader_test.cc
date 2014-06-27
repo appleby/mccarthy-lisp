@@ -56,35 +56,35 @@ TEST(ReaderTest, ReadBadSymbolNoHyphens)
   EXPECT_THROW(reader.Read(), ReadError);
 }
 
-//TEST(ReaderTest, ReadCons)
-//{
-//  Reader reader("(A . B)");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Cons C1(A, B);
-//  EXPECT_EQ(C1, reader.Read());
-//}
+TEST(ReaderTest, ReadCons)
+{
+  Reader reader("(A . B)");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C1 = MakeCons(A, B);
+  EXPECT_EQ(*C1, *reader.Read());
+}
 
-//TEST(ReaderTest, ReadNestedCons)
-//{
-//  Reader reader("((A . B) . (C . D))");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Symbol C("C");
-//  Symbol D("D");
-//  Cons C1(A, B);
-//  Cons C2(C, D);
-//  Cons C3(C1, C2);
-//  EXPECT_EQ(C3, reader.Read());
-//}
+TEST(ReaderTest, ReadNestedCons)
+{
+  Reader reader("((A . B) . (C . D))");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C = reader.Intern("C");
+  const ConsCell* D = reader.Intern("D");
+  const ConsCell* C1 = MakeCons(A, B);
+  const ConsCell* C2 = MakeCons(C, D);
+  const ConsCell* C3 = MakeCons(C1, C2);
+  EXPECT_EQ(*C3, *reader.Read());
+}
 
-//TEST(ReaderTest, ReadBadConsNoOpenParen)
-//{
-//  Reader reader("A . B)");
-//  Symbol A("A");
-//  EXPECT_EQ(A, reader.Read());
-//  EXPECT_THROW(reader.Read(), ReadError);
-//}
+TEST(ReaderTest, ReadBadConsNoOpenParen)
+{
+  Reader reader("A . B)");
+  const ConsCell* A = reader.Intern("A");
+  EXPECT_EQ(A, reader.Read());
+  EXPECT_THROW(reader.Read(), ReadError);
+}
 
 TEST(ReaderTest, ReadBadConsNoCloseParen)
 {
@@ -122,61 +122,61 @@ TEST(ReaderTest, ReadBadNestedConsNoCloseParen)
   EXPECT_THROW(reader.Read(), BadTokenError);
 }
 
-//TEST(ReaderTest, Read1ItemList)
-//{
-//  Reader reader("(A)");
-//  Symbol A("A");
-//  Cons C1(A, kNil);
-//  EXPECT_EQ(C1, reader.Read());
-//}
+TEST(ReaderTest, Read1ItemList)
+{
+  Reader reader("(A)");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* C1 = MakeCons(A, kNil);
+  EXPECT_EQ(*C1, *reader.Read());
+}
 
-//TEST(ReaderTest, Read2ItemList)
-//{
-//  Reader reader("(A, B)");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Cons C1(B, kNil);
-//  Cons C2(A, C1);
-//  EXPECT_EQ(C2, reader.Read());
-//}
+TEST(ReaderTest, Read2ItemList)
+{
+  Reader reader("(A, B)");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C1 = MakeCons(B, kNil);
+  const ConsCell* C2 = MakeCons(A, C1);
+  EXPECT_EQ(*C2, *reader.Read());
+}
 
-//TEST(ReaderTest, Read3ItemList)
-//{
-//  Reader reader("(A, B, C)");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Symbol C("C");
-//  Cons C1(C, kNil);
-//  Cons C2(B, C1);
-//  Cons C3(A, C2);
-//  EXPECT_EQ(C3, reader.Read());
-//}
+TEST(ReaderTest, Read3ItemList)
+{
+  Reader reader("(A, B, C)");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C = reader.Intern("C");
+  const ConsCell* C1 = MakeCons(C, kNil);
+  const ConsCell* C2 = MakeCons(B, C1);
+  const ConsCell* C3 = MakeCons(A, C2);
+  EXPECT_EQ(*C3, *reader.Read());
+}
 
-//TEST(ReaderTest, ReadDottedList)
-//{
-//  Reader reader("(A, B . C)");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Symbol C("C");
-//  Cons C1(B, C);
-//  Cons C2(A, C1);
-//  EXPECT_EQ(C2, reader.Read());
-//}
+TEST(ReaderTest, ReadDottedList)
+{
+  Reader reader("(A, B . C)");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C = reader.Intern("C");
+  const ConsCell* C1 = MakeCons(B, C);
+  const ConsCell* C2 = MakeCons(A, C1);
+  EXPECT_EQ(*C2, *reader.Read());
+}
 
-//TEST(ReaderTest, ReadNestedLists)
-//{
-//  Reader reader("((A . B), (C, D))");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Symbol C("C");
-//  Symbol D("D");
-//  Cons C1(A, B);
-//  Cons C2(D, kNil);
-//  Cons C3(C, C2);
-//  Cons C4(C3, kNil);
-//  Cons C5(C1, C4);
-//  EXPECT_EQ(C5, reader.Read());
-//}
+TEST(ReaderTest, ReadNestedLists)
+{
+  Reader reader("((A . B), (C, D))");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C = reader.Intern("C");
+  const ConsCell* D = reader.Intern("D");
+  const ConsCell* C1 = MakeCons(A, B);
+  const ConsCell* C2 = MakeCons(D, kNil);
+  const ConsCell* C3 = MakeCons(C, C2);
+  const ConsCell* C4 = MakeCons(C3, kNil);
+  const ConsCell* C5 = MakeCons(C1, C4);
+  EXPECT_EQ(*C5, *reader.Read());
+}
 
 TEST(ReaderTest, ReadBadListCommaFollowsDot)
 {
@@ -202,13 +202,13 @@ TEST(ReaderTest, ReadBadListNoCdr)
   EXPECT_THROW(reader.Read(), ReadError);
 }
 
-//TEST(ReaderTest, ReadBadListNoOpenParen)
-//{
-//  Reader reader("A, B)");
-//  Symbol A("A");
-//  EXPECT_EQ(A, reader.Read());
-//  EXPECT_THROW(reader.Read(), ReadError);
-//}
+TEST(ReaderTest, ReadBadListNoOpenParen)
+{
+  Reader reader("A, B)");
+  const ConsCell* A = reader.Intern("A");
+  EXPECT_EQ(A, reader.Read());
+  EXPECT_THROW(reader.Read(), ReadError);
+}
 
 TEST(ReaderTest, ReadBadListNoCloseParen)
 {
@@ -216,17 +216,17 @@ TEST(ReaderTest, ReadBadListNoCloseParen)
   EXPECT_THROW(reader.Read(), BadTokenError);
 }
 
-//TEST(ReaderTest, ReadBadNestedListNoOpenParen)
-//{
-//  Reader reader("(A, B . C))");
-//  Symbol A("A");
-//  Symbol B("B");
-//  Symbol C("C");
-//  Cons C1(B, C);
-//  Cons C2(A, C1);
-//  EXPECT_EQ(C2, reader.Read());
-//  EXPECT_THROW(reader.Read(), ReadError);
-//}
+TEST(ReaderTest, ReadBadNestedListNoOpenParen)
+{
+  Reader reader("(A, B . C))");
+  const ConsCell* A = reader.Intern("A");
+  const ConsCell* B = reader.Intern("B");
+  const ConsCell* C = reader.Intern("C");
+  const ConsCell* C1 = MakeCons(B, C);
+  const ConsCell* C2 = MakeCons(A, C1);
+  EXPECT_EQ(*C2, *reader.Read());
+  EXPECT_THROW(reader.Read(), ReadError);
+}
 
 TEST(ReaderTest, ReadBadNestedListNoCloseParen)
 {
