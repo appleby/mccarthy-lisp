@@ -22,6 +22,7 @@ extern const ConsCell* kT;
 const ConsCell* MakeSymbol(const std::string& name);
 const ConsCell* MakeCons(const ConsCell* car, const ConsCell* cdr);
 
+inline bool Symbolp(const ConsCell* c);
 const std::string SymbolName(const ConsCell* symbol);
 
 } // namespace mclisp

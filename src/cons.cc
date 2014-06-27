@@ -11,31 +11,69 @@ using namespace mclisp;
 
 const std::string kPname = "PNAME";
 
-void SetCons(ConsCell** c, const char* s)
+ConsCell* AtomMagic()
 {
-  strncpy(reinterpret_cast<char *>(c), s, sizeof c);
+  return const_cast<ConsCell*>(Alloc::AtomMagic());
+}
+
+std::string Barf(ConsCell * const * c)
+{
+  return std::string(reinterpret_cast<const char *>(c));
 }
 
 std::string Slurp(ConsCell** c, const std::string& s)
 {
-  SetCons(c, s.c_str());
+  strncpy(reinterpret_cast<char *>(c), s.c_str(), sizeof c);
   return s.length() > sizeof c ? s.substr(sizeof c, std::string::npos) : "";
+}
+
+
+const ConsCell* Get(std::string key, const ConsCell* alist)
+{
+  std::string thiskey;
+  const ConsCell* next = alist;
+  while (thiskey != key && next != kNil)
+  {
+    thiskey = Barf(&next->car_);
+    next = next->cdr_;
+  }
+  return next == kNil ? kNil : next->car_;
+}
+
+std::string StringFromPname(const ConsCell* c)
+{
+  std::string pname;
+  const ConsCell* data;
+
+  while (c != kNil && c != nullptr)
+  {
+    data = c->car_;
+    pname += Barf(&data->car_);
+    pname += Barf(&data->cdr_);
+    c = c->cdr_;
+  }
+
+  return pname;
 }
 
 ConsCell* MakePnameList(const std::string& name)
 {
-  ConsCell *head, *prev, *curr, *data;
   std::string rest(name);
+  ConsCell *head, *prev, *curr, *data;
+  head = prev = curr = data = nullptr;
 
-  for (head = prev = curr = Alloc::Allocate();
-       rest.length() > 0;
-       curr = Alloc::Allocate())
+  while (rest.length() > 0)
   {
+    curr = Alloc::Allocate();
     data = Alloc::Allocate();
     rest = Slurp(&data->car_, rest);
     rest = Slurp(&data->cdr_, rest);
 
-    prev->cdr_ = curr;
+    if (!head)
+      head = curr;
+    if (prev)
+      prev->cdr_ = curr;
+
     curr->car_ = data;
     prev = curr;
   }
@@ -49,7 +87,7 @@ ConsCell* MakeAssociationList(const std::string& name)
   ConsCell* pname = Alloc::Allocate();
   ConsCell* link = Alloc::Allocate();
 
-  SetCons(&pname->car_, kPname.c_str());
+  Slurp(&pname->car_, kPname);
   pname->cdr_ = link;
 
   link->car_ = MakePnameList(name);
@@ -77,15 +115,22 @@ const ConsCell* MakeSymbol(const std::string& name)
 {
   assert(name.length());
   ConsCell* c = Alloc::Allocate();
-  c->car_ = const_cast<ConsCell*>(Alloc::AtomMagic());
+  c->car_ = AtomMagic();
   c->cdr_ = MakeAssociationList(name);
   return c;
 }
 
+inline bool Symbolp(const ConsCell* c)
+{
+  return c->car_ == AtomMagic();
+}
+
 const std::string SymbolName(const ConsCell* symbol)
 {
-  // TODO
-  return "NIL";
+  if (!Symbolp(symbol))
+    // TODO Throw better error.
+    throw std::logic_error("Attempt to call SymbolName on a non-symbol.");
+  return StringFromPname(Get(kPname, symbol->cdr_));
 }
 
 } // namespace mclisp
