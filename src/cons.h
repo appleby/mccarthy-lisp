@@ -28,6 +28,8 @@ std::ostream& operator<<(std::ostream& os, const ConsCell& cons);
 extern const ConsCell* kNil;
 extern const ConsCell* kT;
 
+void HackToFixNil();
+
 const ConsCell* MakeSymbol(const std::string& name);
 const ConsCell* MakeCons(const ConsCell* car, const ConsCell* cdr);
 
