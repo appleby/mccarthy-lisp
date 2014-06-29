@@ -207,9 +207,19 @@ std::ostream& operator<<(std::ostream& os, const ConsCell& cons)
   if (Symbolp(&cons))
     return os << SymbolName(&cons);
 
-  // FIXME
-  //return os << "(" << *cons.car_ << " . " << *cons.cdr_ << ")";
-  return os;
+  if (!cons.car_ || !cons.cdr_)
+    // TODO error handling.
+    throw std::logic_error("Attempted to print ConsCell with null car/cdr.");
+
+  // TODO Pretty-print proper lists.
+  // TODO Handle circular list structure.
+  // TODO Figure out what C++ templating hell causes stream formatting to fail
+  // when specifying a literal const char*, rather than a std::string.
+  // return os << "(" << *cons.car_ << " . " << *cons.cdr_ << ")";
+  static const std::string open("(");
+  static const std::string dot(" . ");
+  static const std::string close(")");
+  return os << open << *cons.car_ << dot << *cons.cdr_ << close;
 }
 
 } // namespace mclisp
