@@ -27,9 +27,9 @@ int Repl::loop()
     out_ << prompt_;
     oss.str("");
     oss.clear();
-    const mclisp::Sexp& exp = reader_.Read();
-    oss << exp;
-    out_ << exp << std::endl;
+    const mclisp::ConsCell *exp = reader_.Read();
+    oss << *exp;
+    out_ << *exp << std::endl;
   }
   return 0;
 }
