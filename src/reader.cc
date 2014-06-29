@@ -41,8 +41,18 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
 
 void Reader::Init()
 {
-  kNil = Intern("NIL");
-  kT = Intern("T");
+  if (kNil == nullptr)
+  {
+    kNil = Intern("NIL");
+    HackToFixNil();
+  }
+  else
+    Intern(kNil);
+
+  if (kT == nullptr)
+    kT = Intern("T");
+  else
+    Intern(kT);
 }
 
 const ConsCell* Reader::Intern(const std::string& name)
