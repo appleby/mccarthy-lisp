@@ -9,11 +9,11 @@ namespace mclisp
 class ConsCell
 {
 public:
-    ConsCell(): car_(nullptr), cdr_(nullptr) {}
-    ConsCell(ConsCell* car, ConsCell* cdr): car_(car), cdr_(cdr) {}
+    ConsCell(): car(nullptr), cdr(nullptr) {}
+    ConsCell(ConsCell* car, ConsCell* cdr): car(car), cdr(cdr) {}
 
-    ConsCell* car_;
-    ConsCell* cdr_;
+    ConsCell* car;
+    ConsCell* cdr;
 };
 
 bool operator==(const ConsCell& lhs, const ConsCell& rhs);

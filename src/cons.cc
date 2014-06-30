@@ -37,10 +37,10 @@ const ConsCell* Get(std::string key, const ConsCell* alist)
   const ConsCell* next = alist;
   while (thiskey != key && next != kNil)
   {
-    thiskey = Barf(&next->car_);
-    next = next->cdr_;
+    thiskey = Barf(&next->car);
+    next = next->cdr;
   }
-  return next == kNil ? kNil : next->car_;
+  return next == kNil ? kNil : next->car;
 }
 
 std::string StringFromPname(const ConsCell* c)
@@ -50,10 +50,10 @@ std::string StringFromPname(const ConsCell* c)
 
   while (c != kNil)
   {
-    data = c->car_;
-    pname += Barf(&data->car_);
-    pname += Barf(&data->cdr_);
-    c = c->cdr_;
+    data = c->car;
+    pname += Barf(&data->car);
+    pname += Barf(&data->cdr);
+    c = c->cdr;
   }
 
   return pname;
@@ -69,19 +69,19 @@ ConsCell* MakePnameList(const std::string& name)
   {
     curr = Alloc::Allocate();
     data = Alloc::Allocate();
-    rest = Slurp(&data->car_, rest);
-    rest = Slurp(&data->cdr_, rest);
+    rest = Slurp(&data->car, rest);
+    rest = Slurp(&data->cdr, rest);
 
     if (!head)
       head = curr;
     if (prev)
-      prev->cdr_ = curr;
+      prev->cdr = curr;
 
-    curr->car_ = data;
+    curr->car = data;
     prev = curr;
   }
 
-  curr->cdr_ = const_cast<ConsCell*>(kNil);
+  curr->cdr = const_cast<ConsCell*>(kNil);
   return head;
 }
 
@@ -90,11 +90,11 @@ ConsCell* MakeAssociationList(const std::string& name)
   ConsCell* pname = Alloc::Allocate();
   ConsCell* link = Alloc::Allocate();
 
-  Slurp(&pname->car_, kPname);
-  pname->cdr_ = link;
+  Slurp(&pname->car, kPname);
+  pname->cdr = link;
 
-  link->car_ = MakePnameList(name);
-  link->cdr_ = const_cast<ConsCell*>(kNil);
+  link->car = MakePnameList(name);
+  link->cdr = const_cast<ConsCell*>(kNil);
 
   return pname;
 }
@@ -133,17 +133,17 @@ void HackToFixNil()
   // has been initialized. The other option is to just nullptr as the list
   // terminator for symbol alist structure. That would avoid the need for this
   // hack, but would mean the symbol alist is not a proper list.
-  assert (kNil->cdr_->cdr_->cdr_ == nullptr);
-  assert (kNil->cdr_->cdr_->car_->cdr_ == nullptr);
-  kNil->cdr_->cdr_->cdr_ = const_cast<ConsCell *>(kNil);
-  kNil->cdr_->cdr_->car_->cdr_ = const_cast<ConsCell *>(kNil);
+  assert (kNil->cdr->cdr->cdr == nullptr);
+  assert (kNil->cdr->cdr->car->cdr == nullptr);
+  kNil->cdr->cdr->cdr = const_cast<ConsCell *>(kNil);
+  kNil->cdr->cdr->car->cdr = const_cast<ConsCell *>(kNil);
 }
 
 const ConsCell* MakeCons(const ConsCell* car, const ConsCell* cdr)
 {
   ConsCell* c = Alloc::Allocate();
-  c->car_ = const_cast<ConsCell*>(car);
-  c->cdr_ = const_cast<ConsCell*>(cdr);
+  c->car = const_cast<ConsCell*>(car);
+  c->cdr = const_cast<ConsCell*>(cdr);
   return c;
 }
 
@@ -151,14 +151,14 @@ const ConsCell* MakeSymbol(const std::string& name)
 {
   assert(name.length());
   ConsCell* c = Alloc::Allocate();
-  c->car_ = AtomMagic();
-  c->cdr_ = MakeAssociationList(name);
+  c->car = AtomMagic();
+  c->cdr = MakeAssociationList(name);
   return c;
 }
 
 inline bool Symbolp(const ConsCell* c)
 {
-  return c->car_ == AtomMagic();
+  return c->car == AtomMagic();
 }
 
 inline bool Consp(const ConsCell* c)
@@ -171,7 +171,7 @@ const std::string SymbolName(const ConsCell* symbol)
   if (!Symbolp(symbol))
     // TODO Throw better error.
     throw std::logic_error("Attempt to call SymbolName on a non-symbol.");
-  return StringFromPname(Get(kPname, symbol->cdr_));
+  return StringFromPname(Get(kPname, symbol->cdr));
 }
 
 // Logical and relational operators (==, !=, <, >, <=, >=)
@@ -181,7 +181,7 @@ bool operator==(const ConsCell& lhs, const ConsCell& rhs)
     return &lhs == &rhs;
 
   if (Consp(&lhs) && Consp(&rhs))
-    return *lhs.car_ == *rhs.car_ && *lhs.cdr_ == *rhs.cdr_;
+    return *lhs.car == *rhs.car && *lhs.cdr == *rhs.cdr;
 
   return false;
 }
@@ -192,8 +192,8 @@ bool operator< (const ConsCell& lhs, const ConsCell& rhs)
     return SymbolName(&lhs) < SymbolName(&rhs);
 
   if (Consp(&lhs) && Consp(&rhs))
-    return (*lhs.car_ < *rhs.car_ ||
-            (*lhs.car_ == *rhs.car_ && *lhs.cdr_ < *rhs.cdr_));
+    return (*lhs.car < *rhs.car ||
+            (*lhs.car == *rhs.car && *lhs.cdr < *rhs.cdr));
 
   return false;
 }
@@ -207,7 +207,7 @@ std::ostream& operator<<(std::ostream& os, const ConsCell& cons)
   if (Symbolp(&cons))
     return os << SymbolName(&cons);
 
-  if (!cons.car_ || !cons.cdr_)
+  if (!cons.car || !cons.cdr)
     // TODO error handling.
     throw std::logic_error("Attempted to print ConsCell with null car/cdr.");
 
@@ -215,11 +215,11 @@ std::ostream& operator<<(std::ostream& os, const ConsCell& cons)
   // TODO Handle circular list structure.
   // TODO Figure out what C++ templating hell causes stream formatting to fail
   // when specifying a literal const char*, rather than a std::string.
-  // return os << "(" << *cons.car_ << " . " << *cons.cdr_ << ")";
+  // return os << "(" << *cons.car << " . " << *cons.cdr << ")";
   static const std::string open("(");
   static const std::string dot(" . ");
   static const std::string close(")");
-  return os << open << *cons.car_ << dot << *cons.cdr_ << close;
+  return os << open << *cons.car << dot << *cons.cdr << close;
 }
 
 } // namespace mclisp
