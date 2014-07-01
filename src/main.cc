@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "cons.h"
+#include "eval.h"
 #include "reader.h"
 
 namespace
@@ -28,14 +30,15 @@ int Repl::loop()
     oss.str("");
     oss.clear();
     const mclisp::ConsCell *exp = reader_.Read();
+    const mclisp::ConsCell *value = Eval(exp);
     oss << *exp;
-    out_ << *exp << std::endl;
+    out_ << *value << std::endl;
   }
   return 0;
 }
 
 
-}; //end namespace
+} //end namespace
 
 int main()
 {
