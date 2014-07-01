@@ -6,15 +6,13 @@
 namespace mclisp
 {
 
-class ConsCell
+struct ConsCell
 {
-public:
-    ConsCell(): car(nullptr), cdr(nullptr) {}
-    ConsCell(ConsCell* car, ConsCell* cdr): car(car), cdr(cdr) {}
-
-    ConsCell* car;
-    ConsCell* cdr;
+  ConsCell* car;
+  ConsCell* cdr;
 };
+
+typedef struct ConsCell ConsCell;
 
 bool operator==(const ConsCell& lhs, const ConsCell& rhs);
 bool operator!=(const ConsCell& lhs, const ConsCell& rhs);
