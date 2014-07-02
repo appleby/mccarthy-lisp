@@ -59,29 +59,29 @@ TEST(ReaderTest, ReadBadSymbolNoHyphens)
 TEST(ReaderTest, ReadCons)
 {
   Reader reader("(A . B)");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C1 = MakeCons(A, B);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C1 = MakeCons(A, B);
   EXPECT_EQ(*C1, *reader.Read());
 }
 
 TEST(ReaderTest, ReadNestedCons)
 {
   Reader reader("((A . B) . (C . D))");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C = reader.Intern("C");
-  const ConsCell* D = reader.Intern("D");
-  const ConsCell* C1 = MakeCons(A, B);
-  const ConsCell* C2 = MakeCons(C, D);
-  const ConsCell* C3 = MakeCons(C1, C2);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C = reader.Intern("C");
+  ConsCell* D = reader.Intern("D");
+  ConsCell* C1 = MakeCons(A, B);
+  ConsCell* C2 = MakeCons(C, D);
+  ConsCell* C3 = MakeCons(C1, C2);
   EXPECT_EQ(*C3, *reader.Read());
 }
 
 TEST(ReaderTest, ReadBadConsNoOpenParen)
 {
   Reader reader("A . B)");
-  const ConsCell* A = reader.Intern("A");
+  ConsCell* A = reader.Intern("A");
   EXPECT_EQ(A, reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }
@@ -125,56 +125,56 @@ TEST(ReaderTest, ReadBadNestedConsNoCloseParen)
 TEST(ReaderTest, Read1ItemList)
 {
   Reader reader("(A)");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* C1 = MakeCons(A, kNil);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* C1 = MakeCons(A, kNil);
   EXPECT_EQ(*C1, *reader.Read());
 }
 
 TEST(ReaderTest, Read2ItemList)
 {
   Reader reader("(A, B)");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C1 = MakeCons(B, kNil);
-  const ConsCell* C2 = MakeCons(A, C1);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C1 = MakeCons(B, kNil);
+  ConsCell* C2 = MakeCons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
 }
 
 TEST(ReaderTest, Read3ItemList)
 {
   Reader reader("(A, B, C)");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C = reader.Intern("C");
-  const ConsCell* C1 = MakeCons(C, kNil);
-  const ConsCell* C2 = MakeCons(B, C1);
-  const ConsCell* C3 = MakeCons(A, C2);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C = reader.Intern("C");
+  ConsCell* C1 = MakeCons(C, kNil);
+  ConsCell* C2 = MakeCons(B, C1);
+  ConsCell* C3 = MakeCons(A, C2);
   EXPECT_EQ(*C3, *reader.Read());
 }
 
 TEST(ReaderTest, ReadDottedList)
 {
   Reader reader("(A, B . C)");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C = reader.Intern("C");
-  const ConsCell* C1 = MakeCons(B, C);
-  const ConsCell* C2 = MakeCons(A, C1);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C = reader.Intern("C");
+  ConsCell* C1 = MakeCons(B, C);
+  ConsCell* C2 = MakeCons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
 }
 
 TEST(ReaderTest, ReadNestedLists)
 {
   Reader reader("((A . B), (C, D))");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C = reader.Intern("C");
-  const ConsCell* D = reader.Intern("D");
-  const ConsCell* C1 = MakeCons(A, B);
-  const ConsCell* C2 = MakeCons(D, kNil);
-  const ConsCell* C3 = MakeCons(C, C2);
-  const ConsCell* C4 = MakeCons(C3, kNil);
-  const ConsCell* C5 = MakeCons(C1, C4);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C = reader.Intern("C");
+  ConsCell* D = reader.Intern("D");
+  ConsCell* C1 = MakeCons(A, B);
+  ConsCell* C2 = MakeCons(D, kNil);
+  ConsCell* C3 = MakeCons(C, C2);
+  ConsCell* C4 = MakeCons(C3, kNil);
+  ConsCell* C5 = MakeCons(C1, C4);
   EXPECT_EQ(*C5, *reader.Read());
 }
 
@@ -205,7 +205,7 @@ TEST(ReaderTest, ReadBadListNoCdr)
 TEST(ReaderTest, ReadBadListNoOpenParen)
 {
   Reader reader("A, B)");
-  const ConsCell* A = reader.Intern("A");
+  ConsCell* A = reader.Intern("A");
   EXPECT_EQ(A, reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }
@@ -219,11 +219,11 @@ TEST(ReaderTest, ReadBadListNoCloseParen)
 TEST(ReaderTest, ReadBadNestedListNoOpenParen)
 {
   Reader reader("(A, B . C))");
-  const ConsCell* A = reader.Intern("A");
-  const ConsCell* B = reader.Intern("B");
-  const ConsCell* C = reader.Intern("C");
-  const ConsCell* C1 = MakeCons(B, C);
-  const ConsCell* C2 = MakeCons(A, C1);
+  ConsCell* A = reader.Intern("A");
+  ConsCell* B = reader.Intern("B");
+  ConsCell* C = reader.Intern("C");
+  ConsCell* C1 = MakeCons(B, C);
+  ConsCell* C2 = MakeCons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }

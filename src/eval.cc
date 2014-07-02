@@ -3,7 +3,7 @@
 namespace mclisp
 {
 
-const ConsCell *Eval(const ConsCell *exp, ConsCell *env /* nullptr */)
+ConsCell *Eval(const ConsCell *exp, ConsCell *env /* nullptr */)
 {
   return MakeSymbol("42");
 }

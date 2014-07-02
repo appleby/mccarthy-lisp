@@ -6,7 +6,7 @@
 namespace mclisp
 {
 
-const ConsCell *Eval(const ConsCell *exp, ConsCell *env=nullptr);
+ConsCell *Eval(const ConsCell *exp, ConsCell *env=nullptr);
 
 } // namespace mclisp
 #endif // Eval_H_

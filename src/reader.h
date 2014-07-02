@@ -46,21 +46,21 @@ class Reader
 {
   private:
     Lexer lexer_;
-    std::map<std::string, const ConsCell *> symbols_;
+    std::map<std::string, ConsCell *> symbols_;
 
     void AcceptToken(Token token);
     Token AcceptTokens(std::set<Token> tokens);
-    const ConsCell* ReadCons();
-    const ConsCell* ReadSymbol();
+    ConsCell* ReadCons();
+    ConsCell* ReadSymbol();
     void Init();  // Intern NIL and T.
 
   public:
     explicit Reader(std::istream& in=std::cin) : lexer_(in) { Init(); };
     explicit Reader(const std::string& in) : lexer_(in) { Init(); };
 
-    const ConsCell* Intern(const std::string& name);
-    const ConsCell* Intern(const ConsCell* symbol);
-    const ConsCell* Read();
+    ConsCell* Intern(const std::string& name);
+    ConsCell* Intern(ConsCell* symbol);
+    ConsCell* Read();
 };
 
 } // namespace mclisp

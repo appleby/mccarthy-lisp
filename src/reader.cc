@@ -55,21 +55,21 @@ void Reader::Init()
     Intern(kT);
 }
 
-const ConsCell* Reader::Intern(const std::string& name)
+ConsCell* Reader::Intern(const std::string& name)
 {
   return Intern(MakeSymbol(ToUpper(name)));
 }
 
-const ConsCell* Reader::Intern(const ConsCell* symbol)
+ConsCell* Reader::Intern(ConsCell* symbol)
 {
   auto pair = symbols_.emplace(SymbolName(symbol), symbol);
   return pair.first->second;
 }
 
-const ConsCell* Reader::ReadCons()
+ConsCell* Reader::ReadCons()
 {
-  const ConsCell* car = Read();
-  const ConsCell* cdr = nullptr;
+  ConsCell* car = Read();
+  ConsCell* cdr = nullptr;
   Token token = AcceptTokens({kDot, kComma, kCloseParen});
 
   if (token == kDot)
@@ -87,12 +87,12 @@ const ConsCell* Reader::ReadCons()
   return MakeCons(car, cdr);
 }
 
-const ConsCell* Reader::ReadSymbol()
+ConsCell* Reader::ReadSymbol()
 {
   return Intern(lexer_.current_token());
 }
 
-const ConsCell* Reader::Read()
+ConsCell* Reader::Read()
 {
   Token token = lexer_.nextToken();
   switch (token)

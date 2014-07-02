@@ -29,8 +29,8 @@ int Repl::loop()
     out_ << prompt_;
     oss.str("");
     oss.clear();
-    const mclisp::ConsCell *exp = reader_.Read();
-    const mclisp::ConsCell *value = Eval(exp);
+    mclisp::ConsCell *exp = reader_.Read();
+    mclisp::ConsCell *value = Eval(exp);
     oss << *exp;
     out_ << *value << std::endl;
   }

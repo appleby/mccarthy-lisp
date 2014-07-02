@@ -31,7 +31,7 @@ std::string Slurp(ConsCell** c, const std::string& s)
 }
 
 
-const ConsCell* Get(std::string key, const ConsCell* alist)
+ConsCell* Get(std::string key, const ConsCell* alist)
 {
   std::string thiskey;
   const ConsCell* next = alist;
@@ -81,7 +81,7 @@ ConsCell* MakePnameList(const std::string& name)
     prev = curr;
   }
 
-  curr->cdr = const_cast<ConsCell*>(kNil);
+  curr->cdr = kNil;
   return head;
 }
 
@@ -94,7 +94,7 @@ ConsCell* MakeAssociationList(const std::string& name)
   pname->cdr = link;
 
   link->car = MakePnameList(name);
-  link->cdr = const_cast<ConsCell*>(kNil);
+  link->cdr = kNil;
 
   return pname;
 }
@@ -103,8 +103,8 @@ ConsCell* MakeAssociationList(const std::string& name)
 
 namespace mclisp
 {
-const ConsCell* kT = nullptr;
-const ConsCell* kNil = nullptr;
+ConsCell* kT = nullptr;
+ConsCell* kNil = nullptr;
 
 void HackToFixNil()
 {
@@ -135,19 +135,19 @@ void HackToFixNil()
   // hack, but would mean the symbol alist is not a proper list.
   assert (kNil->cdr->cdr->cdr == nullptr);
   assert (kNil->cdr->cdr->car->cdr == nullptr);
-  kNil->cdr->cdr->cdr = const_cast<ConsCell *>(kNil);
-  kNil->cdr->cdr->car->cdr = const_cast<ConsCell *>(kNil);
+  kNil->cdr->cdr->cdr = kNil;
+  kNil->cdr->cdr->car->cdr = kNil;
 }
 
-const ConsCell* MakeCons(const ConsCell* car, const ConsCell* cdr)
+ConsCell* MakeCons(ConsCell* car, ConsCell* cdr)
 {
   ConsCell* c = Alloc::Allocate();
-  c->car = const_cast<ConsCell*>(car);
-  c->cdr = const_cast<ConsCell*>(cdr);
+  c->car = car;
+  c->cdr = cdr;
   return c;
 }
 
-const ConsCell* MakeSymbol(const std::string& name)
+ConsCell* MakeSymbol(const std::string& name)
 {
   assert(name.length());
   ConsCell* c = Alloc::Allocate();
