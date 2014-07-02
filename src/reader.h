@@ -45,6 +45,7 @@ class BadTokenError: public ReadError
 class Reader
 {
   private:
+    bool initialized_;
     Lexer lexer_;
     std::map<std::string, ConsCell *> symbols_;
 
@@ -55,8 +56,10 @@ class Reader
     void Init();  // Intern NIL and T.
 
   public:
-    explicit Reader(std::istream& in=std::cin) : lexer_(in) { Init(); };
-    explicit Reader(const std::string& in) : lexer_(in) { Init(); };
+    explicit Reader(std::istream& in=std::cin) : initialized_(false), lexer_(in)
+    { Init(); };
+    explicit Reader(const std::string& in) : initialized_(false), lexer_(in)
+    { Init(); };
 
     ConsCell* Intern(const std::string& name);
     ConsCell* Intern(ConsCell* symbol);

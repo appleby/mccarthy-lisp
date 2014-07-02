@@ -3,6 +3,7 @@
 #include <cstdarg>
 
 #include "reader.h"
+#include "init.h"
 
 namespace
 {
@@ -41,18 +42,17 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
 
 void Reader::Init()
 {
-  if (kNil == nullptr)
-  {
-    kNil = Intern("NIL");
-    HackToFixNil();
-  }
-  else
-    Intern(kNil);
+  
+  if (initialized_)
+    return;
 
-  if (kT == nullptr)
-    kT = Intern("T");
-  else
-    Intern(kT);
+  InitLisp();
+  Intern(kNil);
+  Intern(kT);
+  Intern(kAtom);
+  Intern(kQuote);
+
+  initialized_ = true;
 }
 
 ConsCell* Reader::Intern(const std::string& name)

@@ -2,8 +2,6 @@
 #include "gtest/gtest.h"
 #include "cons.h"
 
-#include <iostream>
-
 using namespace mclisp;
 
 TEST(ReaderTest, DefaultCtor)
