@@ -23,10 +23,16 @@ ConsCell* g_user_env = nullptr;
 
 void Init()
 {
+  bool initialized = false;
+
+  if (initialized)
+    return;
+
   g_init_env = MakeEnv();
   g_init_env = Extend(g_init_env, kNil, kNil);
   g_init_env = Extend(g_init_env, kT, kT);
   g_user_env = Copy(g_init_env);
+  initialized = true;
 }
 
 ConsCell* MakeEnv()
