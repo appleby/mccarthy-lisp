@@ -1,6 +1,10 @@
 CXX=clang++
 CPPFLAGS+=-I $(srcdir)
-CXXFLAGS+=-g -Wall -Wextra -std=c++11
+CXXFLAGS+=-g -O3 -Wall -Wextra -std=c++11
+
+ifdef DEBUG
+    CXXFLAGS+=-g3 -O0
+endif
 
 srcdir=./src
 srcs=$(wildcard $(srcdir)/*.cc)
