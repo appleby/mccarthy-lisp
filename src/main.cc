@@ -2,6 +2,7 @@
 
 #include "cons.h"
 #include "eval.h"
+#include "init.h"
 #include "reader.h"
 
 namespace
@@ -24,14 +25,19 @@ class Repl
 int Repl::loop()
 {
   std::ostringstream oss;
-  while (oss.str() != "QUIT" && oss.str() != "(QUIT . NIL)")
+  while (true)
   {
     out_ << prompt_;
     oss.str("");
     oss.clear();
     mclisp::ConsCell *exp = reader_.Read();
-    mclisp::ConsCell *value = Eval(exp);
     oss << *exp;
+
+    if (oss.str() == "QUIT" || oss.str() == "(QUIT . NIL)")
+      // TODO implement real (quit) function.
+      break;
+
+    mclisp::ConsCell *value = Eval(exp);
     out_ << *value << std::endl;
   }
   return 0;
@@ -43,5 +49,6 @@ int Repl::loop()
 int main()
 {
   Repl repl;
+  mclisp::InitLisp();
   return repl.loop();
 }
