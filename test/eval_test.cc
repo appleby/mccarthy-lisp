@@ -43,7 +43,7 @@ TEST(EvalTest, QuotedCons)
   ConsCell* exp = reader.Read();
   ConsCell* foo = reader.Intern("foo");
   ConsCell* bar = reader.Intern("bar");
-  ConsCell* C1 = MakeCons(foo, bar);
+  ConsCell* C1 = Cons(foo, bar);
   EXPECT_EQ(*C1, *Eval(exp));
 }
 
@@ -53,7 +53,7 @@ TEST(EvalTest, QuotedList)
   ConsCell* exp = reader.Read();
   ConsCell* foo = reader.Intern("foo");
   ConsCell* bar = reader.Intern("bar");
-  ConsCell* C1 = MakeCons(bar, kNil);
-  ConsCell* C2 = MakeCons(foo, C1);
+  ConsCell* C1 = Cons(bar, kNil);
+  ConsCell* C2 = Cons(foo, C1);
   EXPECT_EQ(*C2, *Eval(exp));
 }

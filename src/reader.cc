@@ -84,7 +84,7 @@ ConsCell* Reader::ReadCons()
   else if (token == kCloseParen)
     cdr = kNil;
 
-  return MakeCons(car, cdr);
+  return Cons(car, cdr);
 }
 
 ConsCell* Reader::ReadSymbol()

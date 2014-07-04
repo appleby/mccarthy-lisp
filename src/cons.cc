@@ -152,18 +152,12 @@ ConsCell* FromBool(bool pred)
   return pred ? kT : kNil;
 }
 
-ConsCell* MakeCons(ConsCell* car, ConsCell* cdr)
+ConsCell* Cons(ConsCell* car, ConsCell* cdr)
 {
-  // TODO replace MakeCons() with Cons().
   ConsCell* c = alloc::Allocate();
   c->car = car;
   c->cdr = cdr;
   return c;
-}
-
-ConsCell* Cons(ConsCell* car, ConsCell* cdr)
-{
-  return MakeCons(car, cdr);
 }
 
 ConsCell* Acons(ConsCell* key, ConsCell* value, ConsCell* alist)

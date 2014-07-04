@@ -41,7 +41,6 @@ void HackToFixNil();
 
 ConsCell* FromBool(bool pred);
 ConsCell* MakeSymbol(const std::string& name);
-ConsCell* MakeCons(ConsCell* car, ConsCell* cdr);
 ConsCell* Cons(ConsCell* car, ConsCell* cdr);
 ConsCell* Acons(ConsCell* key, ConsCell* value, ConsCell* alist);
 

@@ -59,7 +59,7 @@ TEST(ReaderTest, ReadCons)
   Reader reader("(A . B)");
   ConsCell* A = reader.Intern("A");
   ConsCell* B = reader.Intern("B");
-  ConsCell* C1 = MakeCons(A, B);
+  ConsCell* C1 = Cons(A, B);
   EXPECT_EQ(*C1, *reader.Read());
 }
 
@@ -70,9 +70,9 @@ TEST(ReaderTest, ReadNestedCons)
   ConsCell* B = reader.Intern("B");
   ConsCell* C = reader.Intern("C");
   ConsCell* D = reader.Intern("D");
-  ConsCell* C1 = MakeCons(A, B);
-  ConsCell* C2 = MakeCons(C, D);
-  ConsCell* C3 = MakeCons(C1, C2);
+  ConsCell* C1 = Cons(A, B);
+  ConsCell* C2 = Cons(C, D);
+  ConsCell* C3 = Cons(C1, C2);
   EXPECT_EQ(*C3, *reader.Read());
 }
 
@@ -124,7 +124,7 @@ TEST(ReaderTest, Read1ItemList)
 {
   Reader reader("(A)");
   ConsCell* A = reader.Intern("A");
-  ConsCell* C1 = MakeCons(A, kNil);
+  ConsCell* C1 = Cons(A, kNil);
   EXPECT_EQ(*C1, *reader.Read());
 }
 
@@ -133,8 +133,8 @@ TEST(ReaderTest, Read2ItemList)
   Reader reader("(A, B)");
   ConsCell* A = reader.Intern("A");
   ConsCell* B = reader.Intern("B");
-  ConsCell* C1 = MakeCons(B, kNil);
-  ConsCell* C2 = MakeCons(A, C1);
+  ConsCell* C1 = Cons(B, kNil);
+  ConsCell* C2 = Cons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
 }
 
@@ -144,9 +144,9 @@ TEST(ReaderTest, Read3ItemList)
   ConsCell* A = reader.Intern("A");
   ConsCell* B = reader.Intern("B");
   ConsCell* C = reader.Intern("C");
-  ConsCell* C1 = MakeCons(C, kNil);
-  ConsCell* C2 = MakeCons(B, C1);
-  ConsCell* C3 = MakeCons(A, C2);
+  ConsCell* C1 = Cons(C, kNil);
+  ConsCell* C2 = Cons(B, C1);
+  ConsCell* C3 = Cons(A, C2);
   EXPECT_EQ(*C3, *reader.Read());
 }
 
@@ -156,8 +156,8 @@ TEST(ReaderTest, ReadDottedList)
   ConsCell* A = reader.Intern("A");
   ConsCell* B = reader.Intern("B");
   ConsCell* C = reader.Intern("C");
-  ConsCell* C1 = MakeCons(B, C);
-  ConsCell* C2 = MakeCons(A, C1);
+  ConsCell* C1 = Cons(B, C);
+  ConsCell* C2 = Cons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
 }
 
@@ -168,11 +168,11 @@ TEST(ReaderTest, ReadNestedLists)
   ConsCell* B = reader.Intern("B");
   ConsCell* C = reader.Intern("C");
   ConsCell* D = reader.Intern("D");
-  ConsCell* C1 = MakeCons(A, B);
-  ConsCell* C2 = MakeCons(D, kNil);
-  ConsCell* C3 = MakeCons(C, C2);
-  ConsCell* C4 = MakeCons(C3, kNil);
-  ConsCell* C5 = MakeCons(C1, C4);
+  ConsCell* C1 = Cons(A, B);
+  ConsCell* C2 = Cons(D, kNil);
+  ConsCell* C3 = Cons(C, C2);
+  ConsCell* C4 = Cons(C3, kNil);
+  ConsCell* C5 = Cons(C1, C4);
   EXPECT_EQ(*C5, *reader.Read());
 }
 
@@ -220,8 +220,8 @@ TEST(ReaderTest, ReadBadNestedListNoOpenParen)
   ConsCell* A = reader.Intern("A");
   ConsCell* B = reader.Intern("B");
   ConsCell* C = reader.Intern("C");
-  ConsCell* C1 = MakeCons(B, C);
-  ConsCell* C2 = MakeCons(A, C1);
+  ConsCell* C1 = Cons(B, C);
+  ConsCell* C2 = Cons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }
