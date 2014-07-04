@@ -13,7 +13,7 @@ void InitLisp()
   if (initialized)
     return;
 
-  Alloc::Init();
+  alloc::Init();
 
   if (kNil == nullptr)
   {

@@ -31,7 +31,7 @@ private:
   std::array<ConsCell, kMaxHeapSize> heap_;
 };
 
-namespace Alloc
+namespace alloc
 {
 
 void Init();
@@ -39,8 +39,7 @@ void Shutdown();
 const mclisp::ConsCell* AtomMagic();
 mclisp::ConsCell* Allocate();
 
-} // namespace Alloc
-
+} // namespace alloc
 } // namespace mclisp
 
 #endif // MCLISP_ALLOC_H_

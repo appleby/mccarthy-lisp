@@ -15,7 +15,7 @@ const std::string kPname = "PNAME";
 
 ConsCell* AtomMagic()
 {
-  return const_cast<ConsCell*>(Alloc::AtomMagic());
+  return const_cast<ConsCell*>(alloc::AtomMagic());
 }
 
 std::string Barf(ConsCell * const * c)
@@ -69,8 +69,8 @@ ConsCell* MakePnameList(const std::string& name)
 
   while (rest.length() > 0)
   {
-    curr = Alloc::Allocate();
-    data = Alloc::Allocate();
+    curr = alloc::Allocate();
+    data = alloc::Allocate();
     rest = Slurp(&data->car, rest);
     rest = Slurp(&data->cdr, rest);
 
@@ -89,8 +89,8 @@ ConsCell* MakePnameList(const std::string& name)
 
 ConsCell* MakeAssociationList(const std::string& name)
 {
-  ConsCell* pname = Alloc::Allocate();
-  ConsCell* link = Alloc::Allocate();
+  ConsCell* pname = alloc::Allocate();
+  ConsCell* link = alloc::Allocate();
 
   Slurp(&pname->car, kPname);
   pname->cdr = link;
@@ -156,7 +156,7 @@ ConsCell* FromBool(bool pred)
 ConsCell* MakeCons(ConsCell* car, ConsCell* cdr)
 {
   // TODO replace MakeCons() with Cons().
-  ConsCell* c = Alloc::Allocate();
+  ConsCell* c = alloc::Allocate();
   c->car = car;
   c->cdr = cdr;
   return c;
@@ -177,7 +177,7 @@ ConsCell* Acons(ConsCell* key, ConsCell* value, ConsCell* alist)
 ConsCell* MakeSymbol(const std::string& name)
 {
   assert(name.length());
-  ConsCell* c = Alloc::Allocate();
+  ConsCell* c = alloc::Allocate();
   c->car = AtomMagic();
   c->cdr = MakeAssociationList(name);
   return c;

@@ -13,8 +13,7 @@ mclisp::ConsAllocator* kAllocator = nullptr;
 
 namespace mclisp
 {
-
-namespace Alloc
+namespace alloc
 {
 
 void Init()
@@ -42,7 +41,7 @@ ConsCell* Allocate()
   return kAllocator->Allocate();
 }
 
-} // namespace Alloc
+} // namespace alloc
 
 ConsAllocator::ConsAllocator()
 {
