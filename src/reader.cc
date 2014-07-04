@@ -99,7 +99,7 @@ ConsCell* Reader::Read()
   {
     case kSymbol: return ReadSymbol();
     case kOpenParen: return ReadCons();
-    case kEof: return kNil; // TODO: return Eof object.
+    case kEofToken: return kEof;
     default:
       throw ReadError("Expected start of Cons or Symbol, found: "
                       + std::to_string(token));

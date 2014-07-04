@@ -58,7 +58,7 @@ Token Lexer::nextToken()
   in_ >> std::noskipws;
 
   if (in_.eof())
-    return kEof;
+    return kEofToken;
 
   current_token_ = c;
 

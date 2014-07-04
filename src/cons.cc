@@ -117,6 +117,7 @@ ConsCell* kT = &TStruct;
 ConsCell* kNil = &NilStruct;
 ConsCell* kAtom = nullptr;
 ConsCell* kQuote = nullptr;
+ConsCell* kEof = nullptr;
 
 namespace cons
 {
@@ -136,6 +137,9 @@ void Init()
 
   if (kQuote == nullptr)
     kQuote = MakeSymbol("QUOTE");
+
+  if (kEof == nullptr)
+    kEof = MakeSymbol("EOF");
 
   initialized = true;
 }

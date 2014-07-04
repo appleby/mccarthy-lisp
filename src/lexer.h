@@ -31,7 +31,7 @@ enum Token
 
   // Control
   kBadToken,
-  kEof
+  kEofToken
 };
 
 class Lexer

@@ -7,9 +7,7 @@ using namespace mclisp;
 TEST(ReaderTest, DefaultCtor)
 {
   Reader reader("");
-  EXPECT_NE(kT, nullptr);
-  EXPECT_NE(kNil, nullptr);
-  EXPECT_EQ(kNil, reader.Read());
+  EXPECT_EQ(kEof, reader.Read());
 }
 
 TEST(ReaderTest, ReadNil)

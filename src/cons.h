@@ -36,6 +36,7 @@ extern ConsCell* kNil;
 extern ConsCell* kT;
 extern ConsCell* kQuote;
 extern ConsCell* kAtom;
+extern ConsCell* kEof;
 
 void HackToFixNil();
 
