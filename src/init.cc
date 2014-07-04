@@ -14,22 +14,7 @@ void InitLisp()
     return;
 
   alloc::Init();
-
-  if (kNil == nullptr)
-  {
-    kNil = MakeSymbol("NIL");
-    HackToFixNil();
-  }
-
-  if (kT == nullptr)
-    kT = MakeSymbol("T");
-
-  if (kAtom == nullptr)
-    kAtom = MakeSymbol("ATOM");
-
-  if (kQuote == nullptr)
-    kQuote = MakeSymbol("QUOTE");
-
+  cons::Init();
   env::Init();
 
   initialized = true;

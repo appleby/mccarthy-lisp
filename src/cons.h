@@ -16,6 +16,11 @@ struct ConsCell
 
 typedef struct ConsCell ConsCell;
 
+namespace cons
+{
+void Init();
+}
+
 bool operator==(const ConsCell& lhs, const ConsCell& rhs);
 bool operator!=(const ConsCell& lhs, const ConsCell& rhs);
 bool operator< (const ConsCell& lhs, const ConsCell& rhs);

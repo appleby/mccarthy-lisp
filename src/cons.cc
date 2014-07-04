@@ -12,11 +12,10 @@ namespace
 using namespace mclisp;
 
 const std::string kPname = "PNAME";
+ConsCell* AtomMagic = reinterpret_cast<ConsCell*>(0x2);
 
-ConsCell* AtomMagic()
-{
-  return const_cast<ConsCell*>(alloc::AtomMagic());
-}
+ConsCell TStruct = { AtomMagic, nullptr };
+ConsCell NilStruct = { AtomMagic, nullptr };
 
 std::string Barf(ConsCell * const * c)
 {
@@ -105,43 +104,43 @@ ConsCell* MakeAssociationList(const std::string& name)
 
 namespace mclisp
 {
-ConsCell* kT = nullptr;
-ConsCell* kNil = nullptr;
+
+// Nil is a self-referential symbol. The association list of Nil, being a list,
+// is terminated with a Nil. If we attempt to set kNil to nullptr here and call
+// MakeSymbol to initialize it a run-time, then Nil's association list will
+// actually be terminated with a nullptr instead of Nil. To get around this, we
+// statically allocate the first ConsCell of kNil, and set the cdr to the result
+// of calling MakeAssociationList in cons::Init.  kT could be initialized to
+// nullptr here, but it's handled the same as kNil for symmetry, and to allow
+// FromBool to work even before kT has been initialized.
+ConsCell* kT = &TStruct;
+ConsCell* kNil = &NilStruct;
 ConsCell* kAtom = nullptr;
 ConsCell* kQuote = nullptr;
 
-void HackToFixNil()
+namespace cons
 {
-  // TODO Get rid of HackToFixNil.
-  // The association list of kNil should have only one item, it's pname. The
-  // structure of kNil's alist should look like this:
-  //          +----+----+     +-----+----+      +----+----+
-  // kNil --->|ATOM|    |---->|PNAME|    |----->|    |    |-----> nullptr
-  //          +----+----+     +-----+----+      +----+----+
-  //                                              |
-  //                                        +-----+                   
-  //                                        |   +----+----+
-  //                                        +-->|    |    |-----> nullptr
-  //                                            +----+----+
-  //                                              |
-  //                                        +-----+
-  //                                        |   +----+----+
-  //                                        +-->|NIL |    |
-  //                                            +----+----+
-  //
-  // The nullptr's need to be converted now to Nil's. The reason for this hack
-  // is that Nil is symbol that is created and interned in Reader::Init. But
-  // like all symbols, Nil's alist references Nil as the list terminator. At the
-  // time when Nil is being created, kNil is still pointing to nullptr, and thus
-  // we must go back an replace the nullptr's with pointers to kNil after kNil
-  // has been initialized. The other option is to just nullptr as the list
-  // terminator for symbol alist structure. That would avoid the need for this
-  // hack, but would mean the symbol alist is not a proper list.
-  assert (kNil->cdr->cdr->cdr == nullptr);
-  assert (kNil->cdr->cdr->car->cdr == nullptr);
-  kNil->cdr->cdr->cdr = kNil;
-  kNil->cdr->cdr->car->cdr = kNil;
+
+void Init()
+{
+  static bool initialized = false;
+
+  if (initialized)
+    return;
+
+  kT->cdr = MakeAssociationList("T");
+  kNil->cdr = MakeAssociationList("NIL");
+
+  if (kAtom == nullptr)
+    kAtom = MakeSymbol("ATOM");
+
+  if (kQuote == nullptr)
+    kQuote = MakeSymbol("QUOTE");
+
+  initialized = true;
 }
+
+} // namespace cons
 
 ConsCell::operator bool() const
 {
@@ -178,14 +177,14 @@ ConsCell* MakeSymbol(const std::string& name)
 {
   assert(name.length());
   ConsCell* c = alloc::Allocate();
-  c->car = AtomMagic();
+  c->car = AtomMagic;
   c->cdr = MakeAssociationList(name);
   return c;
 }
 
 bool Atom(const ConsCell* c)
 {
-  return c->car == AtomMagic();
+  return c->car == AtomMagic;
 }
 
 bool Symbolp(const ConsCell* c)
