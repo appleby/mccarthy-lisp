@@ -210,11 +210,15 @@ bool Null(const ConsCell* c)
 
 ConsCell* Car(const ConsCell* c)
 {
+  // TODO throw error.
+  assert(Null(c) || Consp(c));
   return c == kNil ? kNil : c->car;
 }
 
 ConsCell* Cdr(const ConsCell* c)
 {
+  // TODO throw error.
+  assert(Null(c) || Consp(c));
   return c == kNil ? kNil : c->cdr;
 }
 
@@ -237,12 +241,20 @@ ConsCell* Cadar(const ConsCell* c)
 // x is one of the u's, then assoc [x; y] is the corresponding v.
 ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
 {
-  if (Eq(alist, kNil))
+  if (Null(alist))
     // Because McCarthy's version of Assoc just returns the corresponding v, and
     // not the (u, v) pair as in Common Lisp, we need a way to distinguish "not
     // found" from "v = NIL". Hence, we return nullptr here instead of kNil to
     // indicate lookup failure.
     return nullptr;
+
+  if (!Consp(alist))
+    // TODO Throw better error.
+    throw std::logic_error("Attempt to call Assoc on non-cons.");
+
+  if (!Consp(Car(alist)))
+    // TODO Throw better error.
+    throw std::logic_error("Bad Alist structure.");
 
   if (Eq(k, Caar(alist)))
     // McCarthy's assoc expects the sublists to be proper lists, not dotted
