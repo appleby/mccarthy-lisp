@@ -27,13 +27,6 @@ void Shutdown()
   delete kAllocator;
 }
 
-const ConsCell* AtomMagic()
-{
-  if (kAllocator == nullptr)
-    Init();
-  return kAllocator->oob_pointer();
-}
-
 ConsCell* Allocate()
 {
   if (kAllocator == nullptr)
