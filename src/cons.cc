@@ -12,10 +12,11 @@ namespace
 {
 using namespace mclisp;
 
-const std::string kPname = "PNAME";
 ConsCell* AtomMagic = reinterpret_cast<ConsCell*>(0x2);
 ConsCell TStruct = { AtomMagic, nullptr };
 ConsCell NilStruct = { AtomMagic, nullptr };
+ConsCell PnameStruct = { AtomMagic, nullptr };
+ConsCell* kPname = &PnameStruct;
 
 std::string Barf(ConsCell * const * c)
 {
@@ -32,13 +33,16 @@ std::string Slurp(ConsCell** c, const std::string& s)
 }
 
 
-ConsCell* Get(std::string key, const ConsCell* alist)
+ConsCell* Get(ConsCell* key, const ConsCell* alist)
 {
-  std::string thiskey;
+  assert(Symbolp(key));
+
+  ConsCell* thiskey = nullptr;
   const ConsCell* next = alist;
+
   while (thiskey != key && next != kNil)
   {
-    thiskey = Barf(&next->car);
+    thiskey = next->car;
     next = next->cdr;
   }
   return next == kNil ? kNil : next->car;
@@ -91,7 +95,7 @@ ConsCell* MakeAssociationList(const std::string& name)
   ConsCell* pname = alloc::Allocate();
   ConsCell* link = alloc::Allocate();
 
-  Slurp(&pname->car, kPname);
+  pname->car = kPname;
   pname->cdr = link;
 
   link->car = MakePnameList(name);
@@ -136,7 +140,9 @@ namespace mclisp
 // statically allocate the first ConsCell of kNil, and set the cdr to the result
 // of calling MakeAssociationList in cons::Init.  kT could be initialized to
 // nullptr here, but it's handled the same as kNil for symmetry, and to allow
-// FromBool to work even before kT has been initialized.
+// FromBool to work even before kT has been initialized. The kPname symbol is
+// also self-referential and therefore handled in the same way, but its scope is
+// limited to this file, so it's declared in the anonymous namespace, above.
 ConsCell* kT = &TStruct;
 ConsCell* kNil = &NilStruct;
 std::map<std::string, ConsCell *> g_builtin_symbols;
@@ -152,10 +158,13 @@ void Init()
     return;
 
   kT->cdr = MakeAssociationList("T");
-  kNil->cdr = MakeAssociationList("NIL");
-
   g_builtin_symbols.emplace("T", kT);
+
+  kNil->cdr = MakeAssociationList("NIL");
   g_builtin_symbols.emplace("NIL", kNil);
+
+  kPname->cdr = MakeAssociationList("PNAME");
+  g_builtin_symbols.emplace("PNAME", kPname);
 
   std::vector<const char *> builtin_names = { "ATOM", "EOF", "QUOTE" };
 
