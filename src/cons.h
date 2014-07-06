@@ -1,6 +1,7 @@
 #ifndef MCLISP_CONS_H_
 #define MCLISP_CONS_H_
 
+#include <map>
 #include <string>
 
 namespace mclisp
@@ -31,12 +32,9 @@ bool operator>=(const ConsCell& lhs, const ConsCell& rhs);
 std::ostream& operator<<(std::ostream& os, const ConsCell& cons);
 std::string ToString(const ConsCell* cons);
 
-// TODO Initialize these in a saner way.
 extern ConsCell* kNil;
 extern ConsCell* kT;
-extern ConsCell* kQuote;
-extern ConsCell* kAtom;
-extern ConsCell* kEof;
+extern std::map<std::string, ConsCell *> g_builtin_symbols;
 
 void HackToFixNil();
 

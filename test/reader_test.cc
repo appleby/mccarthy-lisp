@@ -7,7 +7,7 @@ using namespace mclisp;
 TEST(ReaderTest, DefaultCtor)
 {
   Reader reader("");
-  EXPECT_EQ(kEof, reader.Read());
+  EXPECT_EQ(g_builtin_symbols["EOF"], reader.Read());
 }
 
 TEST(ReaderTest, ReadNil)

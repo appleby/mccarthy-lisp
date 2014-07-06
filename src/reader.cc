@@ -47,10 +47,9 @@ void Reader::Init()
     return;
 
   InitLisp();
-  Intern(kNil);
-  Intern(kT);
-  Intern(kAtom);
-  Intern(kQuote);
+
+  for (auto it : g_builtin_symbols)
+    Intern(it.second);
 
   initialized_ = true;
 }
@@ -99,7 +98,7 @@ ConsCell* Reader::Read()
   {
     case kSymbol: return ReadSymbol();
     case kOpenParen: return ReadCons();
-    case kEofToken: return kEof;
+    case kEofToken: return g_builtin_symbols["EOF"];
     default:
       throw ReadError("Expected start of Cons or Symbol, found: "
                       + std::to_string(token));

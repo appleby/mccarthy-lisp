@@ -10,10 +10,10 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
 
   if (Atom(Car(exp)))
   {
-    if (Eq(Car(exp), kQuote))
+    if (Eq(Car(exp), g_builtin_symbols["QUOTE"]))
       return Cadr(exp);
 
-    if (Eq(Car(exp), kAtom))
+    if (Eq(Car(exp), g_builtin_symbols["ATOM"]))
       return FromBool(Atom(Eval(Cadr(exp), env)));
   }
 

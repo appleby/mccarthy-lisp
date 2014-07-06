@@ -3,6 +3,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <sstream>
+#include <vector>
 
 #include "alloc.h"
 #include "cons.h"
@@ -13,7 +14,6 @@ using namespace mclisp;
 
 const std::string kPname = "PNAME";
 ConsCell* AtomMagic = reinterpret_cast<ConsCell*>(0x2);
-
 ConsCell TStruct = { AtomMagic, nullptr };
 ConsCell NilStruct = { AtomMagic, nullptr };
 
@@ -139,9 +139,7 @@ namespace mclisp
 // FromBool to work even before kT has been initialized.
 ConsCell* kT = &TStruct;
 ConsCell* kNil = &NilStruct;
-ConsCell* kAtom = nullptr;
-ConsCell* kQuote = nullptr;
-ConsCell* kEof = nullptr;
+std::map<std::string, ConsCell *> g_builtin_symbols;
 
 namespace cons
 {
@@ -156,14 +154,13 @@ void Init()
   kT->cdr = MakeAssociationList("T");
   kNil->cdr = MakeAssociationList("NIL");
 
-  if (kAtom == nullptr)
-    kAtom = MakeSymbol("ATOM");
+  g_builtin_symbols.emplace("T", kT);
+  g_builtin_symbols.emplace("NIL", kNil);
 
-  if (kQuote == nullptr)
-    kQuote = MakeSymbol("QUOTE");
+  std::vector<const char *> builtin_names = { "ATOM", "EOF", "QUOTE" };
 
-  if (kEof == nullptr)
-    kEof = MakeSymbol("EOF");
+  for (auto it : builtin_names)
+    g_builtin_symbols.emplace(it, MakeSymbol(it));
 
   initialized = true;
 }
