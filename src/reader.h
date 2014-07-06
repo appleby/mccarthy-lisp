@@ -53,6 +53,7 @@ class Reader
     Token AcceptTokens(std::set<Token> tokens);
     ConsCell* ReadCons();
     ConsCell* ReadSymbol();
+    ConsCell* ReadQuotation();
     void Init();  // Intern NIL and T.
 
   public:

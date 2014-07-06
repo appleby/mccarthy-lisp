@@ -25,7 +25,7 @@ TEST(LexerTest, AllWhiteSpace)
 
 TEST(LexerTest, Delimiters)
 {
-  Lexer lexer("(,.)");
+  Lexer lexer("(,.')");
   EXPECT_EQ(kOpenParen, lexer.nextToken());
   EXPECT_EQ("(", lexer.current_token());
 
@@ -34,6 +34,9 @@ TEST(LexerTest, Delimiters)
 
   EXPECT_EQ(kDot, lexer.nextToken());
   EXPECT_EQ(".", lexer.current_token());
+
+  EXPECT_EQ(kQuote, lexer.nextToken());
+  EXPECT_EQ("'", lexer.current_token());
 
   EXPECT_EQ(kCloseParen, lexer.nextToken());
   EXPECT_EQ(")", lexer.current_token());

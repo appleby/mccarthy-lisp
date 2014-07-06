@@ -40,6 +40,15 @@ TEST(ReaderTest, ReadUpcasesSymbols)
   EXPECT_EQ(reader.Intern("UPPERCASE"), reader.Read());
 }
 
+TEST(ReaderTest, ReadQuotedSymbol)
+{
+  Reader reader("'foo");
+  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* foo = reader.Intern("foo");
+  ConsCell* C1 = Cons(quote, Cons(foo, kNil));
+  EXPECT_EQ(*C1, *reader.Read());
+}
+
 TEST(ReaderTest, ReadBadSymbolNoEarMuffs)
 {
   Reader reader("*bad*");
@@ -173,6 +182,27 @@ TEST(ReaderTest, ReadNestedLists)
   ConsCell* C5 = Cons(C1, C4);
   EXPECT_EQ(*C5, *reader.Read());
 }
+
+TEST(ReaderTest, ReadQuotedList)
+{
+  Reader reader("'(foo, bar)");
+  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* foo = reader.Intern("foo");
+  ConsCell* bar = reader.Intern("bar");
+  ConsCell* C1 = Cons(quote, Cons(Cons(foo, Cons(bar, kNil)), kNil));
+  EXPECT_EQ(*C1, *reader.Read());
+}
+
+TEST(ReaderTest, ReadQuotedDottedList)
+{
+  Reader reader("'(foo . bar)");
+  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* foo = reader.Intern("foo");
+  ConsCell* bar = reader.Intern("bar");
+  ConsCell* C1 = Cons(quote, Cons(Cons(foo, bar), kNil));
+  EXPECT_EQ(*C1, *reader.Read());
+}
+
 
 TEST(ReaderTest, ReadBadListCommaFollowsDot)
 {

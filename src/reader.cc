@@ -91,11 +91,20 @@ ConsCell* Reader::ReadSymbol()
   return Intern(lexer_.current_token());
 }
 
+ConsCell* Reader::ReadQuotation()
+{
+  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* sexp = Read();
+  // TODO write List function.
+  return Cons(quote, Cons(sexp, kNil));
+}
+
 ConsCell* Reader::Read()
 {
   Token token = lexer_.nextToken();
   switch (token)
   {
+    case kQuote: return ReadQuotation();
     case kSymbol: return ReadSymbol();
     case kOpenParen: return ReadCons();
     case kEofToken: return g_builtin_symbols["EOF"];

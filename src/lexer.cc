@@ -66,6 +66,7 @@ Token Lexer::nextToken()
   if (c == ',') return kComma;
   if (c == '(') return kOpenParen;
   if (c == ')') return kCloseParen;
+  if (c == '\'') return kQuote;
 
   while (!IsDelim(in_.peek()))
   {

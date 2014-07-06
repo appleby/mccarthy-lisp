@@ -25,6 +25,9 @@ enum Token
   kOpenParen,
   kCloseParen,
 
+  // Syntax
+  kQuote,
+
   // Atoms
   kNumber,
   kSymbol,
