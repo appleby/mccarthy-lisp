@@ -100,6 +100,30 @@ ConsCell* MakeAssociationList(const std::string& name)
   return pname;
 }
 
+std::ostream& FormatListOnStream(std::ostream& os, const ConsCell& cons,
+                                 bool want_open_paren=true)
+{
+  if (cons.car == nullptr || cons.cdr == nullptr)
+    // TODO error handling.
+    throw std::logic_error("Attempted to print ConsCell with null car/cdr.");
+
+  // TODO Handle circular list structure.
+  if (want_open_paren)
+    os << "(";
+
+  os << *cons.car;
+
+  if (Null(cons.cdr))
+    // End of proper list.
+    return os << ")";
+
+  if (Atom(cons.cdr))
+    // End of dotted list.
+    return os << " . " << *cons.cdr << ")";
+
+  os << ", ";
+  return FormatListOnStream(os, *cons.cdr, false);
+}
 } // namespace
 
 namespace mclisp
@@ -333,19 +357,7 @@ std::ostream& operator<<(std::ostream& os, const ConsCell& cons)
   if (Symbolp(&cons))
     return os << SymbolName(&cons);
 
-  if (cons.car == nullptr || cons.cdr == nullptr)
-    // TODO error handling.
-    throw std::logic_error("Attempted to print ConsCell with null car/cdr.");
-
-  // TODO Pretty-print proper lists.
-  // TODO Handle circular list structure.
-  // TODO Figure out what C++ templating hell causes stream formatting to fail
-  // when specifying a literal const char*, rather than a std::string.
-  // return os << "(" << *cons.car << " . " << *cons.cdr << ")";
-  static const std::string open("(");
-  static const std::string dot(" . ");
-  static const std::string close(")");
-  return os << open << *cons.car << dot << *cons.cdr << close;
+  return FormatListOnStream(os, cons);
 }
 
 // Mostly useful as a way to print a ConsCell in GDB.

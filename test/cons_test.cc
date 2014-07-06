@@ -5,6 +5,7 @@
 #include "gtest/gtest.h"
 
 #include "init.h"
+#include "reader.h"
 
 using namespace mclisp;
 
@@ -188,11 +189,51 @@ TEST_F(ConsTest, SymbolName)
   EXPECT_EQ("alongsymbolnamewithoutspaces", SymbolName(nospacesym));
 }
 
-TEST_F(ConsTest, ToString)
+class ConsPrintTest : public ::testing::TestWithParam<std::string> {};
+
+INSTANTIATE_TEST_CASE_P(
+ ToString, ConsPrintTest,
+ ::testing::Values(
+  "FOO",
+  "(FOO)",
+  "(FOO, BAR)",
+  "(FOO . BAR)",
+  "(FOO, BAR, FOO)",
+  "(FOO, BAR . FOO)",
+  "((FOO))",
+  "((FOO), BAR)",
+  "((FOO) . BAR)",
+  "(FOO, (BAR))",
+  "((FOO), BAR, FOO)",
+  "((FOO), BAR . FOO)",
+  "(FOO, (BAR), FOO)",
+  "(FOO, (BAR) . FOO)",
+  "(FOO, BAR, (FOO))",
+  "((FOO, BAR))",
+  "((FOO . BAR))",
+  "((FOO, BAR), BAR)",
+  "((FOO, BAR) . BAR)",
+  "((FOO . BAR), BAR)",
+  "((FOO . BAR) . BAR)",
+  "(FOO, (BAR, FOO))",
+  "(FOO, (BAR . FOO))",
+  "((FOO, BAR), BAR, FOO)",
+  "((FOO . BAR), BAR, FOO)",
+  "((FOO, BAR), BAR . FOO)",
+  "((FOO . BAR), BAR . FOO)",
+  "(FOO, (BAR, FOO), FOO)",
+  "(FOO, (BAR . BAR), FOO)",
+  "(FOO, (BAR, FOO) . FOO)",
+  "(FOO, (BAR . FOO) . FOO)",
+  "(FOO, BAR, (FOO, BAR))",
+  "(FOO, BAR, (FOO . BAR))",
+  "((FOO, BAR), (BAR, FOO))",
+  "((FOO . BAR), (BAR . FOO))",
+  "((FOO, BAR), (BAR, FOO), (FOO, BAR))"
+  ));
+
+TEST_P(ConsPrintTest, ToString)
 {
-  EXPECT_EQ("FOO", ToString(foosym_));
-  EXPECT_EQ("BAR", ToString(barsym_));
-  EXPECT_EQ("(FOO . BAR)", ToString(foobar_));
-  EXPECT_EQ("(BAR . FOO)", ToString(barfoo_));
-  EXPECT_EQ("((FOO . BAR) . (BAR . FOO))", ToString(foobarbarfoo_));
+  Reader reader(GetParam());
+  EXPECT_EQ(GetParam(), ToString(reader.Read()));
 }
