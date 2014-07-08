@@ -48,7 +48,10 @@ int Repl::loop()
 
 int main()
 {
-  Repl repl;
+  // InitLisp must be called before the Reader object is initialized (which
+  // happens in the Repl constructor).
   mclisp::InitLisp();
+
+  Repl repl;
   return repl.loop();
 }
