@@ -95,8 +95,7 @@ ConsCell* Reader::ReadQuotation()
 {
   ConsCell* quote = g_builtin_symbols["QUOTE"];
   ConsCell* sexp = Read();
-  // TODO write List function.
-  return Cons(quote, Cons(sexp, kNil));
+  return List(quote, sexp);
 }
 
 ConsCell* Reader::Read()

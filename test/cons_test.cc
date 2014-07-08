@@ -147,7 +147,7 @@ TEST_F(ConsTest, CopyList)
   ConsCell *L1, *L2, *c;
 
   // Can copy proper lists.
-  L1 = Cons(foobar_, Cons(foosym_, Cons(barsym_, kNil)));
+  L1 = List(foobar_, foosym_, barsym_);
   L2 = CopyList(L1);
 
   EXPECT_EQ(*foobar_, *Car(L1));
@@ -174,6 +174,21 @@ TEST_F(ConsTest, CopyList)
 
   // Throws exception if passed a symbol.
   EXPECT_THROW(CopyList(foosym_), std::logic_error);
+}
+
+TEST_F(ConsTest, List)
+{
+  ConsCell *L1, *L2;
+
+  EXPECT_EQ(*kNil, *List());
+
+  L1 = List(foosym_);
+  L2 = Cons(foosym_, kNil);
+  EXPECT_EQ(*L2, *L1);
+
+  L1 = List(foosym_, barsym_);
+  L2 = Cons(foosym_, Cons(barsym_, kNil));
+  EXPECT_EQ(*L2, *L1);
 }
 
 TEST_F(ConsTest, SymbolName)

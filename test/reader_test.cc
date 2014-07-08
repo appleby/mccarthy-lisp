@@ -45,7 +45,7 @@ TEST(ReaderTest, ReadQuotedSymbol)
   Reader reader("'foo");
   ConsCell* quote = g_builtin_symbols["QUOTE"];
   ConsCell* foo = reader.Intern("foo");
-  ConsCell* C1 = Cons(quote, Cons(foo, kNil));
+  ConsCell* C1 = List(quote, foo);
   EXPECT_EQ(*C1, *reader.Read());
 }
 
@@ -189,7 +189,7 @@ TEST(ReaderTest, ReadQuotedList)
   ConsCell* quote = g_builtin_symbols["QUOTE"];
   ConsCell* foo = reader.Intern("foo");
   ConsCell* bar = reader.Intern("bar");
-  ConsCell* C1 = Cons(quote, Cons(Cons(foo, Cons(bar, kNil)), kNil));
+  ConsCell* C1 = List(quote, List(foo, bar));
   EXPECT_EQ(*C1, *reader.Read());
 }
 
@@ -199,10 +199,9 @@ TEST(ReaderTest, ReadQuotedDottedList)
   ConsCell* quote = g_builtin_symbols["QUOTE"];
   ConsCell* foo = reader.Intern("foo");
   ConsCell* bar = reader.Intern("bar");
-  ConsCell* C1 = Cons(quote, Cons(Cons(foo, bar), kNil));
+  ConsCell* C1 = List(quote, Cons(foo, bar));
   EXPECT_EQ(*C1, *reader.Read());
 }
-
 
 TEST(ReaderTest, ReadBadListCommaFollowsDot)
 {

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace mclisp
 {
@@ -58,6 +59,9 @@ ConsCell* Cadar(const ConsCell* c);
 ConsCell* Assoc(const ConsCell* k, const ConsCell* alist);
 ConsCell* CopyAlist(const ConsCell* alist);
 ConsCell* CopyList(const ConsCell* list);
+
+ConsCell* List_(std::vector<ConsCell *>);
+#define List(values...) List_({values})
 
 const std::string SymbolName(const ConsCell* symbol);
 

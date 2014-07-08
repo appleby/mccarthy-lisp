@@ -3,7 +3,6 @@
 #include <cstring>
 #include <stdexcept>
 #include <sstream>
-#include <vector>
 
 #include "alloc.h"
 #include "cons.h"
@@ -198,7 +197,7 @@ ConsCell* Acons(ConsCell* key, ConsCell* value, ConsCell* alist)
 {
   // In McCarthy's paper, unlike in Common Lisp, assoc expects the sublists of
   // the alist to be proper lists, not dotted lists.
-  return Cons(Cons(key, Cons(value, kNil)), alist);
+  return Cons(List(key, value), alist);
 }
 
 ConsCell* MakeSymbol(const std::string& name)
@@ -320,6 +319,16 @@ ConsCell* CopyList(const ConsCell* list)
     return Cons(Car(list), Cdr(list));
 
   return Cons(Car(list), CopyList(Cdr(list)));
+}
+
+ConsCell* List_(std::vector<ConsCell *> values)
+{
+  ConsCell* L = kNil;
+
+  for (auto it = values.rbegin(); it != values.rend(); ++it)
+    L = Cons(*it, L);
+
+  return L;
 }
 
 const std::string SymbolName(const ConsCell* symbol)
