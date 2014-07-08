@@ -15,7 +15,6 @@ class EnvTest : public ::testing::Test
   protected:
     EnvTest()
     {
-      InitLisp();
       env_ = env::MakeEnv();
       foosym_ = MakeSymbol("FOO");
       barsym_ = MakeSymbol("BAR");

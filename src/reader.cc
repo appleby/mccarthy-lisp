@@ -46,8 +46,6 @@ void Reader::Init()
   if (initialized_)
     return;
 
-  InitLisp();
-
   for (auto it : g_builtin_symbols)
     Intern(it.second);
 

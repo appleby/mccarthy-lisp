@@ -16,7 +16,7 @@ test_srcs=$(wildcard $(testdir)/*.cc)
 test_objs=$(patsubst %.cc, %.o, $(test_srcs))
 
 gtestdir=$(testdir)/gtest-1.7.0
-gtestlib=$(gtestdir)/make/gtest_main.a
+gtestlib=$(gtestdir)/make/gtest.a
 gtest_CPPFLAGS= -isystem $(gtestdir)/include $(CPPFLAGS)
 gtest_CXXFLAGS= -pthread $(CXXFLAGS)
 gtest_headers = $(gtestdir)/include/gtest/*.h \

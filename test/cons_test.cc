@@ -14,7 +14,6 @@ class ConsTest : public ::testing::Test
   protected:
     ConsTest()
     {
-      InitLisp();
       foosym_ = MakeSymbol("FOO");
       barsym_ = MakeSymbol("BAR");
       foobar_ = Cons(foosym_, barsym_);
