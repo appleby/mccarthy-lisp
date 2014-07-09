@@ -1,24 +1,24 @@
 #ifndef ENV_H
 #define ENV_H
 
-#include <stdexcept>
 #include <string>
 
 #include "cons.h"
+#include "error.h"
 
 namespace mclisp
 {
 namespace env
 {
 
-class UnboundSymbolError: public std::logic_error
+class UnboundSymbolError: public Error
 {
   private:
     static const std::string err_prefix_;
 
   public:
     explicit UnboundSymbolError(const mclisp::ConsCell* sym):
-      logic_error(err_prefix_ + mclisp::SymbolName(sym)) {};
+      Error(err_prefix_ + mclisp::SymbolName(sym)) {};
 };
 
 extern mclisp::ConsCell* g_init_env;

@@ -5,27 +5,27 @@
 #include <list>
 #include <map>
 #include <set>
-#include <stdexcept>
 #include <string>
 
 #include "cons.h"
+#include "error.h"
 #include "lexer.h"
 #include "utils.h"
 
 namespace mclisp
 {
 
-class ReadError: public std::logic_error
+class ReadError: public Error
 {
   private:
     static const std::string err_prefix_;
 
   public:
     explicit ReadError(const std::string& what_arg):
-      logic_error(err_prefix_ + what_arg) {};
+      Error(err_prefix_ + what_arg) {};
 
     explicit ReadError(const char* what_arg):
-      logic_error(err_prefix_ + what_arg) {};
+      Error(err_prefix_ + what_arg) {};
 };
 
 class BadTokenError: public ReadError

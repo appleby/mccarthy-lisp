@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "cons.h"
+#include "error.h"
 #include "eval.h"
 #include "init.h"
 #include "reader.h"
@@ -30,15 +31,22 @@ int Repl::loop()
     out_ << prompt_;
     oss.str("");
     oss.clear();
-    mclisp::ConsCell *exp = reader_.Read();
-    oss << *exp;
+    try
+    {
+      mclisp::ConsCell *exp = reader_.Read();
+      oss << *exp;
 
-    if (oss.str() == "QUIT" || oss.str() == "(QUIT . NIL)")
-      // TODO implement real (quit) function.
-      break;
+      if (oss.str() == "QUIT" || oss.str() == "(QUIT . NIL)")
+        // TODO implement real (quit) function.
+        break;
 
-    mclisp::ConsCell *value = Eval(exp);
-    out_ << *value << std::endl;
+      mclisp::ConsCell *value = Eval(exp);
+      out_ << *value << std::endl;
+    }
+    catch (mclisp::Error& e)
+    {
+      out_ << e.what() << std::endl;
+    }
   }
   return 0;
 }

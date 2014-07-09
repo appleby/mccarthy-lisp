@@ -1,11 +1,11 @@
 #include <cassert>
 #include <cstddef>
 #include <cstring>
-#include <stdexcept>
 #include <sstream>
 
 #include "alloc.h"
 #include "cons.h"
+#include "error.h"
 
 namespace
 {
@@ -107,8 +107,7 @@ std::ostream& FormatListOnStream(std::ostream& os, const ConsCell& cons,
                                  bool want_open_paren=true)
 {
   if (cons.car == nullptr || cons.cdr == nullptr)
-    // TODO error handling.
-    throw std::logic_error("Attempted to print ConsCell with null car/cdr.");
+    throw Error("Attempted to print ConsCell with null car/cdr.");
 
   // TODO Handle circular list structure.
   if (want_open_paren)
@@ -236,14 +235,19 @@ bool Null(const ConsCell* c)
 
 ConsCell* Car(const ConsCell* c)
 {
-  // TODO throw error.
-  assert(Null(c) || Consp(c));
+  if (!Null(c) && !Consp(c))
+    // TODO Write Listp()
+    // TODO Write TypeCheck()
+    throw Error("Argument must be a list.");
   return c == kNil ? kNil : c->car;
 }
 
 ConsCell* Cdr(const ConsCell* c)
 {
-  // TODO throw error.
+  if (!Null(c) && !Consp(c))
+    // TODO Write Listp
+    // TODO Write TypeCheck()
+    throw Error("Argument must be a list.");
   assert(Null(c) || Consp(c));
   return c == kNil ? kNil : c->cdr;
 }
@@ -275,12 +279,12 @@ ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
     return nullptr;
 
   if (!Consp(alist))
-    // TODO Throw better error.
-    throw std::logic_error("Attempt to call Assoc on non-cons.");
+    // TODO TypeCheck
+    throw Error("Attempt to call Assoc on non-cons.");
 
   if (!Consp(Car(alist)))
-    // TODO Throw better error.
-    throw std::logic_error("Bad Alist structure.");
+    // TODO TypeCheck
+    throw Error("Bad Alist structure.");
 
   if (Eq(k, Caar(alist)))
     // McCarthy's assoc expects the sublists to be proper lists, not dotted
@@ -296,12 +300,12 @@ ConsCell* CopyAlist(const ConsCell* alist)
     return kNil;
 
   if (!Consp(alist))
-    // TODO Throw better error.
-    throw std::logic_error("Attempt to call CopyAlist on non-cons.");
+    // TODO TypeCheck
+    throw Error("Attempt to call CopyAlist on non-cons.");
 
   if (!Consp(Car(alist)))
-    // TODO Throw better error.
-    throw std::logic_error("Bad Alist structure.");
+    // TODO TypeCheck
+    throw Error("Bad Alist structure.");
 
   return Cons(CopyList(Car(alist)), CopyAlist(Cdr(alist)));
 }
@@ -312,8 +316,8 @@ ConsCell* CopyList(const ConsCell* list)
     return kNil;
 
   if (!Consp(list))
-    // TODO Throw better error.
-    throw std::logic_error("Attempt to call CopyList on non-cons.");
+    // TODO TypeCheck
+    throw Error("Attempt to call CopyList on non-cons.");
 
   if (!Consp(Cdr(list)))
     return Cons(Car(list), Cdr(list));
@@ -334,8 +338,8 @@ ConsCell* List_(std::vector<ConsCell *> values)
 const std::string SymbolName(const ConsCell* symbol)
 {
   if (!Symbolp(symbol))
-    // TODO Throw better error.
-    throw std::logic_error("Attempt to call SymbolName on a non-symbol.");
+    // TODO TypeCheck
+    throw Error("Attempt to call SymbolName on a non-symbol.");
   return StringFromPname(Get(kPname, symbol->cdr));
 }
 

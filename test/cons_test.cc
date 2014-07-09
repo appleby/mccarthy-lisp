@@ -1,10 +1,9 @@
 #include "cons.h"
 
-#include <stdexcept>
-
 #include "gtest/gtest.h"
 
 #include "init.h"
+#include "error.h"
 #include "reader.h"
 
 using namespace mclisp;
@@ -116,8 +115,8 @@ TEST_F(ConsTest, Alist)
   EXPECT_EQ(*kNil, *Assoc(kNil, alist));
   EXPECT_EQ(nullptr, Assoc(kT, alist));
 
-  EXPECT_THROW(Assoc(foosym_, foosym_), std::logic_error);
-  EXPECT_THROW(Assoc(foosym_, foobar_), std::logic_error);
+  EXPECT_THROW(Assoc(foosym_, foosym_), Error);
+  EXPECT_THROW(Assoc(foosym_, foobar_), Error);
 }
 
 TEST_F(ConsTest, CopyAlist)
@@ -137,8 +136,8 @@ TEST_F(ConsTest, CopyAlist)
   EXPECT_EQ(nullptr, Assoc(kT, a1));
   EXPECT_EQ(*kT, *Assoc(kT, a2));
 
-  EXPECT_THROW(CopyAlist(foosym_), std::logic_error);
-  EXPECT_THROW(CopyAlist(foobar_), std::logic_error);
+  EXPECT_THROW(CopyAlist(foosym_), Error);
+  EXPECT_THROW(CopyAlist(foobar_), Error);
 }
 
 TEST_F(ConsTest, CopyList)
@@ -172,7 +171,7 @@ TEST_F(ConsTest, CopyList)
   EXPECT_EQ(*foobar_, *c);
 
   // Throws exception if passed a symbol.
-  EXPECT_THROW(CopyList(foosym_), std::logic_error);
+  EXPECT_THROW(CopyList(foosym_), Error);
 }
 
 TEST_F(ConsTest, List)
