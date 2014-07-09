@@ -1,7 +1,9 @@
-#include "lexer.h"
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
+
+#include "error.h"
+#include "lexer.h"
 
 namespace
 {
@@ -20,6 +22,24 @@ inline void RTrim(std::string& s, const std::string ws=" \n\r\t")
 
 namespace mclisp
 {
+
+std::ostream& operator<<(std::ostream& os, Token token)
+{
+  switch (token)
+  {
+    case kComma: return os << ",";
+    case kDot: return os << ".";
+    case kOpenParen: return os << "(";
+    case kCloseParen: return os << ")";
+    case kQuote: return os << "'";
+    case kNumber: return os << "Number";
+    case kSymbol: return os << "Symbol";
+    case kBadToken: return os << "BadToken";
+    case kEofToken: return os << "EOF";
+    default: throw Error("Unhandled Token: " + std::to_string(token));
+  }
+  // Not reached.
+}
 
 bool Lexer::CurrentTokenIsValidNumber()
 {

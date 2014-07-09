@@ -17,6 +17,8 @@ namespace mclisp
 // Note that we slightly relax the constraints on atomic symbols by allowing
 // both upper and lowercase letters, and multiple embedded blanks.
 
+// XXX When updating this enum, be sure to also update operator<< to handle new
+// or removed Tokens.
 enum Token
 {
   // Delimiters
@@ -36,6 +38,8 @@ enum Token
   kBadToken,
   kEofToken
 };
+
+std::ostream& operator<<(std::ostream& os, Token token);
 
 class Lexer
 {
