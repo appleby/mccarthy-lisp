@@ -56,7 +56,7 @@ class TypeError: public Error
 #define ERROR(msg) THROW(Error, (msg))
 #define TYPE_ERROR(obj, pred) THROW(TypeError, obj, pred)
 
-// Assumes obj is a pointer, not an expr generating a pointer.
+// Assumes obj does not expand to an expression with side-effects.
 #define TYPECHECK(obj, pred) \
   if (!pred(obj)) TYPE_ERROR(obj, #pred)
 
