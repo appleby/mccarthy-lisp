@@ -36,7 +36,7 @@ std::ostream& operator<<(std::ostream& os, Token token)
     case kSymbol: return os << "Symbol";
     case kBadToken: return os << "BadToken";
     case kEofToken: return os << "EOF";
-    default: throw Error("Unhandled Token: " + std::to_string(token));
+    default: ERROR("Unhandled Token: " + std::to_string(token));
   }
   // Not reached.
 }

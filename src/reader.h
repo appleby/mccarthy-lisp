@@ -17,30 +17,43 @@ namespace mclisp
 
 class ReadError: public Error
 {
-  private:
-    static const std::string err_prefix_;
-
   public:
-    explicit ReadError(const std::string& what_arg):
-      Error(err_prefix_ + what_arg) {};
+    explicit ReadError(const char* file, const char* func, int line,
+                       const std::string& what_arg):
+      Error(file, func, line, what_arg) {};
 
-    explicit ReadError(const char* what_arg):
-      Error(err_prefix_ + what_arg) {};
+    explicit ReadError(const char* file, const char* func, int line,
+                       const char* what_arg):
+      Error(file, func, line, std::string(what_arg)) {};
+
+  protected:
+    virtual const char* prefix() const noexcept
+    { return "Read Error:"; }
 };
+
+#define READ_ERROR(msg) THROW(ReadError, (msg))
 
 class BadTokenError: public ReadError
 {
-  private:
-    static const std::string err_prefix_;
-
   public:
-    explicit BadTokenError(Token actual, Token expected) :
-      ReadError(err_prefix_ + "expected " + std::to_string(expected) +
-                ", but found: " + std::to_string(actual)) {};
-    explicit BadTokenError(Token actual, std::set<Token> expected) :
-      ReadError(err_prefix_ + "expected " + container_to_string<>(expected) +
-                ", but found: " + std::to_string(actual)) {};
+    explicit BadTokenError(const char* file, const char* func, int line,
+                           Token actual, Token expected):
+      ReadError(file, func, line,
+                "expected: " + std::to_string(expected)
+                + ", but found: " + std::to_string(actual)) {};
+
+    explicit BadTokenError(const char* file, const char* func, int line,
+                           Token actual, std::set<Token> expected):
+      ReadError(file, func, line,
+                + ": expected: " + container_to_string<>(expected)
+                + ", but found: " + std::to_string(actual)) {};
+
+  protected:
+    virtual const char* prefix() const noexcept
+    { return "Bad Token Error:"; }
 };
+
+#define BAD_TOKEN_ERROR(actual, expected) THROW(BadTokenError, actual, expected)
 
 class Reader
 {

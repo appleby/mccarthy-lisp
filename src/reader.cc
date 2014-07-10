@@ -20,14 +20,11 @@ std::string ToUpper(std::string s)
 namespace mclisp
 {
 
-const std::string ReadError::err_prefix_("Read Error: ");
-const std::string BadTokenError::err_prefix_("Bad Token: ");
-
 void Reader::AcceptToken(Token expected_token)
 {
   Token token = lexer_.nextToken();
   if (token != expected_token)
-    throw BadTokenError(token, expected_token);
+    BAD_TOKEN_ERROR(token, expected_token);
 }
 
 Token Reader::AcceptTokens(std::set<Token> tokens)
@@ -35,7 +32,7 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
   Token token = lexer_.nextToken();
 
   if (tokens.find(token) == tokens.end())
-    throw BadTokenError(token, tokens);
+    BAD_TOKEN_ERROR(token, tokens);
 
   return token;
 }
@@ -106,8 +103,8 @@ ConsCell* Reader::Read()
     case kOpenParen: return ReadCons();
     case kEofToken: return g_builtin_symbols["EOF"];
     default:
-      throw ReadError("Expected start of Cons or Symbol, found: "
-                      + std::to_string(token));
+      READ_ERROR("Expected start of Cons or Symbol, found: "
+                 + lexer_.current_token());
   }
 }
 

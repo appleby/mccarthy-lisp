@@ -13,13 +13,17 @@ namespace env
 
 class UnboundSymbolError: public Error
 {
-  private:
-    static const std::string err_prefix_;
-
   public:
-    explicit UnboundSymbolError(const mclisp::ConsCell* sym):
-      Error(err_prefix_ + mclisp::SymbolName(sym)) {};
+    explicit UnboundSymbolError(const char* file, const char* func, int line,
+                                const mclisp::ConsCell* sym):
+      Error(file, func, line, mclisp::SymbolName(sym)) {};
+
+  protected:
+    virtual const char* prefix() const noexcept
+    { return "Unbound Symbol Error:"; }
 };
+
+#define UNBOUND_SYMBOL_ERROR(sym) THROW(UnboundSymbolError, sym)
 
 extern mclisp::ConsCell* g_init_env;
 extern mclisp::ConsCell* g_user_env;

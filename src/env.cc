@@ -16,8 +16,6 @@ using ::mclisp::Eq;
 using ::mclisp::kNil;
 using ::mclisp::Symbolp;
 
-const std::string UnboundSymbolError::err_prefix_("Unbound Symbol: ");
-
 ConsCell* g_init_env = nullptr;
 ConsCell* g_user_env = nullptr;
 
@@ -57,7 +55,7 @@ ConsCell* Lookup(ConsCell* env, const ConsCell* sym)
   ConsCell* value = Assoc(sym, env);
 
   if (value == nullptr)
-    throw UnboundSymbolError(sym);
+    UNBOUND_SYMBOL_ERROR(sym);
 
   return value;
 }

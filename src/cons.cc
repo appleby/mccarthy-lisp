@@ -107,7 +107,7 @@ std::ostream& FormatListOnStream(std::ostream& os, const ConsCell& cons,
                                  bool want_open_paren=true)
 {
   if (cons.car == nullptr || cons.cdr == nullptr)
-    throw Error("Attempted to print ConsCell with null car/cdr.");
+    ERROR("Attempted to print ConsCell with null car/cdr.");
 
   // TODO Handle circular list structure.
   if (want_open_paren)
@@ -238,7 +238,7 @@ ConsCell* Car(const ConsCell* c)
   if (!Null(c) && !Consp(c))
     // TODO Write Listp()
     // TODO Write TypeCheck()
-    throw Error("Argument must be a list.");
+    ERROR("Argument must be a list.");
   return c == kNil ? kNil : c->car;
 }
 
@@ -247,7 +247,7 @@ ConsCell* Cdr(const ConsCell* c)
   if (!Null(c) && !Consp(c))
     // TODO Write Listp
     // TODO Write TypeCheck()
-    throw Error("Argument must be a list.");
+    ERROR("Argument must be a list.");
   assert(Null(c) || Consp(c));
   return c == kNil ? kNil : c->cdr;
 }
@@ -280,11 +280,11 @@ ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
 
   if (!Consp(alist))
     // TODO TypeCheck
-    throw Error("Attempt to call Assoc on non-cons.");
+    ERROR("Attempt to call Assoc on non-cons.");
 
   if (!Consp(Car(alist)))
     // TODO TypeCheck
-    throw Error("Bad Alist structure.");
+    ERROR("Bad Alist structure.");
 
   if (Eq(k, Caar(alist)))
     // McCarthy's assoc expects the sublists to be proper lists, not dotted
@@ -301,11 +301,11 @@ ConsCell* CopyAlist(const ConsCell* alist)
 
   if (!Consp(alist))
     // TODO TypeCheck
-    throw Error("Attempt to call CopyAlist on non-cons.");
+    ERROR("Attempt to call CopyAlist on non-cons.");
 
   if (!Consp(Car(alist)))
     // TODO TypeCheck
-    throw Error("Bad Alist structure.");
+    ERROR("Bad Alist structure.");
 
   return Cons(CopyList(Car(alist)), CopyAlist(Cdr(alist)));
 }
@@ -317,7 +317,7 @@ ConsCell* CopyList(const ConsCell* list)
 
   if (!Consp(list))
     // TODO TypeCheck
-    throw Error("Attempt to call CopyList on non-cons.");
+    ERROR("Attempt to call CopyList on non-cons.");
 
   if (!Consp(Cdr(list)))
     return Cons(Car(list), Cdr(list));
@@ -339,7 +339,7 @@ const std::string SymbolName(const ConsCell* symbol)
 {
   if (!Symbolp(symbol))
     // TODO TypeCheck
-    throw Error("Attempt to call SymbolName on a non-symbol.");
+    ERROR("Attempt to call SymbolName on a non-symbol.");
   return StringFromPname(Get(kPname, symbol->cdr));
 }
 
