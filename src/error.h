@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "cons.h"
+
 namespace mclisp
 {
 
@@ -29,10 +31,34 @@ class Error: public std::logic_error
     int line_;
 };
 
+class TypeError: public Error
+{
+  public:
+    explicit TypeError(const char* file, const char* func, int line,
+                       const ConsCell* object, const std::string& should_satisfy):
+      Error(file, func, line, ""), object_(object),
+      should_satisfy_(should_satisfy) {};
+
+    virtual const char* what() const noexcept;
+
+  protected:
+    virtual const char* prefix() const noexcept
+    { return "TypeError:"; }
+
+  private:
+    const ConsCell* object_;
+    const std::string should_satisfy_;
+};
+
 #define THROW(etype, args...) \
   throw etype(__FILE__, __FUNCTION__, __LINE__, args)
 
 #define ERROR(msg) THROW(Error, (msg))
+#define TYPE_ERROR(obj, pred) THROW(TypeError, obj, pred)
+
+// Assumes obj is a pointer, not an expr generating a pointer.
+#define TYPECHECK(obj, pred) \
+  if (!pred(obj)) TYPE_ERROR(obj, #pred)
 
 } // mclisp
 

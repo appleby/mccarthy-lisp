@@ -79,6 +79,7 @@ TEST_F(ConsTest, Car)
   EXPECT_EQ(*foosym_, *Car(foobar_));
   EXPECT_EQ(*barsym_, *Car(barfoo_));
   EXPECT_EQ(*foobar_, *Car(foobarbarfoo_));
+  EXPECT_EQ(*kNil, *Car(kNil));
 }
 
 TEST_F(ConsTest, Cdr)
@@ -86,6 +87,7 @@ TEST_F(ConsTest, Cdr)
   EXPECT_EQ(*foosym_, *Cdr(barfoo_));
   EXPECT_EQ(*barsym_, *Cdr(foobar_));
   EXPECT_EQ(*barfoo_, *Cdr(foobarbarfoo_));
+  EXPECT_EQ(*kNil, *Cdr(kNil));
 }
 
 TEST_F(ConsTest, Caar)
@@ -101,6 +103,16 @@ TEST_F(ConsTest, Cadr)
 TEST_F(ConsTest, Cadar)
 {
   EXPECT_EQ(*barsym_, *Cadar(Cons(foobarbarfoo_, kNil)));
+}
+
+TEST_F(ConsTest, CarRequiresListp)
+{
+  EXPECT_THROW(Car(foosym_), TypeError);
+}
+
+TEST_F(ConsTest, CdrRequiresListp)
+{
+  EXPECT_THROW(Cdr(foosym_), TypeError);
 }
 
 TEST_F(ConsTest, Alist)

@@ -223,6 +223,11 @@ bool Consp(const ConsCell* c)
   return !Atom(c);
 }
 
+bool Listp(const ConsCell* c)
+{
+  return Null(c) || Consp(c);
+}
+
 bool Eq(const ConsCell* a, const ConsCell* b)
 {
   return a == b;
@@ -235,20 +240,13 @@ bool Null(const ConsCell* c)
 
 ConsCell* Car(const ConsCell* c)
 {
-  if (!Null(c) && !Consp(c))
-    // TODO Write Listp()
-    // TODO Write TypeCheck()
-    ERROR("Argument must be a list.");
+  TYPECHECK(c, Listp);
   return c == kNil ? kNil : c->car;
 }
 
 ConsCell* Cdr(const ConsCell* c)
 {
-  if (!Null(c) && !Consp(c))
-    // TODO Write Listp
-    // TODO Write TypeCheck()
-    ERROR("Argument must be a list.");
-  assert(Null(c) || Consp(c));
+  TYPECHECK(c, Listp);
   return c == kNil ? kNil : c->cdr;
 }
 
@@ -271,6 +269,8 @@ ConsCell* Cadar(const ConsCell* c)
 // x is one of the u's, then assoc [x; y] is the corresponding v.
 ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
 {
+  TYPECHECK(alist, Listp);
+
   if (Null(alist))
     // Because McCarthy's version of Assoc just returns the corresponding v, and
     // not the (u, v) pair as in Common Lisp, we need a way to distinguish "not
@@ -278,13 +278,7 @@ ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
     // indicate lookup failure.
     return nullptr;
 
-  if (!Consp(alist))
-    // TODO TypeCheck
-    ERROR("Attempt to call Assoc on non-cons.");
-
-  if (!Consp(Car(alist)))
-    // TODO TypeCheck
-    ERROR("Bad Alist structure.");
+  TYPECHECK(Car(alist), Consp);
 
   if (Eq(k, Caar(alist)))
     // McCarthy's assoc expects the sublists to be proper lists, not dotted
@@ -296,28 +290,22 @@ ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
 
 ConsCell* CopyAlist(const ConsCell* alist)
 {
+  TYPECHECK(alist, Listp);
+
   if (Null(alist))
     return kNil;
 
-  if (!Consp(alist))
-    // TODO TypeCheck
-    ERROR("Attempt to call CopyAlist on non-cons.");
-
-  if (!Consp(Car(alist)))
-    // TODO TypeCheck
-    ERROR("Bad Alist structure.");
+  TYPECHECK(Car(alist), Consp);
 
   return Cons(CopyList(Car(alist)), CopyAlist(Cdr(alist)));
 }
 
 ConsCell* CopyList(const ConsCell* list)
 {
+  TYPECHECK(list, Listp);
+
   if (Null(list))
     return kNil;
-
-  if (!Consp(list))
-    // TODO TypeCheck
-    ERROR("Attempt to call CopyList on non-cons.");
 
   if (!Consp(Cdr(list)))
     return Cons(Car(list), Cdr(list));
@@ -337,9 +325,7 @@ ConsCell* List_(std::vector<ConsCell *> values)
 
 const std::string SymbolName(const ConsCell* symbol)
 {
-  if (!Symbolp(symbol))
-    // TODO TypeCheck
-    ERROR("Attempt to call SymbolName on a non-symbol.");
+  TYPECHECK(symbol, Symbolp);
   return StringFromPname(Get(kPname, symbol->cdr));
 }
 

@@ -47,6 +47,7 @@ ConsCell* Acons(ConsCell* key, ConsCell* value, ConsCell* alist);
 bool Atom(const ConsCell* c);
 bool Symbolp(const ConsCell* c);
 bool Consp(const ConsCell* c);
+bool Listp(const ConsCell* c);
 bool Eq(const ConsCell* a, const ConsCell* b);
 bool Null(const ConsCell* c);
 
