@@ -105,6 +105,11 @@ TEST_F(ConsTest, Cadar)
   EXPECT_EQ(*barsym_, *Cadar(Cons(foobarbarfoo_, kNil)));
 }
 
+TEST_F(ConsTest, Caddr)
+{
+  EXPECT_EQ(*foosym_, *Caddr(List(barsym_, kT, foosym_)));
+}
+
 TEST_F(ConsTest, CarRequiresListp)
 {
   EXPECT_THROW(Car(foosym_), TypeError);
