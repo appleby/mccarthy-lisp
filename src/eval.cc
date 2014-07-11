@@ -1,22 +1,61 @@
 #include "eval.h"
 #include "env.h"
 
+namespace
+{
+using namespace mclisp;
+
+ConsCell *Evcon(const ConsCell *clauses, ConsCell *env)
+{
+  // TODO Might want throw something more descriptive than TypeError.
+  TYPECHECK(clauses, Listp);
+
+  if (Null(clauses))
+    return kNil;
+
+  TYPECHECK(Car(clauses), Consp);
+
+  if (*Eval(Caar(clauses), env))
+    return Eval(Cadar(clauses), env);
+
+  return Evcon(Cdr(clauses), env);
+}
+} // namespace
+
 namespace mclisp
 {
 ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
 {
+#define EQ(exp, sym) Eq(exp, g_builtin_symbols[#sym])
+
   if (Atom(exp))
     return env::Lookup(env, exp);
 
   if (Atom(Car(exp)))
   {
-    if (Eq(Car(exp), g_builtin_symbols["QUOTE"]))
+    if (EQ(Car(exp), QUOTE))
       return Cadr(exp);
 
-    if (Eq(Car(exp), g_builtin_symbols["ATOM"]))
+    if (EQ(Car(exp), ATOM))
       return FromBool(Atom(Eval(Cadr(exp), env)));
+
+    if (EQ(Car(exp), EQ))
+      return FromBool(Eq(Eval(Cadr(exp), env), Eval(Caddr(exp), env)));
+
+    if (EQ(Car(exp), COND))
+      return Evcon(Cdr(exp), env);
+
+    if (EQ(Car(exp), CAR))
+      return Car(Eval(Cadr(exp), env));
+
+    if (EQ(Car(exp), CDR))
+      return Cdr(Eval(Cadr(exp), env));
+
+    if (EQ(Car(exp), CONS))
+      return Cons(Eval(Cadr(exp), env), Eval(Caddr(exp), env));
   }
 
+#undef EQ
   return MakeSymbol("42");
 }
 
