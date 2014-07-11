@@ -6,7 +6,17 @@
 
 #include <iostream>
 
+// TODO Reduce boilerplate in these tests.
+
+namespace
+{
 using namespace mclisp;
+
+ConsCell* EvalString(const std::string& expr)
+{
+  Reader reader(expr);
+  return Eval(reader.Read());
+}
 
 TEST(EvalTest, T)
 {
@@ -87,3 +97,78 @@ TEST_P(EvalAtomTest, Atom)
   ConsCell* exp = reader.Read();
   EXPECT_EQ(*expected_, *Eval(exp));
 }
+
+TEST(EvalTest, Eq)
+{
+  EXPECT_EQ(*kT, *EvalString("(eq, t, t)"));
+  EXPECT_EQ(*kT, *EvalString("(eq, nil, nil)"));
+  EXPECT_EQ(*kT, *EvalString("(eq, 'foo, 'foo)"));
+
+  EXPECT_EQ(*kNil, *EvalString("(eq, t, nil)"));
+  EXPECT_EQ(*kNil, *EvalString("(eq, 'foo, 'bar)"));
+
+  EXPECT_EQ(*kNil, *EvalString("(eq, 'foo, '(foo))"));
+  EXPECT_EQ(*kNil, *EvalString("(eq, '(foo), '(foo))"));
+}
+
+TEST(EvalTest, Cons)
+{
+  Reader reader("(cons, 'foo, 'bar)");
+  ConsCell *foo = reader.Intern("FOO");
+  ConsCell *bar = reader.Intern("BAR");
+  ConsCell *cons = Cons(foo, bar);
+  EXPECT_EQ(*cons, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, Car)
+{
+  Reader reader("(car, '(foo, bar))");
+  ConsCell *foo = reader.Intern("FOO");
+  EXPECT_EQ(*foo, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, Cdr)
+{
+  Reader reader("(cdr, '(foo, bar))");
+  ConsCell *bar = reader.Intern("BAR");
+  ConsCell *cons = List(bar);
+  EXPECT_EQ(*cons, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, EmptyCondIsNil)
+{
+  Reader reader("(cond)");
+  EXPECT_EQ(*kNil, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, NonMatchingCondIsNil)
+{
+  Reader reader("(cond, (nil, t))");
+  EXPECT_EQ(*kNil, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, NonMatchingCondConsequentIsNotEvaled)
+{
+  Reader reader("(cond, (nil, unbound))");
+  EXPECT_EQ(*kNil, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, MatchingCond)
+{
+  Reader reader("(cond, (nil, t), (t, 'foo))");
+  ConsCell* foo = reader.Intern("FOO");
+  EXPECT_EQ(*foo, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, MatchingCondWithPredicate)
+{
+  Reader reader("(cond, (nil, t), ((atom, 'foo), 'foo))");
+  ConsCell* foo = reader.Intern("FOO");
+  EXPECT_EQ(*foo, *Eval(reader.Read()));
+}
+
+TEST(EvalTest, MalformedCondThrowsTypeError)
+{
+  EXPECT_THROW(EvalString("(cond, t)"), TypeError);
+}
+} // namespace
