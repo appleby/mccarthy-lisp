@@ -57,3 +57,33 @@ TEST(EvalTest, QuotedList)
   ConsCell* C2 = Cons(foo, C1);
   EXPECT_EQ(*C2, *Eval(exp));
 }
+
+class EvalAtomTest :
+  public ::testing::TestWithParam< std::tuple<std::string, ConsCell *> >
+{
+  protected:
+    EvalAtomTest():
+      expr_(std::get<0>(GetParam())),
+      expected_(std::get<1>(GetParam()))
+    {}
+
+    std::string expr_;
+    ConsCell *expected_;
+};
+
+using ::testing::Combine;
+using ::testing::Values;
+
+auto Symbols = Values("nil", "t", "'foo", "'foo bar", "'apple pie number 3");
+auto Lists = Values("nil", "'(foo)", "'(foo, bar)", "'(foo . bar)");
+auto Conses = Values("'(foo)", "'(foo, bar)", "'(foo . bar)");
+
+INSTANTIATE_TEST_CASE_P(SymbolsAreAtoms, EvalAtomTest, Combine(Symbols, Values(kT)));
+INSTANTIATE_TEST_CASE_P(ConsessAreNotAtoms, EvalAtomTest, Combine(Conses, Values(kNil)));
+
+TEST_P(EvalAtomTest, Atom)
+{
+  Reader reader("(atom, " + expr_ + ")");
+  ConsCell* exp = reader.Read();
+  EXPECT_EQ(*expected_, *Eval(exp));
+}
