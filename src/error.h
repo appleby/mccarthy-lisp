@@ -38,7 +38,7 @@ class TypeError: public Error
   public:
     explicit TypeError(const char* file, const char* func, int line,
                        const ConsCell* object, const std::string& should_satisfy):
-      Error(file, func, line, ""), object_(object), object_str_(ToString(object)),
+      Error(file, func, line, ""), object_str_(ToString(object)),
       should_satisfy_(should_satisfy)
     {};
 
@@ -49,7 +49,6 @@ class TypeError: public Error
     { return "TypeError:"; }
 
   private:
-    const ConsCell* object_;
     const std::string object_str_;
     const std::string should_satisfy_;
 };
