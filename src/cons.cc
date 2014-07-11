@@ -164,7 +164,9 @@ void Init()
   kPname->cdr = MakeAssociationList("PNAME");
   g_builtin_symbols.emplace("PNAME", kPname);
 
-  std::vector<const char *> builtin_names = { "ATOM", "EOF", "QUOTE" };
+  std::vector<const char *> builtin_names =
+  { "ATOM", "CAR", "CDR", "COND", "CONS", "EOF", "EQ", "LABEL", "LAMBDA",
+    "QUOTE" };
 
   for (auto it : builtin_names)
     g_builtin_symbols.emplace(it, MakeSymbol(it));
