@@ -28,17 +28,13 @@ const char* Error::what() const noexcept
 
 const char* TypeError::what() const noexcept
 {
-  // TODO don't call function that might throw.
   static char buffer[256];
   char *buf = buffer;
   size_t space = sizeof buffer - 1;
 
-  std::string objstr = ToString(object_);
-
   MAYBE_COPY(buf, space, prefix());
   MAYBE_COPY(buf, space, " '");
-  // TODO truncate objstr?
-  MAYBE_COPY(buf, space, objstr.c_str());
+  MAYBE_COPY(buf, space, object_str_.c_str());
   MAYBE_COPY(buf, space, "' does not satisfy ");
   MAYBE_COPY(buf, space, should_satisfy_.c_str());
   MAYBE_COPY(buf, space, ".");

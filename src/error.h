@@ -14,11 +14,13 @@ class Error: public std::logic_error
   public:
     explicit Error(const char* file, const char* func, int line,
                    const std::string& what_arg):
-      logic_error(what_arg), file_(file), func_(func), line_(line) {};
+      logic_error(what_arg), file_(file), func_(func), line_(line)
+    {};
 
     explicit Error(const char* file, const char* func, int line,
                    const char* what_arg):
-      Error(file, func, line, std::string(what_arg)) {};
+      Error(file, func, line, std::string(what_arg))
+    {};
 
     virtual const char* what() const noexcept;
 
@@ -36,8 +38,9 @@ class TypeError: public Error
   public:
     explicit TypeError(const char* file, const char* func, int line,
                        const ConsCell* object, const std::string& should_satisfy):
-      Error(file, func, line, ""), object_(object),
-      should_satisfy_(should_satisfy) {};
+      Error(file, func, line, ""), object_(object), object_str_(ToString(object)),
+      should_satisfy_(should_satisfy)
+    {};
 
     virtual const char* what() const noexcept;
 
@@ -47,6 +50,7 @@ class TypeError: public Error
 
   private:
     const ConsCell* object_;
+    const std::string object_str_;
     const std::string should_satisfy_;
 };
 
