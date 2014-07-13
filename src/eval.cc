@@ -20,6 +20,16 @@ ConsCell *Evcon(const ConsCell *clauses, ConsCell *env)
 
   return Evcon(Cdr(clauses), env);
 }
+
+ConsCell* Evlis(ConsCell* lst, ConsCell* env)
+{
+  TYPECHECK(lst, Listp);
+
+  if (Null(lst))
+    return kNil;
+
+  return Cons(Eval(Car(lst), env), Evlis(Cdr(lst), env));
+}
 } // namespace
 
 namespace mclisp
@@ -53,6 +63,8 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
 
     if (EQ(Car(exp), CONS))
       return Cons(Eval(Cadr(exp), env), Eval(Caddr(exp), env));
+
+    return Eval(Cons(Assoc(Car(exp), env), Evlis(Cdr(exp), env)), env);
   }
 
 #undef EQ
