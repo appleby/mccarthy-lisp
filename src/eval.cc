@@ -64,7 +64,7 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
     if (EQ(Car(exp), CONS))
       return Cons(Eval(Cadr(exp), env), Eval(Caddr(exp), env));
 
-    return Eval(Cons(Assoc(Car(exp), env), Evlis(Cdr(exp), env)), env);
+    return Eval(Cons(Assoc(Car(exp), env), Cdr(exp)), env);
   }
 
 #undef EQ
