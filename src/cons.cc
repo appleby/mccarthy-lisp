@@ -272,6 +272,11 @@ ConsCell* Caddr(const ConsCell* c)
   return Car(Cdr(Cdr(c)));
 }
 
+ConsCell* Caddar(const ConsCell* c)
+{
+  return Car(Cdr(Cdr(Car(c))));
+}
+
 // 4. assoc [x;y]. If y is a list of the form  ((u_1, v_1), ..., (u_n, v_n)) and
 // x is one of the u's, then assoc [x; y] is the corresponding v.
 ConsCell* Assoc(const ConsCell* k, const ConsCell* alist)
