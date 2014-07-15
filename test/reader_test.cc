@@ -7,7 +7,7 @@ using namespace mclisp;
 TEST(ReaderTest, DefaultCtor)
 {
   Reader reader("");
-  EXPECT_EQ(g_builtin_symbols["EOF"], reader.Read());
+  EXPECT_EQ(BUILTIN(EOF), reader.Read());
 }
 
 TEST(ReaderTest, ReadNil)
@@ -43,7 +43,7 @@ TEST(ReaderTest, ReadUpcasesSymbols)
 TEST(ReaderTest, ReadQuotedSymbol)
 {
   Reader reader("'foo");
-  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* quote = BUILTIN(QUOTE);
   ConsCell* foo = reader.Intern("foo");
   ConsCell* C1 = List(quote, foo);
   EXPECT_EQ(*C1, *reader.Read());
@@ -186,7 +186,7 @@ TEST(ReaderTest, ReadNestedLists)
 TEST(ReaderTest, ReadQuotedList)
 {
   Reader reader("'(foo, bar)");
-  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* quote = BUILTIN(QUOTE);
   ConsCell* foo = reader.Intern("foo");
   ConsCell* bar = reader.Intern("bar");
   ConsCell* C1 = List(quote, List(foo, bar));
@@ -196,7 +196,7 @@ TEST(ReaderTest, ReadQuotedList)
 TEST(ReaderTest, ReadQuotedDottedList)
 {
   Reader reader("'(foo . bar)");
-  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* quote = BUILTIN(QUOTE);
   ConsCell* foo = reader.Intern("foo");
   ConsCell* bar = reader.Intern("bar");
   ConsCell* C1 = List(quote, Cons(foo, bar));

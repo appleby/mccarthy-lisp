@@ -88,7 +88,7 @@ ConsCell* Reader::ReadSymbol()
 
 ConsCell* Reader::ReadQuotation()
 {
-  ConsCell* quote = g_builtin_symbols["QUOTE"];
+  ConsCell* quote = BUILTIN(QUOTE);
   ConsCell* sexp = Read();
   return List(quote, sexp);
 }
