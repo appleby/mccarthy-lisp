@@ -77,6 +77,9 @@ ConsCell* CopyList(const ConsCell* list);
 ConsCell* List_(std::vector<ConsCell *>);
 #define List(values...) List_({values})
 
+ConsCell* Append(const ConsCell* L1, ConsCell* L2);
+ConsCell* Pair(const ConsCell *L1, const ConsCell *L2);
+
 const std::string SymbolName(const ConsCell* symbol);
 
 } // namespace mclisp

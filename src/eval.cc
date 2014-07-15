@@ -5,29 +5,6 @@ namespace
 {
 using namespace mclisp;
 
-// TODO Move these to separate module.
-ConsCell* Append(const ConsCell* L1, ConsCell* L2)
-{
-  TYPECHECK(L1, Listp);
-  TYPECHECK(L2, Listp);
-
-  if (Null(L1))
-    return L2;
-
-  return Cons(Car(L1), Append(Cdr(L1), L2));
-}
-
-ConsCell* Pair(const ConsCell *L1, const ConsCell *L2)
-{
-  TYPECHECK(L1, Listp);
-  TYPECHECK(L2, Listp);
-
-  if (Null(L1) && Null(L2))
-    return kNil;
-
-  return Cons(List(Car(L1), Car(L2)), Pair(Cdr(L1), Cdr(L2)));
-}
-
 ConsCell *Evcon(const ConsCell *clauses, ConsCell *env)
 {
   // TODO Might want throw something more descriptive than TypeError.
@@ -99,16 +76,16 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
       return kNil;
     }
 
-    return Eval(Cons(Assoc(Car(exp), env), Cdr(exp)), env);
+    return Eval(Cons(env::Lookup(env, Car(exp)), Cdr(exp)), env);
   }
 
   if (EQ(Caar(exp), LABEL))
-    // TODO use function in env:: module to manipulate the env.
-    return Eval(Cons(Caddar(exp), Cdr(exp)), Cons(List(Cadar(exp), Car(exp)), env));
+    return Eval(Cons(Caddar(exp), Cdr(exp)),
+                env::Extend(env, Cadar(exp), Car(exp)));
 
   if (EQ(Caar(exp), LAMBDA))
-    // TODO use function in env:: module to manipulate the env.
-    return Eval(Caddar(exp), Append(Pair(Cadar(exp), Evlis(Cdr(exp), env)), env));
+    return Eval(Caddar(exp),
+                env::ExtendAll(env, Cadar(exp), Evlis(Cdr(exp), env)));
 
   return MakeSymbol("42");
 }

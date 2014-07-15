@@ -40,18 +40,30 @@ ConsCell* MakeEnv()
 
 ConsCell* Copy(const ConsCell* env)
 {
+  TYPECHECK(env, Listp);
   return CopyAlist(env);
 }
 
 ConsCell* Extend(ConsCell* env, ConsCell* sym, ConsCell* value)
 {
-  assert(Symbolp(sym));
+  TYPECHECK(env, Listp);
+  TYPECHECK(sym, Symbolp);
   return Acons(sym, value, env);
+}
+
+ConsCell* ExtendAll(ConsCell* env, ConsCell* symbols, ConsCell* values)
+{
+  // TODO unit test for ExtendAll
+  TYPECHECK(env, Listp);
+  TYPECHECK(symbols, Listp);
+  TYPECHECK(values, Listp);
+  return Append(Pair(symbols, values), env);
 }
 
 ConsCell* Lookup(ConsCell* env, const ConsCell* sym)
 {
-  assert(Symbolp(sym));
+  TYPECHECK(env, Listp);
+  TYPECHECK(sym, Symbolp);
   ConsCell* value = Assoc(sym, env);
 
   if (value == nullptr)

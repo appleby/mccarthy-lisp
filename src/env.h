@@ -34,6 +34,8 @@ mclisp::ConsCell* MakeEnv();
 mclisp::ConsCell* Copy(const mclisp::ConsCell* env);
 mclisp::ConsCell* Extend(mclisp::ConsCell* env, mclisp::ConsCell* sym,
                          mclisp::ConsCell* value);
+mclisp::ConsCell* ExtendAll(mclisp::ConsCell* env, mclisp::ConsCell* symbols,
+                            mclisp::ConsCell* values);
 mclisp::ConsCell* Lookup(mclisp::ConsCell* env, const mclisp::ConsCell* sym);
   
 } // namespace env

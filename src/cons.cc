@@ -341,6 +341,30 @@ ConsCell* List_(std::vector<ConsCell *> values)
   return L;
 }
 
+ConsCell* Append(const ConsCell* L1, ConsCell* L2)
+{
+  // TODO unit test for Append
+  TYPECHECK(L1, Listp);
+  TYPECHECK(L2, Listp);
+
+  if (Null(L1))
+    return L2;
+
+  return Cons(Car(L1), Append(Cdr(L1), L2));
+}
+
+ConsCell* Pair(const ConsCell *L1, const ConsCell *L2)
+{
+  // TODO unit test for Pair
+  TYPECHECK(L1, Listp);
+  TYPECHECK(L2, Listp);
+
+  if (Null(L1) && Null(L2))
+    return kNil;
+
+  return Acons(Car(L1), Car(L2), Pair(Cdr(L1), Cdr(L2)));
+}
+
 const std::string SymbolName(const ConsCell* symbol)
 {
   TYPECHECK(symbol, Symbolp);
