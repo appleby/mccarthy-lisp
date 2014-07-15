@@ -36,7 +36,7 @@ int Repl::loop()
       mclisp::ConsCell *exp = reader_.Read();
       oss << *exp;
 
-      if (oss.str() == "QUIT" || oss.str() == "(QUIT . NIL)")
+      if (oss.str() == "QUIT" || oss.str() == "(QUIT)")
         // TODO implement real (quit) function.
         break;
 
