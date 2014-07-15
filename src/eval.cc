@@ -60,9 +60,6 @@ namespace mclisp
 
 ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
 {
-#define BUILTIN(sym) g_builtin_symbols[#sym]
-#define EQ(exp, sym) Eq(exp, BUILTIN(sym))
-
   if (Atom(exp))
     return env::Lookup(env, exp);
 
@@ -112,9 +109,6 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
   if (EQ(Caar(exp), LAMBDA))
     // TODO use function in env:: module to manipulate the env.
     return Eval(Caddar(exp), Append(Pair(Cadar(exp), Evlis(Cdr(exp), env)), env));
-
-#undef EQ
-#undef BUILTIN
 
   return MakeSymbol("42");
 }

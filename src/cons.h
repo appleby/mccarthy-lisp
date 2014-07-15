@@ -51,6 +51,16 @@ bool Listp(const ConsCell* c);
 bool Eq(const ConsCell* a, const ConsCell* b);
 bool Null(const ConsCell* c);
 
+// Get the global builtin symbol corresponding to sym.
+#define BUILTIN(sym) mclisp::g_builtin_symbols[#sym]
+
+// Test if exp is Eq to a builtin symbol. This should probably be named
+// EQ_BUILTIN or similar, but the extra characters hurt readability. Note that
+// we don't use the BUILTIN macro for the second arg, since we don't want that
+// arg macro expanded. We need to prevent macro expansion of that arg because
+// EOF is both a mclisp symbol name and a standard C macro. 
+#define EQ(exp, sym) mclisp::Eq(exp, mclisp::g_builtin_symbols[#sym])
+
 ConsCell* Car(const ConsCell* c);
 ConsCell* Cdr(const ConsCell* c);
 ConsCell* Caar(const ConsCell* c);
