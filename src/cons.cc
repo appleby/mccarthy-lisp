@@ -165,8 +165,8 @@ void Init()
   g_builtin_symbols.emplace("PNAME", kPname);
 
   std::vector<const char *> builtin_names =
-  { "ATOM", "CAR", "CDR", "COND", "CONS", "EOF", "EQ", "LABEL", "LAMBDA",
-    "QUOTE" };
+  { "ATOM", "CAR", "CDR", "COND", "CONS", "DEFUN", "EOF", "EQ", "LABEL",
+    "LAMBDA", "QUOTE" };
 
   for (auto it : builtin_names)
     g_builtin_symbols.emplace(it, MakeSymbol(it));
@@ -270,6 +270,12 @@ ConsCell* Cadar(const ConsCell* c)
 ConsCell* Caddr(const ConsCell* c)
 {
   return Car(Cdr(Cdr(c)));
+}
+
+ConsCell* Cdddr(const ConsCell* c)
+{
+  // TODO unit tests for Cdddr
+  return Cdr(Cdr(Cdr(c)));
 }
 
 ConsCell* Caddar(const ConsCell* c)

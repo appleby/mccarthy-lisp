@@ -57,6 +57,7 @@ ConsCell* Caar(const ConsCell* c);
 ConsCell* Cadr(const ConsCell* c);
 ConsCell* Cadar(const ConsCell* c);
 ConsCell* Caddr(const ConsCell* c);
+ConsCell* Cdddr(const ConsCell* c);
 ConsCell* Caddar(const ConsCell* c);
 
 ConsCell* Assoc(const ConsCell* k, const ConsCell* alist);

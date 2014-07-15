@@ -57,9 +57,11 @@ ConsCell* Evlis(ConsCell* lst, ConsCell* env)
 
 namespace mclisp
 {
+
 ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
 {
-#define EQ(exp, sym) Eq(exp, g_builtin_symbols[#sym])
+#define BUILTIN(sym) g_builtin_symbols[#sym]
+#define EQ(exp, sym) Eq(exp, BUILTIN(sym))
 
   if (Atom(exp))
     return env::Lookup(env, exp);
@@ -87,16 +89,33 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
     if (EQ(Car(exp), CONS))
       return Cons(Eval(Cadr(exp), env), Eval(Caddr(exp), env));
 
+    if (EQ(Car(exp), DEFUN))
+    {
+      // TODO fix defun.
+      //
+      // This won't work if the defun isn't a toplevel form.
+      ConsCell *fname = Cadr(exp);
+      ConsCell *formals = Caddr(exp);
+      ConsCell *body = Cdddr(exp);
+      ConsCell *lambda = Append(List(BUILTIN(LAMBDA), formals), body);
+      env::g_user_env = env::Extend(env::g_user_env, fname, lambda);
+      return kNil;
+    }
+
     return Eval(Cons(Assoc(Car(exp), env), Cdr(exp)), env);
   }
 
   if (EQ(Caar(exp), LABEL))
+    // TODO use function in env:: module to manipulate the env.
     return Eval(Cons(Caddar(exp), Cdr(exp)), Cons(List(Cadar(exp), Car(exp)), env));
 
   if (EQ(Caar(exp), LAMBDA))
+    // TODO use function in env:: module to manipulate the env.
     return Eval(Caddar(exp), Append(Pair(Cadar(exp), Evlis(Cdr(exp), env)), env));
 
 #undef EQ
+#undef BUILTIN
+
   return MakeSymbol("42");
 }
 
