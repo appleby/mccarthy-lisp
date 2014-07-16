@@ -2,8 +2,6 @@
 #define READER_H_
 
 #include <istream>
-#include <list>
-#include <map>
 #include <set>
 #include <string>
 
@@ -60,14 +58,13 @@ class Reader
   private:
     bool initialized_;
     Lexer lexer_;
-    std::map<std::string, ConsCell *> symbols_;
 
     void AcceptToken(Token token);
     Token AcceptTokens(std::set<Token> tokens);
     ConsCell* ReadCons();
     ConsCell* ReadSymbol();
     ConsCell* ReadQuotation();
-    void Init();  // Intern NIL and T.
+    void Init();
 
   public:
     explicit Reader(std::istream& in=std::cin) : initialized_(false), lexer_(in)

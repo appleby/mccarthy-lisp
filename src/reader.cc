@@ -1,12 +1,15 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdarg>
+#include <map>
 
 #include "reader.h"
 #include "init.h"
 
 namespace
 {
+
+std::map<std::string, mclisp::ConsCell *> g_interned_symbols;
 
 // The parameter is mutated, and therefore must be passed by value.
 std::string ToUpper(std::string s)
@@ -56,7 +59,7 @@ ConsCell* Reader::Intern(const std::string& name)
 
 ConsCell* Reader::Intern(ConsCell* symbol)
 {
-  auto pair = symbols_.emplace(SymbolName(symbol), symbol);
+  auto pair = g_interned_symbols.emplace(SymbolName(symbol), symbol);
   return pair.first->second;
 }
 
