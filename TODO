@@ -1,0 +1,9 @@
+* Add ability to load files.
+* Add princ.
+* Write missing unit tests.
+* Write some tests in lisp.
+* Better error messages for Read errors.
+* Flush input on Read error.
+* Cleanup TODOs
+* Allow () for nil.
+* Allow symbol as lambda-list to bind all args as a list.
