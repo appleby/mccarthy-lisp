@@ -55,8 +55,8 @@ class Lexer
     bool CurrentTokenIsValidSymbol();
 
   public:
-    explicit Lexer(std::istream& in=std::cin) : in_(in) {};
-    explicit Lexer(const std::string& in) : ss_(in), in_(ss_) {};
+    explicit Lexer(std::istream& in=std::cin) : in_(in) {}
+    explicit Lexer(const std::string& in) : ss_(in), in_(ss_) {}
 
     Token nextToken();
 
