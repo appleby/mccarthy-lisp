@@ -23,12 +23,6 @@
                      (t, nil))),
           (t, nil)))
 
-(defun, and3, (x, y, z),
-   (and, x, (and, y, z)))
-
-(defun, and4, (w, x, y, z),
-   (and, w, (and3, x, y, z)))
-
 (defun, equal, (x, y),
    (cond, ((and, (atom, x), (atom, y)), (eq, x, y)),
           ((and, (not, (atom, x)), (not, (atom, y))),
