@@ -9,6 +9,13 @@
 namespace
 {
 
+bool ShouldQuit(mclisp::ConsCell *exp)
+{
+  std::ostringstream oss;
+  oss << *exp;
+  return EQ(exp, EOF) || oss.str() == "QUIT" || oss.str() == "(QUIT)";
+}
+
 class Repl
 {
   std::istream& in_;
@@ -25,19 +32,14 @@ class Repl
 
 int Repl::loop()
 {
-  std::ostringstream oss;
   while (true)
   {
     out_ << prompt_;
-    oss.str("");
-    oss.clear();
     try
     {
       mclisp::ConsCell *exp = reader_.Read();
-      oss << *exp;
 
-      if (EQ(exp, EOF) || oss.str() == "QUIT" || oss.str() == "(QUIT)")
-        // TODO implement real (quit) function.
+      if (ShouldQuit(exp))
         break;
 
       mclisp::ConsCell *value = Eval(exp);
