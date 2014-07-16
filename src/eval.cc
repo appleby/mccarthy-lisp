@@ -100,7 +100,7 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
       ConsCell *body = Cdddr(exp);
       ConsCell *lambda = Append(List(BUILTIN(LAMBDA), formals), body);
       env::g_user_env = env::Extend(env::g_user_env, fname, lambda);
-      return kNil;
+      return fname;
     }
 
     return Eval(Cons(env::Lookup(env, Car(exp)), Cdr(exp)), env);
