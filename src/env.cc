@@ -53,7 +53,6 @@ ConsCell* Extend(ConsCell* env, ConsCell* sym, ConsCell* value)
 
 ConsCell* ExtendAll(ConsCell* env, ConsCell* symbols, ConsCell* values)
 {
-  // TODO unit test for ExtendAll
   TYPECHECK(env, Listp);
   TYPECHECK(symbols, Listp);
   TYPECHECK(values, Listp);

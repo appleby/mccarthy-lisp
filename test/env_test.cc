@@ -47,6 +47,20 @@ TEST_F(EnvTest, GlobalUserEnv)
   EXPECT_THROW(env::Lookup(env::g_user_env, foosym_), env::UnboundSymbolError);
 }
 
+TEST_F(EnvTest, Copy)
+{
+  env_ = env::Copy(env::g_user_env);
+  env_ = env::Extend(env_, foosym_, kT);
+
+  EXPECT_EQ(*kNil, *env::Lookup(env_, kNil));
+  EXPECT_EQ(*kT, *env::Lookup(env_, kT));
+  EXPECT_EQ(*kT, *env::Lookup(env_, foosym_));
+
+  EXPECT_EQ(*kNil, *env::Lookup(env::g_user_env, kNil));
+  EXPECT_EQ(*kT, *env::Lookup(env::g_user_env, kT));
+  EXPECT_THROW(env::Lookup(env::g_user_env, foosym_), env::UnboundSymbolError);
+}
+
 TEST_F(EnvTest, Extend)
 {
   env_ = env::Extend(env_, foosym_, kT);
@@ -76,16 +90,11 @@ TEST_F(EnvTest, ManyBindings)
     EXPECT_EQ(*si, *env::Lookup(env_, si));
 }
 
-TEST_F(EnvTest, Copy)
+TEST_F(EnvTest, ExtendAll)
 {
-  env_ = env::Copy(env::g_user_env);
-  env_ = env::Extend(env_, foosym_, kT);
-
-  EXPECT_EQ(*kNil, *env::Lookup(env_, kNil));
-  EXPECT_EQ(*kT, *env::Lookup(env_, kT));
+  ConsCell *newsym = MakeSymbol("NEWSYM");
+  env_ = env::ExtendAll(env_, List(foosym_, barsym_, newsym), List(kT, kNil, foosym_));
   EXPECT_EQ(*kT, *env::Lookup(env_, foosym_));
-
-  EXPECT_EQ(*kNil, *env::Lookup(env::g_user_env, kNil));
-  EXPECT_EQ(*kT, *env::Lookup(env::g_user_env, kT));
-  EXPECT_THROW(env::Lookup(env::g_user_env, foosym_), env::UnboundSymbolError);
+  EXPECT_EQ(*kNil, *env::Lookup(env_, barsym_));
+  EXPECT_EQ(*foosym_, *env::Lookup(env_, newsym));
 }
