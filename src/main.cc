@@ -19,7 +19,7 @@ class Repl
   mclisp::Reader reader_;
 
   public:
-    explicit Repl(std::istream& in=std::cin, std::ostream& out=std::cout):
+    explicit Repl(std::istream& in=std::cin, std::ostream& out=std::cerr):
       in_(in), out_(out), reader_(in_) {};
 
     int loop();
