@@ -72,19 +72,3 @@
 (defun, sublis, (x, y),
    (cond, ((atom, y), (sub2, x, y)),
           (t, (cons, (sublis, x, (car, y)), (sublis, x, (cdr, y))))))
-
-(ff, '((a . b) . c))
-(subst, 'x, 'y, '(x, y, z))
-(equal, 'x, 'x)
-(equal, 'x, 'y)
-(equal, '((x, y), x), '((x, y), x))
-(equal, '((x, y), x), '((x, y), y))
-(null, nil)
-(null, 'x)
-(append, '(x, y, z), '(x))
-(among, 'x, '(y, z, x))
-(among, 'x, '(y, z))
-(pair, '(x, y, z), '(x, y, z))
-(assoc, 'x, '((a, b), (c, d), (x, y)))
-(assoc, 'z, '((a, b), (c, d), (x, y)))
-(sublis, '((x, (a, b)), (y, (b, c))), '(a, x . y))
