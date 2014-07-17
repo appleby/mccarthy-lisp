@@ -37,8 +37,6 @@ extern ConsCell* kNil;
 extern ConsCell* kT;
 extern std::map<std::string, ConsCell *> g_builtin_symbols;
 
-void HackToFixNil();
-
 ConsCell* FromBool(bool pred);
 ConsCell* MakeSymbol(const std::string& name);
 ConsCell* Cons(ConsCell* car, ConsCell* cdr);

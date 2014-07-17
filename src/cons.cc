@@ -274,7 +274,6 @@ ConsCell* Caddr(const ConsCell* c)
 
 ConsCell* Cdddr(const ConsCell* c)
 {
-  // TODO unit tests for Cdddr
   return Cdr(Cdr(Cdr(c)));
 }
 
@@ -343,7 +342,6 @@ ConsCell* List_(std::vector<ConsCell *> values)
 
 ConsCell* Append(const ConsCell* L1, ConsCell* L2)
 {
-  // TODO unit test for Append
   TYPECHECK(L1, Listp);
   TYPECHECK(L2, Listp);
 
@@ -355,12 +353,15 @@ ConsCell* Append(const ConsCell* L1, ConsCell* L2)
 
 ConsCell* Pair(const ConsCell *L1, const ConsCell *L2)
 {
-  // TODO unit test for Pair
   TYPECHECK(L1, Listp);
   TYPECHECK(L2, Listp);
 
   if (Null(L1) && Null(L2))
     return kNil;
+
+  if (Null(L1) || Null(L2))
+    // TODO Throw ArgumentError
+    ERROR("Pair: The lists L1 and L2 must be the same length.");
 
   return Acons(Car(L1), Car(L2), Pair(Cdr(L1), Cdr(L2)));
 }

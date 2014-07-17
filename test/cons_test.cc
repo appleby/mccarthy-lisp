@@ -50,6 +50,14 @@ TEST_F(ConsTest, Consp)
   EXPECT_FALSE(Consp(foosym_));
 }
 
+TEST_F(ConsTest, Listp)
+{
+  EXPECT_TRUE(Listp(kNil));
+  EXPECT_TRUE(Listp(foobar_));
+  EXPECT_TRUE(Listp(Cons(foosym_, kNil)));
+  EXPECT_FALSE(Listp(foosym_));
+}
+
 TEST_F(ConsTest, Eq)
 {
   EXPECT_TRUE(Eq(kT, kT));
@@ -108,6 +116,11 @@ TEST_F(ConsTest, Cadar)
 TEST_F(ConsTest, Caddr)
 {
   EXPECT_EQ(*foosym_, *Caddr(List(barsym_, kT, foosym_)));
+}
+
+TEST_F(ConsTest, Cdddr)
+{
+  EXPECT_EQ(*List(foosym_), *Cdddr(List(kT, barsym_, kT, foosym_)));
 }
 
 TEST_F(ConsTest, Caddar)
@@ -209,6 +222,44 @@ TEST_F(ConsTest, List)
   L1 = List(foosym_, barsym_);
   L2 = Cons(foosym_, Cons(barsym_, kNil));
   EXPECT_EQ(*L2, *L1);
+}
+
+TEST_F(ConsTest, Append)
+{
+  ConsCell *L1 = List(foosym_, barsym_);
+  ConsCell *L2 = List(barsym_, foosym_);
+
+  EXPECT_EQ(*kNil, *Append(kNil, kNil));
+  EXPECT_EQ(*L1, *Append(L1, kNil));
+  EXPECT_EQ(*L2, *Append(kNil, L2));
+  EXPECT_EQ(*List(foosym_, barsym_, barsym_, foosym_), *Append(L1, L2));
+
+  EXPECT_THROW(Append(foosym_, L2), TypeError);
+  EXPECT_THROW(Append(L1, barsym_), TypeError);
+}
+
+TEST_F(ConsTest, Pair)
+{
+  EXPECT_EQ(*kNil, *Pair(kNil, kNil));
+
+  ConsCell *L1 = List(foosym_);
+  ConsCell *L2 = List(barsym_);
+  ConsCell *expect = Acons(foosym_, barsym_, kNil);
+  EXPECT_EQ(*expect, *Pair(L1, L2));
+
+  L1 = List(foosym_, barsym_);
+  L2 = List(barsym_, foosym_);
+  expect = Acons(foosym_, barsym_, Acons(barsym_, foosym_, kNil));
+  EXPECT_EQ(*expect, *Pair(L1, L2));
+
+  EXPECT_THROW(Pair(foosym_, L2), TypeError);
+  EXPECT_THROW(Pair(L1, barsym_), TypeError);
+
+  // Both lists must be proper lists.
+  EXPECT_THROW(Pair(L1, foobar_), TypeError);
+
+  // Lists must be the same length.
+  EXPECT_THROW(Pair(L1, List(foosym_)), Error);
 }
 
 TEST_F(ConsTest, SymbolName)
