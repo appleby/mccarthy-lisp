@@ -166,7 +166,7 @@ void Init()
 
   std::vector<const char *> builtin_names =
   { "ATOM", "CAR", "CDR", "COND", "CONS", "DEFUN", "EOF", "EQ", "LABEL",
-    "LAMBDA", "LOAD", "QUOTE" };
+    "LAMBDA", "LOAD", "PRINT", "QUOTE" };
 
   for (auto it : builtin_names)
     g_builtin_symbols.emplace(it, MakeSymbol(it));

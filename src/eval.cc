@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "eval.h"
 #include "env.h"
 #include "load.h"
@@ -113,6 +115,13 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
       // LOAD only makes sense as a toplevel form.
       LoadFile(ToLower(SymbolName(Eval(Cadr(exp), env))) + ".lisp");
       return kNil;
+    }
+
+    if (EQ(Car(exp), PRINT))
+    {
+      ConsCell *v = Eval(Cadr(exp), env);
+      std::cerr << *v << std::endl;
+      return v;
     }
 
     return Eval(Cons(env::Lookup(env, Car(exp)), Cdr(exp)), env);
