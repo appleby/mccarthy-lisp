@@ -1,22 +1,13 @@
-#include <algorithm>
-#include <cctype>
-#include <cstdarg>
 #include <map>
 
 #include "reader.h"
 #include "init.h"
+#include "utils.h"
 
 namespace
 {
 
 std::map<std::string, mclisp::ConsCell *> g_interned_symbols;
-
-// The parameter is mutated, and therefore must be passed by value.
-std::string ToUpper(std::string s)
-{
-  std::transform(s.begin(), s.end(), s.begin(), ::toupper);
-  return s;
-}
 
 } // namespace
 

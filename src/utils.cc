@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cctype>
 #include <sstream>
 
 #include "cons.h"
@@ -23,6 +25,18 @@ bool ShouldQuit(ConsCell *exp)
   std::ostringstream oss;
   oss << *exp;
   return EQ(exp, EOF) || oss.str() == "QUIT" || oss.str() == "(QUIT)";
+}
+
+std::string ToUpper(std::string s)
+{
+  std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+  return s;
+}
+
+std::string ToLower(std::string s)
+{
+  std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+  return s;
 }
 
 } // namespace mclisp

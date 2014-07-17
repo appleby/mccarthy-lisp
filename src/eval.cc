@@ -1,5 +1,7 @@
 #include "eval.h"
 #include "env.h"
+#include "load.h"
+#include "utils.h"
 
 namespace
 {
@@ -101,6 +103,16 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
       ConsCell *lambda = Append(List(BUILTIN(LAMBDA), formals), body);
       env::g_user_env = env::Extend(env::g_user_env, fname, lambda);
       return fname;
+    }
+
+    if (EQ(Car(exp), LOAD))
+    {
+      // TODO Update lexer to allow reasonable filenames for LOAD?
+      //
+      // For the same reasons as mentioned in the above comment about DEFUN,
+      // LOAD only makes sense as a toplevel form.
+      LoadFile(ToLower(SymbolName(Eval(Cadr(exp), env))) + ".lisp");
+      return kNil;
     }
 
     return Eval(Cons(env::Lookup(env, Car(exp)), Cdr(exp)), env);

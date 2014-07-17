@@ -1,4 +1,3 @@
-* Add ability to load files.
 * Add princ.
 * Write missing unit tests.
 * Write some tests in lisp.
@@ -8,3 +7,4 @@
 * Allow comments.
 * Allow () for nil.
 * Allow symbol as lambda-list to bind all args as a list.
+* Accept filenames as command line args.
