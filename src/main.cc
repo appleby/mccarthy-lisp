@@ -4,17 +4,12 @@
 #include "error.h"
 #include "eval.h"
 #include "init.h"
+#include "load.h"
 #include "reader.h"
+#include "utils.h"
 
 namespace
 {
-
-bool ShouldQuit(mclisp::ConsCell *exp)
-{
-  std::ostringstream oss;
-  oss << *exp;
-  return EQ(exp, EOF) || oss.str() == "QUIT" || oss.str() == "(QUIT)";
-}
 
 class Repl
 {
@@ -39,7 +34,7 @@ int Repl::loop()
     {
       mclisp::ConsCell *exp = reader_.Read();
 
-      if (ShouldQuit(exp))
+      if (mclisp::ShouldQuit(exp))
         break;
 
       mclisp::ConsCell *value = Eval(exp);
@@ -58,9 +53,9 @@ int Repl::loop()
 
 int main()
 {
-  // InitLisp must be called before the Reader object is initialized (which
-  // happens in the Repl constructor).
+  // InitLisp must be called before the Reader object is initialized.
   mclisp::InitLisp();
+  mclisp::LoadFile("mclisp.lisp");
 
   Repl repl;
   return repl.loop();

@@ -1,5 +1,6 @@
 #include <sstream>
 
+#include "cons.h"
 #include "utils.h"
 
 namespace mclisp
@@ -15,5 +16,13 @@ std::string container_to_string(T items)
 }
 
 template std::string container_to_string<>(std::set<Token> items);
+
+// TODO Figure out where to put ShouldQuit
+bool ShouldQuit(ConsCell *exp)
+{
+  std::ostringstream oss;
+  oss << *exp;
+  return EQ(exp, EOF) || oss.str() == "QUIT" || oss.str() == "(QUIT)";
+}
 
 } // namespace mclisp

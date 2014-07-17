@@ -13,6 +13,9 @@ std::string container_to_string(T items);
 
 extern template std::string container_to_string<>(std::set<Token> items);
 
+struct ConsCell;
+bool ShouldQuit(ConsCell *exp);
+
 } // namespace mclisp
 
 #endif // UTILS_H_
