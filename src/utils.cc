@@ -9,7 +9,7 @@ namespace mclisp
 {
 
 template<typename T>
-std::string container_to_string(T items)
+std::string ContainerToString(T items)
 {
   std::ostringstream oss;
   for(auto item : items)
@@ -17,7 +17,7 @@ std::string container_to_string(T items)
   return oss.str();
 }
 
-template std::string container_to_string<>(std::set<Token> items);
+template std::string ContainerToString<>(std::set<Token> items);
 
 // TODO Figure out where to put ShouldQuit
 bool ShouldQuit(ConsCell *exp)

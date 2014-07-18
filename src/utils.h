@@ -4,14 +4,15 @@
 #include <string>
 #include <set>
 
+#include "cons.h"
 #include "lexer.h"
 
 namespace mclisp {
 
 template<typename T>
-std::string container_to_string(T items);
+std::string ContainerToString(T items);
 
-extern template std::string container_to_string<>(std::set<Token> items);
+extern template std::string ContainerToString<>(std::set<Token> items);
 
 struct ConsCell;
 bool ShouldQuit(ConsCell *exp);

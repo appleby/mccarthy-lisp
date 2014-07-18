@@ -43,7 +43,7 @@ class BadTokenError: public ReadError
     explicit BadTokenError(const char* file, const char* func, int line,
                            Token actual, std::set<Token> expected):
       ReadError(file, func, line,
-                + ": expected: " + container_to_string<>(expected)
+                + ": expected: " + ContainerToString<>(expected)
                 + ", but found: " + std::to_string(actual)) {};
 
   protected:
