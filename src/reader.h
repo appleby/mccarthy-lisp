@@ -56,7 +56,6 @@ class BadTokenError: public ReadError
 class Reader
 {
   private:
-    bool initialized_;
     Lexer lexer_;
 
     void AcceptToken(Token token);
@@ -64,18 +63,21 @@ class Reader
     ConsCell* ReadCons();
     ConsCell* ReadSymbol();
     ConsCell* ReadQuotation();
-    void Init();
 
   public:
-    explicit Reader(std::istream& in=std::cin) : initialized_(false), lexer_(in)
-    { Init(); };
-    explicit Reader(const std::string& in) : initialized_(false), lexer_(in)
-    { Init(); };
+    explicit Reader(std::istream& in=std::cin) : lexer_(in) {}
+    explicit Reader(const std::string& in) : lexer_(in) {}
 
-    ConsCell* Intern(const std::string& name);
-    ConsCell* Intern(ConsCell* symbol);
     ConsCell* Read();
 };
 
+namespace reader
+{
+
+void Init();
+ConsCell* Intern(ConsCell* symbol);
+ConsCell* Intern(const std::string& name);
+
+} // namespace reader
 } // namespace mclisp
 #endif // READER_H_

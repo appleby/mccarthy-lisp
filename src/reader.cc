@@ -14,6 +14,33 @@ std::map<std::string, mclisp::ConsCell *> g_interned_symbols;
 namespace mclisp
 {
 
+namespace reader
+{
+void Init()
+{
+  static bool initialized = false;
+  
+  if (initialized)
+    return;
+
+  for (auto it : g_builtin_symbols)
+    Intern(it.second);
+
+  initialized = true;
+}
+
+ConsCell* Intern(ConsCell* symbol)
+{
+  auto pair = g_interned_symbols.emplace(SymbolName(symbol), symbol);
+  return pair.first->second;
+}
+
+ConsCell* Intern(const std::string& name)
+{
+  return Intern(MakeSymbol(ToUpper(name)));
+}
+} // namespace reader
+
 void Reader::AcceptToken(Token expected_token)
 {
   Token token = lexer_.nextToken();
@@ -29,29 +56,6 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
     BAD_TOKEN_ERROR(token, tokens);
 
   return token;
-}
-
-void Reader::Init()
-{
-  
-  if (initialized_)
-    return;
-
-  for (auto it : g_builtin_symbols)
-    Intern(it.second);
-
-  initialized_ = true;
-}
-
-ConsCell* Reader::Intern(const std::string& name)
-{
-  return Intern(MakeSymbol(ToUpper(name)));
-}
-
-ConsCell* Reader::Intern(ConsCell* symbol)
-{
-  auto pair = g_interned_symbols.emplace(SymbolName(symbol), symbol);
-  return pair.first->second;
 }
 
 ConsCell* Reader::ReadCons()
@@ -77,7 +81,7 @@ ConsCell* Reader::ReadCons()
 
 ConsCell* Reader::ReadSymbol()
 {
-  return Intern(lexer_.current_token());
+  return reader::Intern(lexer_.current_token());
 }
 
 ConsCell* Reader::ReadQuotation()

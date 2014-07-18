@@ -43,7 +43,7 @@ TEST(EvalTest, QuotedSymbol)
 {
   Reader reader("(quote, foo)");
   ConsCell* exp = reader.Read();
-  ConsCell* foo = reader.Intern("foo");
+  ConsCell* foo = reader::Intern("foo");
   EXPECT_EQ(*foo, *Eval(exp));
 }
 
@@ -51,8 +51,8 @@ TEST(EvalTest, QuotedCons)
 {
   Reader reader("(quote, (foo . bar))");
   ConsCell* exp = reader.Read();
-  ConsCell* foo = reader.Intern("foo");
-  ConsCell* bar = reader.Intern("bar");
+  ConsCell* foo = reader::Intern("foo");
+  ConsCell* bar = reader::Intern("bar");
   ConsCell* C1 = Cons(foo, bar);
   EXPECT_EQ(*C1, *Eval(exp));
 }
@@ -61,8 +61,8 @@ TEST(EvalTest, QuotedList)
 {
   Reader reader("(quote, (foo, bar))");
   ConsCell* exp = reader.Read();
-  ConsCell* foo = reader.Intern("foo");
-  ConsCell* bar = reader.Intern("bar");
+  ConsCell* foo = reader::Intern("foo");
+  ConsCell* bar = reader::Intern("bar");
   ConsCell* C1 = Cons(bar, kNil);
   ConsCell* C2 = Cons(foo, C1);
   EXPECT_EQ(*C2, *Eval(exp));
@@ -114,8 +114,8 @@ TEST(EvalTest, Eq)
 TEST(EvalTest, Cons)
 {
   Reader reader("(cons, 'foo, 'bar)");
-  ConsCell *foo = reader.Intern("FOO");
-  ConsCell *bar = reader.Intern("BAR");
+  ConsCell *foo = reader::Intern("FOO");
+  ConsCell *bar = reader::Intern("BAR");
   ConsCell *cons = Cons(foo, bar);
   EXPECT_EQ(*cons, *Eval(reader.Read()));
 }
@@ -123,14 +123,14 @@ TEST(EvalTest, Cons)
 TEST(EvalTest, Car)
 {
   Reader reader("(car, '(foo, bar))");
-  ConsCell *foo = reader.Intern("FOO");
+  ConsCell *foo = reader::Intern("FOO");
   EXPECT_EQ(*foo, *Eval(reader.Read()));
 }
 
 TEST(EvalTest, Cdr)
 {
   Reader reader("(cdr, '(foo, bar))");
-  ConsCell *bar = reader.Intern("BAR");
+  ConsCell *bar = reader::Intern("BAR");
   ConsCell *cons = List(bar);
   EXPECT_EQ(*cons, *Eval(reader.Read()));
 }
@@ -156,14 +156,14 @@ TEST(EvalTest, NonMatchingCondConsequentIsNotEvaled)
 TEST(EvalTest, MatchingCond)
 {
   Reader reader("(cond, (nil, t), (t, 'foo))");
-  ConsCell* foo = reader.Intern("FOO");
+  ConsCell* foo = reader::Intern("FOO");
   EXPECT_EQ(*foo, *Eval(reader.Read()));
 }
 
 TEST(EvalTest, MatchingCondWithPredicate)
 {
   Reader reader("(cond, (nil, t), ((atom, 'foo), 'foo))");
-  ConsCell* foo = reader.Intern("FOO");
+  ConsCell* foo = reader::Intern("FOO");
   EXPECT_EQ(*foo, *Eval(reader.Read()));
 }
 

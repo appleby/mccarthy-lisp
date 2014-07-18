@@ -2,6 +2,7 @@
 #include "alloc.h"
 #include "cons.h"
 #include "env.h"
+#include "reader.h"
 
 namespace mclisp
 {
@@ -16,6 +17,7 @@ void InitLisp()
   alloc::Init();
   cons::Init();
   env::Init();
+  reader::Init();
 
   initialized = true;
 }

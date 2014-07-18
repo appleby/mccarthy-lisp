@@ -25,26 +25,26 @@ TEST(ReaderTest, ReadT)
 TEST(ReaderTest, ReadSymbol)
 {
   Reader reader("symbol");
-  EXPECT_EQ(reader.Intern("symbol"), reader.Read());
+  EXPECT_EQ(reader::Intern("symbol"), reader.Read());
 }
 
 TEST(ReaderTest, ReadSymbolWithSpaces)
 {
   Reader reader("APPLE PIE NUMBER 3");
-  EXPECT_EQ(reader.Intern("APPLE PIE NUMBER 3"), reader.Read());
+  EXPECT_EQ(reader::Intern("APPLE PIE NUMBER 3"), reader.Read());
 }
 
 TEST(ReaderTest, ReadUpcasesSymbols)
 {
   Reader reader("uPpErCaSe");
-  EXPECT_EQ(reader.Intern("UPPERCASE"), reader.Read());
+  EXPECT_EQ(reader::Intern("UPPERCASE"), reader.Read());
 }
 
 TEST(ReaderTest, ReadQuotedSymbol)
 {
   Reader reader("'foo");
   ConsCell* quote = BUILTIN(QUOTE);
-  ConsCell* foo = reader.Intern("foo");
+  ConsCell* foo = reader::Intern("foo");
   ConsCell* C1 = List(quote, foo);
   EXPECT_EQ(*C1, *reader.Read());
 }
@@ -64,8 +64,8 @@ TEST(ReaderTest, ReadBadSymbolNoHyphens)
 TEST(ReaderTest, ReadCons)
 {
   Reader reader("(A . B)");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
   ConsCell* C1 = Cons(A, B);
   EXPECT_EQ(*C1, *reader.Read());
 }
@@ -73,10 +73,10 @@ TEST(ReaderTest, ReadCons)
 TEST(ReaderTest, ReadNestedCons)
 {
   Reader reader("((A . B) . (C . D))");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
-  ConsCell* C = reader.Intern("C");
-  ConsCell* D = reader.Intern("D");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
+  ConsCell* C = reader::Intern("C");
+  ConsCell* D = reader::Intern("D");
   ConsCell* C1 = Cons(A, B);
   ConsCell* C2 = Cons(C, D);
   ConsCell* C3 = Cons(C1, C2);
@@ -86,7 +86,7 @@ TEST(ReaderTest, ReadNestedCons)
 TEST(ReaderTest, ReadBadConsNoOpenParen)
 {
   Reader reader("A . B)");
-  ConsCell* A = reader.Intern("A");
+  ConsCell* A = reader::Intern("A");
   EXPECT_EQ(A, reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }
@@ -130,7 +130,7 @@ TEST(ReaderTest, ReadBadNestedConsNoCloseParen)
 TEST(ReaderTest, Read1ItemList)
 {
   Reader reader("(A)");
-  ConsCell* A = reader.Intern("A");
+  ConsCell* A = reader::Intern("A");
   ConsCell* C1 = Cons(A, kNil);
   EXPECT_EQ(*C1, *reader.Read());
 }
@@ -138,8 +138,8 @@ TEST(ReaderTest, Read1ItemList)
 TEST(ReaderTest, Read2ItemList)
 {
   Reader reader("(A, B)");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
   ConsCell* C1 = Cons(B, kNil);
   ConsCell* C2 = Cons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
@@ -148,9 +148,9 @@ TEST(ReaderTest, Read2ItemList)
 TEST(ReaderTest, Read3ItemList)
 {
   Reader reader("(A, B, C)");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
-  ConsCell* C = reader.Intern("C");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
+  ConsCell* C = reader::Intern("C");
   ConsCell* C1 = Cons(C, kNil);
   ConsCell* C2 = Cons(B, C1);
   ConsCell* C3 = Cons(A, C2);
@@ -160,9 +160,9 @@ TEST(ReaderTest, Read3ItemList)
 TEST(ReaderTest, ReadDottedList)
 {
   Reader reader("(A, B . C)");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
-  ConsCell* C = reader.Intern("C");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
+  ConsCell* C = reader::Intern("C");
   ConsCell* C1 = Cons(B, C);
   ConsCell* C2 = Cons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());
@@ -171,10 +171,10 @@ TEST(ReaderTest, ReadDottedList)
 TEST(ReaderTest, ReadNestedLists)
 {
   Reader reader("((A . B), (C, D))");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
-  ConsCell* C = reader.Intern("C");
-  ConsCell* D = reader.Intern("D");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
+  ConsCell* C = reader::Intern("C");
+  ConsCell* D = reader::Intern("D");
   ConsCell* C1 = Cons(A, B);
   ConsCell* C2 = Cons(D, kNil);
   ConsCell* C3 = Cons(C, C2);
@@ -187,8 +187,8 @@ TEST(ReaderTest, ReadQuotedList)
 {
   Reader reader("'(foo, bar)");
   ConsCell* quote = BUILTIN(QUOTE);
-  ConsCell* foo = reader.Intern("foo");
-  ConsCell* bar = reader.Intern("bar");
+  ConsCell* foo = reader::Intern("foo");
+  ConsCell* bar = reader::Intern("bar");
   ConsCell* C1 = List(quote, List(foo, bar));
   EXPECT_EQ(*C1, *reader.Read());
 }
@@ -197,8 +197,8 @@ TEST(ReaderTest, ReadQuotedDottedList)
 {
   Reader reader("'(foo . bar)");
   ConsCell* quote = BUILTIN(QUOTE);
-  ConsCell* foo = reader.Intern("foo");
-  ConsCell* bar = reader.Intern("bar");
+  ConsCell* foo = reader::Intern("foo");
+  ConsCell* bar = reader::Intern("bar");
   ConsCell* C1 = List(quote, Cons(foo, bar));
   EXPECT_EQ(*C1, *reader.Read());
 }
@@ -230,7 +230,7 @@ TEST(ReaderTest, ReadBadListNoCdr)
 TEST(ReaderTest, ReadBadListNoOpenParen)
 {
   Reader reader("A, B)");
-  ConsCell* A = reader.Intern("A");
+  ConsCell* A = reader::Intern("A");
   EXPECT_EQ(A, reader.Read());
   EXPECT_THROW(reader.Read(), ReadError);
 }
@@ -244,9 +244,9 @@ TEST(ReaderTest, ReadBadListNoCloseParen)
 TEST(ReaderTest, ReadBadNestedListNoOpenParen)
 {
   Reader reader("(A, B . C))");
-  ConsCell* A = reader.Intern("A");
-  ConsCell* B = reader.Intern("B");
-  ConsCell* C = reader.Intern("C");
+  ConsCell* A = reader::Intern("A");
+  ConsCell* B = reader::Intern("B");
+  ConsCell* C = reader::Intern("C");
   ConsCell* C1 = Cons(B, C);
   ConsCell* C2 = Cons(A, C1);
   EXPECT_EQ(*C2, *reader.Read());

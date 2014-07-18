@@ -53,7 +53,6 @@ int Repl::loop()
 
 int main()
 {
-  // InitLisp must be called before the Reader object is initialized.
   mclisp::InitLisp();
   mclisp::LoadFile("mclisp.lisp");
 
