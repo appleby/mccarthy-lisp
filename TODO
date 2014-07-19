@@ -1,4 +1,5 @@
-* Write missing unit tests.
+* Add testing base class that creates "standard objects".
+* Wrap all tests in anon namespace.
 * Write some tests in lisp.
 * Better error messages for Read errors.
 * Flush input on Read error.

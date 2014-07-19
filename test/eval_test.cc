@@ -1,9 +1,10 @@
 #include "eval.h"
 #include "reader.h"
 
+#include <iostream>
 #include <map>
+#include <sstream>
 #include <tuple>
-#include <vector>
 
 #include "gtest/gtest.h"
 
@@ -90,7 +91,28 @@ INSTANTIATE_TEST_CASE_P(
   TUP("(cond, (nil, t))", "nil"),
   TUP("(cond, (nil, unbound))", "nil"),
   TUP("(cond, (nil, t), (t, 'foo))", "foo"),
-  TUP("(cond, (nil, t), ((atom, 'foo), 'foo))", "foo")));
+  TUP("(cond, (nil, t), ((atom, 'foo), 'foo))", "foo"),
+
+  TUP("(defun, foo, nil, 'foo)", "foo"),
+  TUP("(foo)", "foo"),
+  TUP("(defun, foo, (x), x)", "foo"),
+  TUP("(foo, 'bar)", "bar"),
+
+  TUP("(load, 'loadtest)", "nil"),
+  TUP("(loadtest)", "foo"),
+
+  // Note: label shadows the binding created by defun.
+  TUP("((label, foo,"
+      "   (lambda, (x),"
+      "      (cond, ((atom, x), x),"
+      "             (t, (foo, (car, x)))))),"
+      " '((foo, bar), bar))",
+      "foo"),
+
+  TUP("((lambda, nil, 'foo))", "foo"),
+  TUP("((lambda, (x), x), 'bar)", "bar"),
+  TUP("((lambda, (x, y), (cons, x, y)), 'foo, 'bar)", "foobar")
+  ));
 #undef TUP
 
 ConsCell* EvalString(const std::string& expr)
@@ -102,6 +124,16 @@ ConsCell* EvalString(const std::string& expr)
 TEST_P(EvalTest, TestExpr)
 {
   EXPECT_EQ(*expect_, *EvalString(expr_));
+}
+
+TEST(EvalTest, Print)
+{
+  // This test is handled separately because of the need to capture std::cerr.
+  std::ostringstream oss;
+  std::streambuf* old = std::cerr.rdbuf(oss.rdbuf());
+  EvalString("(print, '(foo, bar))");
+  std::cerr.rdbuf(old);
+  EXPECT_EQ("(FOO, BAR)\n", oss.str());
 }
 
 TEST(EvalTest, MalformedCondThrowsTypeError)

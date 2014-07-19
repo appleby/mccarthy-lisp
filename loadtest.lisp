@@ -1,0 +1,2 @@
+(defun, loadtest, nil,
+   'foo)

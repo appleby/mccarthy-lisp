@@ -135,6 +135,7 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
     return Eval(Caddar(exp),
                 env::ExtendAll(env, Cadar(exp), Evlis(Cdr(exp), env)));
 
+  // TODO throw an error.
   return MakeSymbol("42");
 }
 
