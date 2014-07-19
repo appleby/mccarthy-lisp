@@ -1,31 +1,11 @@
 #include "cons.h"
-#include "init.h"
-#include "error.h"
-#include "reader.h"
-
-#include "gtest/gtest.h"
+#include "mclisp_test.h"
 
 namespace
 {
 using namespace mclisp;
 
-class ConsTest : public ::testing::Test
-{
-  protected:
-    ConsTest()
-    {
-      foosym_ = MakeSymbol("FOO");
-      barsym_ = MakeSymbol("BAR");
-      foobar_ = Cons(foosym_, barsym_);
-      barfoo_ = Cons(barsym_, foosym_);
-      foobarbarfoo_ = Cons(foobar_, barfoo_);
-    }
-    ConsCell* foosym_;
-    ConsCell* barsym_;
-    ConsCell* foobar_;
-    ConsCell* barfoo_;
-    ConsCell* foobarbarfoo_;
-};
+class ConsTest : public mclisp::testing::Test {};
 
 TEST_F(ConsTest, FromBool)
 {
@@ -35,41 +15,41 @@ TEST_F(ConsTest, FromBool)
 
 TEST_F(ConsTest, Atom)
 {
-  EXPECT_TRUE(Atom(foosym_));
+  EXPECT_TRUE(Atom(foo_));
   EXPECT_FALSE(Atom(foobar_));
 }
 
 TEST_F(ConsTest, Symbolp)
 {
-  EXPECT_TRUE(Symbolp(foosym_));
+  EXPECT_TRUE(Symbolp(foo_));
   EXPECT_FALSE(Symbolp(foobar_));
 }
 
 TEST_F(ConsTest, Consp)
 {
   EXPECT_TRUE(Consp(foobar_));
-  EXPECT_FALSE(Consp(foosym_));
+  EXPECT_FALSE(Consp(foo_));
 }
 
 TEST_F(ConsTest, Listp)
 {
   EXPECT_TRUE(Listp(kNil));
   EXPECT_TRUE(Listp(foobar_));
-  EXPECT_TRUE(Listp(Cons(foosym_, kNil)));
-  EXPECT_FALSE(Listp(foosym_));
+  EXPECT_TRUE(Listp(Cons(foo_, kNil)));
+  EXPECT_FALSE(Listp(foo_));
 }
 
 TEST_F(ConsTest, Eq)
 {
   EXPECT_TRUE(Eq(kT, kT));
   EXPECT_TRUE(Eq(kNil, kNil));
-  EXPECT_TRUE(Eq(foosym_, foosym_));
+  EXPECT_TRUE(Eq(foo_, foo_));
 
-  EXPECT_FALSE(Eq(foosym_, barsym_));
-  EXPECT_FALSE(Eq(foosym_, foobar_));
+  EXPECT_FALSE(Eq(foo_, bar_));
+  EXPECT_FALSE(Eq(foo_, foobar_));
   EXPECT_FALSE(Eq(foobar_, barfoo_));
 
-  ConsCell* foobar2 = Cons(foosym_, barsym_);
+  ConsCell* foobar2 = Cons(foo_, bar_);
   EXPECT_FALSE(Eq(foobar_, foobar2));
 }
 
@@ -78,101 +58,101 @@ TEST_F(ConsTest, Null)
   EXPECT_TRUE(Null(kNil));
 
   EXPECT_FALSE(Null(kT));
-  EXPECT_FALSE(Null(foosym_));
+  EXPECT_FALSE(Null(foo_));
   EXPECT_FALSE(Null(foobar_));
   EXPECT_FALSE(Null(Cons(kNil, kNil)));
 }
 
 TEST_F(ConsTest, Car)
 {
-  EXPECT_EQ(*foosym_, *Car(foobar_));
-  EXPECT_EQ(*barsym_, *Car(barfoo_));
+  EXPECT_EQ(*foo_, *Car(foobar_));
+  EXPECT_EQ(*bar_, *Car(barfoo_));
   EXPECT_EQ(*foobar_, *Car(foobarbarfoo_));
   EXPECT_EQ(*kNil, *Car(kNil));
 }
 
 TEST_F(ConsTest, Cdr)
 {
-  EXPECT_EQ(*foosym_, *Cdr(barfoo_));
-  EXPECT_EQ(*barsym_, *Cdr(foobar_));
+  EXPECT_EQ(*foo_, *Cdr(barfoo_));
+  EXPECT_EQ(*bar_, *Cdr(foobar_));
   EXPECT_EQ(*barfoo_, *Cdr(foobarbarfoo_));
   EXPECT_EQ(*kNil, *Cdr(kNil));
 }
 
 TEST_F(ConsTest, Caar)
 {
-  EXPECT_EQ(*foosym_, *Caar(foobarbarfoo_));
+  EXPECT_EQ(*foo_, *Caar(foobarbarfoo_));
 }
 
 TEST_F(ConsTest, Cadr)
 {
-  EXPECT_EQ(*barsym_, *Cadr(foobarbarfoo_));
+  EXPECT_EQ(*bar_, *Cadr(foobarbarfoo_));
 }
 
 TEST_F(ConsTest, Cadar)
 {
-  EXPECT_EQ(*barsym_, *Cadar(Cons(foobarbarfoo_, kNil)));
+  EXPECT_EQ(*bar_, *Cadar(Cons(foobarbarfoo_, kNil)));
 }
 
 TEST_F(ConsTest, Caddr)
 {
-  EXPECT_EQ(*foosym_, *Caddr(List(barsym_, kT, foosym_)));
+  EXPECT_EQ(*foo_, *Caddr(List(bar_, kT, foo_)));
 }
 
 TEST_F(ConsTest, Cdddr)
 {
-  EXPECT_EQ(*List(foosym_), *Cdddr(List(kT, barsym_, kT, foosym_)));
+  EXPECT_EQ(*List(foo_), *Cdddr(List(kT, bar_, kT, foo_)));
 }
 
 TEST_F(ConsTest, Caddar)
 {
-  EXPECT_EQ(*foosym_, *Caddar(List(List(kT, kT, foosym_))));
+  EXPECT_EQ(*foo_, *Caddar(List(List(kT, kT, foo_))));
 }
 
 TEST_F(ConsTest, CarRequiresListp)
 {
-  EXPECT_THROW(Car(foosym_), TypeError);
+  EXPECT_THROW(Car(foo_), TypeError);
 }
 
 TEST_F(ConsTest, CdrRequiresListp)
 {
-  EXPECT_THROW(Cdr(foosym_), TypeError);
+  EXPECT_THROW(Cdr(foo_), TypeError);
 }
 
 TEST_F(ConsTest, Alist)
 {
   ConsCell* alist = kNil;
-  alist = Acons(foosym_, foobar_, alist);
-  alist = Acons(barsym_, foosym_, alist);
+  alist = Acons(foo_, foobar_, alist);
+  alist = Acons(bar_, foo_, alist);
   alist = Acons(kNil, kNil, alist);
 
-  EXPECT_EQ(*foobar_, *Assoc(foosym_, alist));
-  EXPECT_EQ(*foosym_, *Assoc(barsym_, alist));
+  EXPECT_EQ(*foobar_, *Assoc(foo_, alist));
+  EXPECT_EQ(*foo_, *Assoc(bar_, alist));
   EXPECT_EQ(*kNil, *Assoc(kNil, alist));
   EXPECT_EQ(nullptr, Assoc(kT, alist));
 
-  EXPECT_THROW(Assoc(foosym_, foosym_), Error);
-  EXPECT_THROW(Assoc(foosym_, foobar_), Error);
+  EXPECT_THROW(Assoc(foo_, foo_), Error);
+  EXPECT_THROW(Assoc(foo_, foobar_), Error);
 }
 
 TEST_F(ConsTest, CopyAlist)
 {
   ConsCell *a1, *a2;
-  a1 = Acons(foosym_, foobar_, kNil);
-  a1 = Acons(barsym_, barfoo_, a1);
+  a1 = Acons(foo_, foobar_, kNil);
+  a1 = Acons(bar_, barfoo_, a1);
 
   a2 = CopyAlist(a1);
   a2 = Acons(kT, kT, a2);
 
-  EXPECT_EQ(*foobar_, *Assoc(foosym_, a1));
-  EXPECT_EQ(*foobar_, *Assoc(foosym_, a2));
-  EXPECT_EQ(*barfoo_, *Assoc(barsym_, a1));
-  EXPECT_EQ(*barfoo_, *Assoc(barsym_, a2));
+  EXPECT_EQ(*foobar_, *Assoc(foo_, a1));
+  EXPECT_EQ(*foobar_, *Assoc(foo_, a2));
+  EXPECT_EQ(*barfoo_, *Assoc(bar_, a1));
+  EXPECT_EQ(*barfoo_, *Assoc(bar_, a2));
 
   EXPECT_EQ(nullptr, Assoc(kT, a1));
   EXPECT_EQ(*kT, *Assoc(kT, a2));
 
-  EXPECT_THROW(CopyAlist(foosym_), Error);
+  EXPECT_THROW(CopyAlist(foo_), Error);
   EXPECT_THROW(CopyAlist(foobar_), Error);
 }
 
@@ -181,33 +161,33 @@ TEST_F(ConsTest, CopyList)
   ConsCell *L1, *L2, *c;
 
   // Can copy proper lists.
-  L1 = List(foobar_, foosym_, barsym_);
+  L1 = List(foobar_, foo_, bar_);
   L2 = CopyList(L1);
 
   EXPECT_EQ(*foobar_, *Car(L1));
   EXPECT_EQ(*foobar_, *Car(L2));
 
   // Only list structure is copied (shallow copy).
-  EXPECT_EQ(*foosym_, *Cadr(L1));
-  EXPECT_EQ(*foosym_, *Cadr(L2));
+  EXPECT_EQ(*foo_, *Cadr(L1));
+  EXPECT_EQ(*foo_, *Cadr(L2));
   c = Cdr(L1);
-  c->car = barsym_;
-  EXPECT_EQ(*barsym_, *Cadr(L1));
-  EXPECT_EQ(*foosym_, *Cadr(L2));
+  c->car = bar_;
+  EXPECT_EQ(*bar_, *Cadr(L1));
+  EXPECT_EQ(*foo_, *Cadr(L2));
 
-  EXPECT_EQ(*foosym_, *Caar(L1));
-  EXPECT_EQ(*foosym_, *Caar(L2));
+  EXPECT_EQ(*foo_, *Caar(L1));
+  EXPECT_EQ(*foo_, *Caar(L2));
   c = Car(L1);
-  c->car = barsym_;
-  EXPECT_EQ(*barsym_, *Caar(L1));
-  EXPECT_EQ(*barsym_, *Caar(L2));
+  c->car = bar_;
+  EXPECT_EQ(*bar_, *Caar(L1));
+  EXPECT_EQ(*bar_, *Caar(L2));
 
   // Can copy dotted lists.
   c = CopyList(foobar_);
   EXPECT_EQ(*foobar_, *c);
 
   // Throws exception if passed a symbol.
-  EXPECT_THROW(CopyList(foosym_), Error);
+  EXPECT_THROW(CopyList(foo_), Error);
 }
 
 TEST_F(ConsTest, List)
@@ -216,57 +196,57 @@ TEST_F(ConsTest, List)
 
   EXPECT_EQ(*kNil, *List());
 
-  L1 = List(foosym_);
-  L2 = Cons(foosym_, kNil);
+  L1 = List(foo_);
+  L2 = Cons(foo_, kNil);
   EXPECT_EQ(*L2, *L1);
 
-  L1 = List(foosym_, barsym_);
-  L2 = Cons(foosym_, Cons(barsym_, kNil));
+  L1 = List(foo_, bar_);
+  L2 = Cons(foo_, Cons(bar_, kNil));
   EXPECT_EQ(*L2, *L1);
 }
 
 TEST_F(ConsTest, Append)
 {
-  ConsCell *L1 = List(foosym_, barsym_);
-  ConsCell *L2 = List(barsym_, foosym_);
+  ConsCell *L1 = List(foo_, bar_);
+  ConsCell *L2 = List(bar_, foo_);
 
   EXPECT_EQ(*kNil, *Append(kNil, kNil));
   EXPECT_EQ(*L1, *Append(L1, kNil));
   EXPECT_EQ(*L2, *Append(kNil, L2));
-  EXPECT_EQ(*List(foosym_, barsym_, barsym_, foosym_), *Append(L1, L2));
+  EXPECT_EQ(*List(foo_, bar_, bar_, foo_), *Append(L1, L2));
 
-  EXPECT_THROW(Append(foosym_, L2), TypeError);
-  EXPECT_THROW(Append(L1, barsym_), TypeError);
+  EXPECT_THROW(Append(foo_, L2), TypeError);
+  EXPECT_THROW(Append(L1, bar_), TypeError);
 }
 
 TEST_F(ConsTest, Pair)
 {
   EXPECT_EQ(*kNil, *Pair(kNil, kNil));
 
-  ConsCell *L1 = List(foosym_);
-  ConsCell *L2 = List(barsym_);
-  ConsCell *expect = Acons(foosym_, barsym_, kNil);
+  ConsCell *L1 = List(foo_);
+  ConsCell *L2 = List(bar_);
+  ConsCell *expect = Acons(foo_, bar_, kNil);
   EXPECT_EQ(*expect, *Pair(L1, L2));
 
-  L1 = List(foosym_, barsym_);
-  L2 = List(barsym_, foosym_);
-  expect = Acons(foosym_, barsym_, Acons(barsym_, foosym_, kNil));
+  L1 = List(foo_, bar_);
+  L2 = List(bar_, foo_);
+  expect = Acons(foo_, bar_, Acons(bar_, foo_, kNil));
   EXPECT_EQ(*expect, *Pair(L1, L2));
 
-  EXPECT_THROW(Pair(foosym_, L2), TypeError);
-  EXPECT_THROW(Pair(L1, barsym_), TypeError);
+  EXPECT_THROW(Pair(foo_, L2), TypeError);
+  EXPECT_THROW(Pair(L1, bar_), TypeError);
 
   // Both lists must be proper lists.
   EXPECT_THROW(Pair(L1, foobar_), TypeError);
 
   // Lists must be the same length.
-  EXPECT_THROW(Pair(L1, List(foosym_)), Error);
+  EXPECT_THROW(Pair(L1, List(foo_)), Error);
 }
 
 TEST_F(ConsTest, SymbolName)
 {
-  EXPECT_EQ("FOO", SymbolName(foosym_));
-  EXPECT_EQ("BAR", SymbolName(barsym_));
+  EXPECT_EQ("FOO", SymbolName(foo_));
+  EXPECT_EQ("BAR", SymbolName(bar_));
   EXPECT_EQ("X", SymbolName(MakeSymbol("X")));
 
   ConsCell* spacesym = MakeSymbol("a long symbol name with spaces");

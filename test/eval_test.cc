@@ -1,19 +1,18 @@
 #include "eval.h"
-#include "reader.h"
+#include "mclisp_test.h"
 
 #include <iostream>
 #include <map>
 #include <sstream>
 #include <tuple>
 
-#include "gtest/gtest.h"
-
 namespace
 {
 using namespace mclisp;
 
 class EvalTest :
-  public ::testing::TestWithParam< std::tuple<const char*, const char*> >
+  public mclisp::testing::Test,
+  public ::testing::WithParamInterface<std::tuple<const char*, const char*>>
 {
   private:
     static std::map<std::string, ConsCell*> objects_;
@@ -24,18 +23,14 @@ class EvalTest :
     {
       if (!objects_initialized_)
       {
-        ConsCell *foo = reader::Intern("FOO");
-        ConsCell *bar = reader::Intern("BAR");
-
         objects_.emplace("t", kT);
         objects_.emplace("nil", kNil);
-        objects_.emplace("foo", foo);
-        objects_.emplace("bar", bar);
-        objects_.emplace("foobar", Cons(foo, bar));
-        objects_.emplace("barfoo", Cons(bar, foo));
-        objects_.emplace("foo_list", List(foo));
-        objects_.emplace("bar_list", List(bar));
-        objects_.emplace("foobar_list", List(foo, bar));
+        objects_.emplace("foo", foo_);
+        objects_.emplace("bar", bar_);
+        objects_.emplace("foobar", foobar_);
+        objects_.emplace("foo_list", foo_list_);
+        objects_.emplace("bar_list", bar_list_);
+        objects_.emplace("foobar_list", foobar_list_);
         objects_initialized_ = true;
       }
 
