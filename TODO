@@ -1,8 +1,8 @@
-* Write some tests in lisp.
-* Better error messages for Read errors.
-* Flush input on Read error.
-* Cleanup TODOs
-* Allow comments.
-* Allow () for nil.
-* Allow symbol as lambda-list to bind all args as a list.
-* Accept filenames as command line args.
+1. Write some tests in lisp.
+2. Better error messages for Read errors.
+3. Flush input on Read error.
+4. Cleanup TODOs
+5. Allow comments.
+6. Allow () for nil.
+7. Allow symbol as lambda-list to bind all args as a list.
+8. Accept filenames as command line args.
