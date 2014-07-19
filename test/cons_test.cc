@@ -1,11 +1,12 @@
 #include "cons.h"
-
-#include "gtest/gtest.h"
-
 #include "init.h"
 #include "error.h"
 #include "reader.h"
 
+#include "gtest/gtest.h"
+
+namespace
+{
 using namespace mclisp;
 
 class ConsTest : public ::testing::Test
@@ -323,3 +324,4 @@ TEST_P(ConsPrintTest, ToString)
   Reader reader(GetParam());
   EXPECT_EQ(GetParam(), ToString(reader.Read()));
 }
+} // namespace

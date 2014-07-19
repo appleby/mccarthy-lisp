@@ -1,6 +1,9 @@
 #include "utils.h"
+
 #include "gtest/gtest.h"
 
+namespace
+{
 using namespace mclisp;
 
 TEST(UtilsTest, ContainerToString)
@@ -44,3 +47,4 @@ TEST(UtilsTest, ToUpper)
   EXPECT_EQ("fOo", fOo);
   EXPECT_EQ("FOO", FOO);
 }
+} // namespace 

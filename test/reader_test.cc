@@ -1,7 +1,10 @@
 #include "reader.h"
-#include "gtest/gtest.h"
 #include "cons.h"
 
+#include "gtest/gtest.h"
+
+namespace
+{
 using namespace mclisp;
 
 TEST(ReaderTest, DefaultCtor)
@@ -258,3 +261,4 @@ TEST(ReaderTest, ReadBadNestedListNoCloseParen)
   Reader reader("(A, (B . C)");
   EXPECT_THROW(reader.Read(), BadTokenError);
 }
+} // namespace 

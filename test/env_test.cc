@@ -1,13 +1,14 @@
 #include "env.h"
+#include "cons.h"
+#include "init.h"
 
 #include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
 
-#include "cons.h"
-#include "init.h"
-
+namespace
+{
 using namespace mclisp;
 
 class EnvTest : public ::testing::Test
@@ -98,3 +99,4 @@ TEST_F(EnvTest, ExtendAll)
   EXPECT_EQ(*kNil, *env::Lookup(env_, barsym_));
   EXPECT_EQ(*foosym_, *env::Lookup(env_, newsym));
 }
+} // namespace 

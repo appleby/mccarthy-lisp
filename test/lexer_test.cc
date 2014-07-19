@@ -1,6 +1,9 @@
 #include "lexer.h"
+
 #include "gtest/gtest.h"
 
+namespace
+{
 using namespace mclisp;
 
 TEST(LexerTest, DefaultCtor)
@@ -99,3 +102,4 @@ TEST_P(LexerBadTokenTest, BadTokens)
   EXPECT_EQ(kEofToken, lexer.nextToken());
   EXPECT_EQ("", lexer.current_token());
 }
+} // namespace 

@@ -6,6 +6,8 @@
 
 #include "gtest/gtest.h"
 
+namespace
+{
 class AllocatorTest: public ::testing::Test
 {
 protected:
@@ -68,3 +70,4 @@ TEST_F(AllocatorTest, AllocTooManyThrowsException)
   EXPECT_THROW(allocator_.Allocate(mclisp::ConsAllocator::max_heap_size() + 1),
                std::bad_alloc);
 }
+} // namespace 
