@@ -40,6 +40,7 @@ enum Token
 };
 
 std::ostream& operator<<(std::ostream& os, Token token);
+std::string TokenToString(Token token);
 
 class Lexer
 {

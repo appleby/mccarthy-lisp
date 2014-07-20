@@ -41,6 +41,13 @@ std::ostream& operator<<(std::ostream& os, Token token)
   // Not reached.
 }
 
+std::string TokenToString(Token token)
+{
+  std::ostringstream oss;
+  oss << token;
+  return oss.str();
+}
+
 bool Lexer::CurrentTokenIsValidNumber()
 {
   auto start = current_token_.cbegin();

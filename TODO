@@ -1,7 +1,6 @@
-1. Better error messages for Read errors.
-2. Flush input on Read error.
-3. Cleanup TODOs
-4. Allow comments.
-5. Allow () for nil.
-6. Allow symbol as lambda-list to bind all args as a list.
-7. Accept filenames as command line args.
+* Flush input on Read error.
+* Cleanup TODOs
+* Allow comments.
+* Allow () for nil.
+* Allow symbol as lambda-list to bind all args as a list.
+* Accept filenames as command line args.
