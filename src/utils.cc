@@ -19,7 +19,6 @@ std::string ContainerToString(T items)
 
 template std::string ContainerToString<>(std::set<Token> items);
 
-// TODO Figure out where to put ShouldQuit
 bool ShouldQuit(ConsCell *exp)
 {
   std::ostringstream oss;
