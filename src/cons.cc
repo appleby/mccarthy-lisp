@@ -107,7 +107,7 @@ std::ostream& FormatListOnStream(std::ostream& os, const ConsCell& cons,
                                  bool want_open_paren=true)
 {
   if (cons.car == nullptr || cons.cdr == nullptr)
-    ERROR("Attempted to print ConsCell with null car/cdr.");
+    ARGUMENT_ERROR("Attempted to print ConsCell with nullptr in car/cdr.");
 
   // TODO Handle circular list structure.
   if (want_open_paren)
@@ -360,8 +360,7 @@ ConsCell* Pair(const ConsCell *L1, const ConsCell *L2)
     return kNil;
 
   if (Null(L1) || Null(L2))
-    // TODO Throw ArgumentError
-    ERROR("Pair: The lists L1 and L2 must be the same length.");
+    ARGUMENT_ERROR("The lists L1 and L2 must be the same length.");
 
   return Acons(Car(L1), Car(L2), Pair(Cdr(L1), Cdr(L2)));
 }

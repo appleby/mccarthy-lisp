@@ -33,6 +33,24 @@ class Error: public std::logic_error
     int line_;
 };
 
+class ArgumentError: public Error
+{
+  public:
+    explicit ArgumentError(const char* file, const char* func, int line,
+                           const std::string& what_arg):
+      Error(file, func, line, std::string(func) + ": " + what_arg)
+    {};
+
+    explicit ArgumentError(const char* file, const char* func, int line,
+                           const char* what_arg):
+      ArgumentError(file, func, line, std::string(what_arg))
+    {};
+
+  protected:
+    virtual const char* prefix() const noexcept
+    { return "Invalid Argument:"; }
+};
+
 class TypeError: public Error
 {
   public:
@@ -57,6 +75,7 @@ class TypeError: public Error
   throw etype(__FILE__, __FUNCTION__, __LINE__, args)
 
 #define ERROR(msg) THROW(Error, (msg))
+#define ARGUMENT_ERROR(msg) THROW(ArgumentError, (msg))
 #define TYPE_ERROR(obj, pred) THROW(TypeError, obj, pred)
 
 // Assumes obj does not expand to an expression with side-effects.
