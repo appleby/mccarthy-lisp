@@ -340,6 +340,16 @@ ConsCell* List_(std::vector<ConsCell *> values)
   return L;
 }
 
+size_t Length(const ConsCell *list)
+{
+  TYPECHECK(list, Listp);
+
+  if (Null(list))
+    return 0;
+
+  return 1 + Length(Cdr(list));
+}
+
 ConsCell* Append(const ConsCell* L1, ConsCell* L2)
 {
   TYPECHECK(L1, Listp);

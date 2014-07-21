@@ -51,6 +51,21 @@ class ArgumentError: public Error
     { return "Invalid Argument:"; }
 };
 
+class ParityError: public Error
+{
+  public:
+    explicit ParityError(const char* file, const char* func, int line,
+                         ConsCell *formals, ConsCell *actuals):
+      Error(file, func, line, ConstructWhat(formals, actuals))
+    {};
+
+  protected:
+    const std::string ConstructWhat(ConsCell *formals, ConsCell *actuals);
+
+    virtual const char* prefix() const noexcept
+    { return "ParityError:"; }
+};
+
 class TypeError: public Error
 {
   public:
@@ -76,7 +91,13 @@ class TypeError: public Error
 
 #define ERROR(msg) THROW(Error, (msg))
 #define ARGUMENT_ERROR(msg) THROW(ArgumentError, (msg))
+#define PARITY_ERROR(formals, actuals) THROW(ParityError, formals, actuals)
 #define TYPE_ERROR(obj, pred) THROW(TypeError, obj, pred)
+
+// Assumes arguments do not expand to expressions with side-effects.
+#define PARITY_CHECK(formals, actuals) \
+  if (Length(formals) != Length(actuals)) \
+      PARITY_ERROR(formals, actuals)
 
 // Assumes obj does not expand to an expression with side-effects.
 #define TYPECHECK(obj, pred) \

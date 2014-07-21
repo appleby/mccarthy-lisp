@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <cstring>
+#include <sstream>
+
 #include "error.h"
 
 #define MAYBE_COPY(buf, space, str) \
@@ -24,6 +26,24 @@ const char* Error::what() const noexcept
   MAYBE_COPY(buf, space, " ");
   MAYBE_COPY(buf, space, std::logic_error::what());
   return buffer;
+}
+
+const std::string ParityError::ConstructWhat(ConsCell *formals,
+                                             ConsCell *actuals)
+{
+  std::ostringstream oss;
+
+  auto fmt_args = [](ConsCell* list)
+  {
+    size_t len = Length(list);
+    return (std::to_string(len) + " argument" + (len == 1 ? " " : "s ")
+            + (len ? ToString(list) : ""));
+  };
+
+  oss << "Function expects " << fmt_args(formals) << " but was passed "
+      << fmt_args(actuals) << ".";
+
+  return oss.str();
 }
 
 const char* TypeError::what() const noexcept

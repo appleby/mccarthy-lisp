@@ -205,6 +205,16 @@ TEST_F(ConsTest, List)
   EXPECT_EQ(*L2, *L1);
 }
 
+TEST_F(ConsTest, Length)
+{
+  EXPECT_EQ(0, Length(List()));
+  EXPECT_EQ(1, Length(foo_list_));
+  EXPECT_EQ(2, Length(foobar_list_));
+  EXPECT_EQ(5, Length(List(foo_, bar_, foobar_, kT, foo_list_)));
+
+  EXPECT_THROW(Length(foo_), TypeError);
+}
+
 TEST_F(ConsTest, Append)
 {
   ConsCell *L1 = List(foo_, bar_);

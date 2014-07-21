@@ -133,8 +133,16 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
                 env::Extend(env, Cadar(exp), Car(exp)));
 
   if (EQ(Caar(exp), LAMBDA))
-    return Eval(Caddar(exp),
-                env::ExtendAll(env, Cadar(exp), Evlis(Cdr(exp), env)));
+  {
+    ConsCell *body = Caddar(exp);
+    ConsCell *formals = Cadar(exp);
+    ConsCell *parameters = Cdr(exp);
+
+    PARITY_CHECK(formals, parameters);
+
+    ConsCell *values = Evlis(parameters, env);
+    return Eval(body, env::ExtendAll(env, formals, values));
+  }
 
   ERROR("Invalid expression: " + ToString(exp));
 }

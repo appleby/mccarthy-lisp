@@ -1,6 +1,7 @@
 #ifndef MCLISP_CONS_H_
 #define MCLISP_CONS_H_
 
+#include <cstddef>
 #include <map>
 #include <string>
 #include <vector>
@@ -74,6 +75,8 @@ ConsCell* CopyList(const ConsCell* list);
 
 ConsCell* List_(std::vector<ConsCell *>);
 #define List(values...) List_({values})
+
+size_t Length(const ConsCell *list);
 
 ConsCell* Append(const ConsCell* L1, ConsCell* L2);
 ConsCell* Pair(const ConsCell *L1, const ConsCell *L2);
