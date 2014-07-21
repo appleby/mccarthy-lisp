@@ -72,8 +72,10 @@ bool Lexer::CurrentTokenIsValidSymbol()
     // Require at least one char.
     return false;
 
-  return std::all_of(start, end,
-                     [](char c) { return c == ' ' || isalnum(c); });
+  return std::all_of(
+   start, end,
+   [](char c) { return c == ' ' || c == '/' || isalnum(c); }
+  );
 }
 
 Token Lexer::nextToken()

@@ -93,7 +93,7 @@ INSTANTIATE_TEST_CASE_P(
   TUP("(defun, foo, (x), x)", "foo"),
   TUP("(foo, 'bar)", "bar"),
 
-  TUP("(load, 'loadtest)", "nil"),
+  TUP("(load, 'test/loadtest)", "nil"),
   TUP("(loadtest)", "foo"),
 
   // Note: label shadows the binding created by defun.

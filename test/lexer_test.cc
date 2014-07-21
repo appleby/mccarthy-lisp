@@ -77,7 +77,8 @@ class LexerSymbolTest : public ::testing::TestWithParam<std::string> {};
 
 INSTANTIATE_TEST_CASE_P(
  ValidSymbols, LexerSymbolTest,
- ::testing::Values("car", "CAR", "a", "two  space", "apple pie number 3"));
+ ::testing::Values("car", "CAR", "a", "two  space", "apple pie number 3",
+                   "ok/fine"));
 
 TEST_P(LexerSymbolTest, ValidSymbols)
 {
@@ -92,7 +93,7 @@ class LexerBadTokenTest : public ::testing::TestWithParam<std::string> {};
 
 INSTANTIATE_TEST_CASE_P(
  BadTokens, LexerBadTokenTest,
- ::testing::Values("+", "*special*", "no-good", "no_good", "bad?", "no/good"));
+ ::testing::Values("+", "*special*", "no-good", "no_good", "bad?"));
 
 TEST_P(LexerBadTokenTest, BadTokens)
 {
@@ -102,4 +103,4 @@ TEST_P(LexerBadTokenTest, BadTokens)
   EXPECT_EQ(kEofToken, lexer.nextToken());
   EXPECT_EQ("", lexer.current_token());
 }
-} // namespace 
+} // namespace

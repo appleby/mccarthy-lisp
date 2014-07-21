@@ -109,10 +109,11 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
 
     if (EQ(Car(exp), LOAD))
     {
-      // TODO Update lexer to allow reasonable filenames for LOAD?
-      //
       // For the same reasons as mentioned in the above comment about DEFUN,
       // LOAD only makes sense as a toplevel form.
+      //
+      // We append ".lisp" because '.' can't be a valid symbol character (since
+      // symbols can have whitespace and '.' is also used for dotted lists).
       LoadFile(ToLower(SymbolName(Eval(Cadr(exp), env))) + ".lisp");
       return kNil;
     }
