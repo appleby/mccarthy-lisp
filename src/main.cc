@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "cons.h"
 #include "error.h"
@@ -43,6 +44,13 @@ int Repl::loop()
     catch (mclisp::Error& e)
     {
       out_ << e.what() << std::endl;
+      // C++ doesn't seem to provide a way to discard all remaining input from
+      // cin. cin.peek() will block rather than return EOF when the buffer is
+      // empty, and both cin.readsome() and cin.sync() appear to be no-ops.
+      // cin.ignore() isn't a perfect solution, since the expression we're
+      // trying to ignore may span multiple lines, but probably 90% of repl
+      // expressions are one-liners.
+      in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
   }
   return 0;

@@ -1,4 +1,3 @@
-* Flush input on Read error.
 * Cleanup TODOs
 * Allow comments.
 * Allow () for nil.
