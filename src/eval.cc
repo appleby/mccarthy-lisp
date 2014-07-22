@@ -76,6 +76,9 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
       return fname;
     }
 
+    if (EQ(Car(exp), EVAL))
+      return Eval(Eval(Cadr(exp), env), env);
+
     if (EQ(Car(exp), LOAD))
     {
       // We append ".lisp" because '.' can't be a valid symbol character (since

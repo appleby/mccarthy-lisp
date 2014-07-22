@@ -48,7 +48,7 @@ bool EvalTest::objects_initialized_ = false;
 
 #define TUP std::make_tuple
 INSTANTIATE_TEST_CASE_P(
- Eval, EvalTest,
+ Eval1, EvalTest,
  ::testing::Values(
   TUP("t", "t"),
   TUP("nil", "nil"),
@@ -102,6 +102,11 @@ INSTANTIATE_TEST_CASE_P(
   TUP("(foo, 'bar)", "bar_list"),
   TUP("(foo, 'foo, 'bar)", "foobar_list"),
 
+  TUP("(eval, ''foo)", "foo"),
+  TUP("(eval, '((lambda, (), 'bar)))", "bar"),
+  TUP("((lambda, (x), (eval, 'x)), 'foo)", "foo"),
+  TUP("(eval, (cons, 'car, '('(bar, foo))))", "bar"),
+
   TUP("(load, 'test/loadtest)", "nil"),
   TUP("(loadtest)", "foo"),
 
@@ -111,12 +116,18 @@ INSTANTIATE_TEST_CASE_P(
       "      (cond, ((atom, x), x),"
       "             (t, (foo, (car, x)))))),"
       " '((foo, bar), bar))",
-      "foo"),
+      "foo")
+ ));
 
+// ::testing::Values supports at most 50 values, hence we need another
+// instantiation.
+INSTANTIATE_TEST_CASE_P(
+ Eval2, EvalTest,
+ ::testing::Values(
   TUP("((lambda, nil, 'foo))", "foo"),
   TUP("((lambda, (x), x), 'bar)", "bar"),
   TUP("((lambda, (x, y), (cons, x, y)), 'foo, 'bar)", "foobar")
-  ));
+ ));
 #undef TUP
 
 ConsCell* EvalString(const std::string& expr)

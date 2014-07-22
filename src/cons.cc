@@ -165,7 +165,7 @@ void Init()
   g_builtin_symbols.emplace("PNAME", kPname);
 
   std::vector<const char *> builtin_names =
-  { "ATOM", "CAR", "CDR", "COND", "CONS", "DEFUN", "EOF", "EQ", "LABEL",
+  { "ATOM", "CAR", "CDR", "COND", "CONS", "DEFUN", "EOF", "EQ", "EVAL", "LABEL",
     "LAMBDA", "LOAD", "PRINT", "QUOTE" };
 
   for (auto it : builtin_names)

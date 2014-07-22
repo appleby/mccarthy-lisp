@@ -26,6 +26,10 @@
      'baz)
 (eq, ((lambda, (), 'foo)), 'foo)
 (eq, ((lambda, (x), x), 'bar), 'bar)
+(eq, (eval, ''foo), 'foo)
+(eq, (eval, '((lambda, (), 'bar))), 'bar)
+(eq, ((lambda, (x), (eval, 'x)), 'foo), 'foo)
+(eq, (eval, (cons, 'car, '('(a, b)))), 'a)
 
 ;;; Recursive S-functions (defined in mclisp.lisp).
 (eq, (ff, '((a . b) . c)), 'a)
