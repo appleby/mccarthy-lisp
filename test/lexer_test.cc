@@ -48,6 +48,16 @@ TEST(LexerTest, Delimiters)
   EXPECT_EQ("", lexer.current_token());
 }
 
+TEST(LexerTest, Comments)
+{
+  Lexer lexer(";;; some comment\nfoo ; another one\n");
+  EXPECT_EQ(kSymbol, lexer.nextToken());
+  EXPECT_EQ("foo", lexer.current_token());
+
+  EXPECT_EQ(kEofToken, lexer.nextToken());
+  EXPECT_EQ("", lexer.current_token());
+}
+
 TEST(LexerTest, TrimTrailingWhiteSpace)
 {
   std::string strval("TRIM TRAILING");

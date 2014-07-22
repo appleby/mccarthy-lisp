@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cstdio>
+#include <limits>
 
 #include "error.h"
 #include "lexer.h"
@@ -10,7 +11,8 @@ namespace
 
 inline bool IsDelim(int c)
 {
-  return c == '.' || c == ',' || c == '(' || c == ')' || c == '\n' || c == EOF;
+  static const std::string delims("(.,;)\n");
+  return c == EOF || delims.find(c) != std::string::npos;
 }
 
 inline void RTrim(std::string& s, const std::string ws=" \n\r\t")
@@ -96,6 +98,11 @@ Token Lexer::nextToken()
   if (c == '(') return kOpenParen;
   if (c == ')') return kCloseParen;
   if (c == '\'') return kQuote;
+  if (c == ';')
+  {
+    in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    return nextToken();
+  }
 
   while (!IsDelim(in_.peek()))
   {

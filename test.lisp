@@ -30,3 +30,7 @@
 (equal, (pair, '(x, y, z), '(x, y, z)), '((x, x), (y, y), (z, z)))
 (equal, (subst, 'x, 'y, '(x, y, z)), '(x, x, z))
 (equal, (sublis, '((x, (a, b)), (y, (b, c))), '(a, x . y)), '(a, (a, b), b, c))
+
+;;; Comments are OK.
+(equal, t, ; so are in-line comments
+        t)

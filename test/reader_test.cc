@@ -64,6 +64,14 @@ TEST(ReaderTest, ReadBadSymbolNoHyphens)
   EXPECT_THROW(reader.Read(), ReadError);
 }
 
+TEST(ReaderTest, ReadComment)
+{
+  Reader reader(";;; Look, a comment\nfoo ; Another comment");
+  ConsCell* foo = reader::Intern("foo");
+  EXPECT_EQ(*foo, *reader.Read());
+  EXPECT_EQ(*BUILTIN(EOF), *reader.Read());
+}
+
 TEST(ReaderTest, ReadCons)
 {
   Reader reader("(A . B)");

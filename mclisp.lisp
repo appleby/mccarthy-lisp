@@ -1,3 +1,5 @@
+;;;; Functions from section 3.d, Recursive S-functions.
+
 (defun, ff, (x),
    (cond, ((atom, x), x),
           (t, (ff, (car, x)))))
@@ -13,6 +15,9 @@
    (cond, (x, nil),
           (t, t)))
 
+;;; These are poor subsitutes for and/or since they are limited to two
+;;; arguments and don't short-circuit. In the absence of macros, these will
+;;; have to do.
 (defun, or, (x, y),
    (cond, (x, t),
           (y, t),
@@ -43,6 +48,8 @@
                 (among, x, (cdr, y)))),
           (t, nil)))
 
+;;; TODO Make list a special form, or else allow a symbol in place of the
+;;; lambda-list to bind all arguments.
 (defun, list2, (x, y),
    (cons, x, (cons, y, nil)))
 
