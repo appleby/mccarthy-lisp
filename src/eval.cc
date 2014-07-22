@@ -11,7 +11,6 @@ using namespace mclisp;
 
 ConsCell *Evcon(const ConsCell *clauses, ConsCell *env)
 {
-  // TODO Might want throw something more descriptive than TypeError.
   TYPECHECK(clauses, Listp);
 
   if (Null(clauses))
