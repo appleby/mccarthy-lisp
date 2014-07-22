@@ -4,4 +4,3 @@
 * Parity check special forms?
 * Print (QUOTE, FOO) as 'FOO
 * Include symbol name in BadTokenError.
-* Add eof_ to base Test fixture.
