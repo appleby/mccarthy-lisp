@@ -1,6 +1,6 @@
-* Cleanup TODOs
 * Allow comments.
 * Allow () for nil.
 * Allow symbol as lambda-list to bind all args as a list.
 * Accept filenames as command line args.
 * Parity check special forms?
+* Print (QUOTE, FOO) as 'FOO
