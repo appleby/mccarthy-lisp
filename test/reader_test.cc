@@ -36,6 +36,12 @@ TEST_F(ReaderTest, ReadNil)
   EXPECT_EQ(*kNil, *reader.Read());
 }
 
+TEST_F(ReaderTest, ReadNilSyntax)
+{
+  Reader reader("()");
+  EXPECT_EQ(*kNil, *reader.Read());
+}
+
 TEST_F(ReaderTest, ReadT)
 {
   Reader reader("T");

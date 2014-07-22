@@ -36,6 +36,7 @@ std::ostream& operator<<(std::ostream& os, Token token)
     case kQuote: return os << "'";
     case kNumber: return os << "Number";
     case kSymbol: return os << "Symbol";
+    case kNilToken: return os << "()";
     case kBadToken: return os << "BadToken";
     case kEofToken: return os << "EOF";
     default: ERROR("Unhandled Token: " + std::to_string(token));
@@ -95,9 +96,22 @@ Token Lexer::nextToken()
 
   if (c == '.') return kDot;
   if (c == ',') return kComma;
-  if (c == '(') return kOpenParen;
-  if (c == ')') return kCloseParen;
   if (c == '\'') return kQuote;
+  if (c == ')') return kCloseParen;
+  if (c == '(')
+  {
+    in_ >> std::ws;
+
+    if (in_.peek() == ')')
+    {
+      in_.ignore(1);
+      current_token_ += ")";
+      return kNilToken;
+    }
+
+    return kOpenParen;
+  }
+
   if (c == ';')
   {
     in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

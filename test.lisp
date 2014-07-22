@@ -1,3 +1,6 @@
+(eq, (), nil)
+(eq, ( ), nil)
+(eq, '(), nil)
 (eq, (atom, t), t)
 (eq, (atom, nil), t)
 (eq, (atom, 'foo), t)
@@ -12,7 +15,7 @@
                   (t, (lastcar, (cdr, x)))))),
       '(foo, bar, baz)),
      'baz)
-(eq, ((lambda, nil, 'foo)), 'foo)
+(eq, ((lambda, (), 'foo)), 'foo)
 (eq, ((lambda, (x), x), 'bar), 'bar)
 
 (eq, (ff, '((a . b) . c)), 'a)

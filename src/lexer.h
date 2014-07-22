@@ -33,6 +33,7 @@ enum Token
   // Atoms
   kNumber,
   kSymbol,
+  kNilToken,
 
   // Control
   kBadToken,

@@ -100,6 +100,7 @@ ConsCell* Reader::Read()
     case kSymbol: return ReadSymbol();
     case kOpenParen: return ReadCons();
     case kEofToken: return BUILTIN(EOF);
+    case kNilToken: return kNil;
     default:
       READ_ERROR("Expected start of Cons or Symbol, found: "
                  + lexer_.current_token());

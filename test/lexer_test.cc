@@ -26,6 +26,20 @@ TEST(LexerTest, AllWhiteSpace)
   EXPECT_EQ("", lexer.current_token());
 }
 
+TEST(LexerTest, NilSyntax)
+{
+  Lexer lexer("() (  )");
+
+  EXPECT_EQ(kNilToken, lexer.nextToken());
+  EXPECT_EQ("()", lexer.current_token());
+
+  EXPECT_EQ(kNilToken, lexer.nextToken());
+  EXPECT_EQ("()", lexer.current_token());
+
+  EXPECT_EQ(kEofToken, lexer.nextToken());
+  EXPECT_EQ("", lexer.current_token());
+}
+
 TEST(LexerTest, Delimiters)
 {
   Lexer lexer("(,.')");
