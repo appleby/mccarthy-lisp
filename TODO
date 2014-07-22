@@ -5,3 +5,4 @@
 * Print (QUOTE, FOO) as 'FOO
 * Include symbol name in BadTokenError.
 * Use mclisp::testing::Test fixture in Reader tests.
+* Add eof_ to base Test fixture.
