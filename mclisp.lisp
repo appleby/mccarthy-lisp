@@ -48,15 +48,12 @@
                 (among, x, (cdr, y)))),
           (t, nil)))
 
-;;; TODO Make list a special form, or else allow a symbol in place of the
-;;; lambda-list to bind all arguments.
-(defun, list2, (x, y),
-   (cons, x, (cons, y, nil)))
+(defun, list, lst, lst)
 
 (defun, pair, (x, y),
    (cond, ((and, (null, x), (null, y)), nil),
           ((and, (not, (atom, x)), (not, (atom, y))),
-           (cons, (list2, (car, x), (car, y)),
+           (cons, (list, (car, x), (car, y)),
                   (pair, (cdr, x), (cdr, y)))),
           (t, nil)))
 

@@ -104,10 +104,16 @@ ConsCell *Eval(const ConsCell *exp, ConsCell *env /* env::g_user_env */)
     ConsCell *formals = Cadar(exp);
     ConsCell *parameters = Cdr(exp);
 
-    PARITY_CHECK(formals, parameters);
+    if (Listp(formals))
+      PARITY_CHECK(formals, parameters);
 
+    // The double Listp check is wasteful, but I think it makes the code easier
+    // to read.
+    auto extendfn = Listp(formals) ? env::ExtendAll : env::Extend;
     ConsCell *values = Evlis(parameters, env);
-    return Eval(body, env::ExtendAll(env, formals, values));
+    ConsCell *newenv = extendfn(env, formals, values);
+
+    return Eval(body, newenv);
   }
 
   ERROR("Invalid expression: " + ToString(exp));

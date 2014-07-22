@@ -1,6 +1,15 @@
+;;;; A very ghetto test suite. All should evaluate to T.
+
+;;; Syntax
 (eq, (), nil)
 (eq, ( ), nil)
 (eq, '(), nil)
+
+;;; Comments are OK.
+(equal, t, ; so are in-line comments
+        t)
+
+;;; Elementary S-functions (builtins)
 (eq, (atom, t), t)
 (eq, (atom, nil), t)
 (eq, (atom, 'foo), t)
@@ -18,6 +27,7 @@
 (eq, ((lambda, (), 'foo)), 'foo)
 (eq, ((lambda, (x), x), 'bar), 'bar)
 
+;;; Recursive S-functions (defined in mclisp.lisp).
 (eq, (ff, '((a . b) . c)), 'a)
 (eq, (equal, 'x, 'x), t)
 (eq, (equal, 'x, 'y), nil)
@@ -34,6 +44,9 @@
 (equal, (subst, 'x, 'y, '(x, y, z)), '(x, x, z))
 (equal, (sublis, '((x, (a, b)), (y, (b, c))), '(a, x . y)), '(a, (a, b), b, c))
 
-;;; Comments are OK.
-(equal, t, ; so are in-line comments
-        t)
+;;; Not mentioned in McCarthy's paper, but useful nonetheless. Also defined in
+;;; mclisp.lisp.
+(equal, (list), nil)
+(equal, (list, 'a), '(a))
+(equal, (list, 'a, 'b), '(a, b))
+(equal, (list, 'a, '(b, c)), '(a, (b, c)))

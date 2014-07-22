@@ -68,6 +68,8 @@ INSTANTIATE_TEST_CASE_P(
 
   TUP("(eq, t, t)", "t"),
   TUP("(eq, nil, nil)", "t"),
+  TUP("(eq, (), nil)", "t"),
+  TUP("(eq, (  ), nil)", "t"),
   TUP("(eq, 'foo, 'foo)", "t"),
   TUP("(eq, t, nil)", "nil"),
   TUP("(eq, 'foo, 'bar)", "nil"),
@@ -93,6 +95,12 @@ INSTANTIATE_TEST_CASE_P(
   TUP("(foo)", "foo"),
   TUP("(defun, foo, (x), x)", "foo"),
   TUP("(foo, 'bar)", "bar"),
+  TUP("(defun, foo, (), 'foo)", "foo"),
+  TUP("(foo)", "foo"),
+  TUP("(defun, foo, args, args)", "foo"),
+  TUP("(foo)", "nil"),
+  TUP("(foo, 'bar)", "bar_list"),
+  TUP("(foo, 'foo, 'bar)", "foobar_list"),
 
   TUP("(load, 'test/loadtest)", "nil"),
   TUP("(loadtest)", "foo"),
