@@ -63,6 +63,21 @@ ConsCell* Lookup(ConsCell* env, const ConsCell* sym)
 {
   TYPECHECK(env, Listp);
   TYPECHECK(sym, Symbolp);
+
+  // It would be faster to duplicate the logic of Lookup1 here, rather than
+  // throwing and catching an exception for every failed lookup.
+  try {
+    return Lookup1(env, sym);
+  }
+  catch (UnboundSymbolError& e) {}
+
+  return Lookup1(g_user_env, sym);
+}
+
+ConsCell* Lookup1(ConsCell* env, const ConsCell* sym)
+{
+  TYPECHECK(env, Listp);
+  TYPECHECK(sym, Symbolp);
   ConsCell* value = Assoc(sym, env);
 
   if (value == nullptr)

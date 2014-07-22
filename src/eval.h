@@ -2,12 +2,11 @@
 #define Eval_H_
 
 #include "cons.h"
-#include "env.h"
 
 namespace mclisp
 {
 
-ConsCell *Eval(const ConsCell *exp, ConsCell *env=env::g_user_env);
+ConsCell *Eval(const ConsCell *exp, ConsCell *env=kNil);
 
 } // namespace mclisp
 #endif // Eval_H_

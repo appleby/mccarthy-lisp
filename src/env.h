@@ -36,8 +36,13 @@ mclisp::ConsCell* Extend(mclisp::ConsCell* env, mclisp::ConsCell* sym,
                          mclisp::ConsCell* value);
 mclisp::ConsCell* ExtendAll(mclisp::ConsCell* env, mclisp::ConsCell* symbols,
                             mclisp::ConsCell* values);
+
+// Lookup in env, and fallback to Lookup in the g_user_env on failure.
 mclisp::ConsCell* Lookup(mclisp::ConsCell* env, const mclisp::ConsCell* sym);
-  
+
+// Lookup in env only. No fallback.
+mclisp::ConsCell* Lookup1(mclisp::ConsCell* env, const mclisp::ConsCell* sym);
+
 } // namespace env
 } // namespace mclisp
 
