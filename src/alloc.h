@@ -24,7 +24,7 @@ public:
   static constexpr size_type max_heap_size() { return kMaxHeapSize; }
 
 private:
-  static constexpr size_type kMaxHeapSize = 15000;
+  static constexpr size_type kMaxHeapSize = 15000 * 2;
 
   std::list<ConsCell*> free_list_;
   std::array<ConsCell, kMaxHeapSize> heap_;
