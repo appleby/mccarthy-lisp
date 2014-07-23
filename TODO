@@ -1,5 +1,4 @@
 * Parity check special forms?
-* Print (QUOTE, FOO) as 'FOO
 * Include symbol name in BadTokenError.
 * GC
 * M-exprs

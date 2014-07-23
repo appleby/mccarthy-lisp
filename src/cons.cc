@@ -106,25 +106,30 @@ ConsCell* MakeAssociationList(const std::string& name)
 std::ostream& FormatListOnStream(std::ostream& os, const ConsCell& cons,
                                  bool want_open_paren=true)
 {
-  if (cons.car == nullptr || cons.cdr == nullptr)
+  // TODO Handle circular list structure.
+  const ConsCell *consp = &cons;
+
+  if (Car(consp) == nullptr || Cdr(consp) == nullptr)
     ARGUMENT_ERROR("Attempted to print ConsCell with nullptr in car/cdr.");
 
-  // TODO Handle circular list structure.
+  if (EQ(Car(consp), QUOTE) && want_open_paren && Cadr(consp) != nullptr)
+    return os << "'" << *Cadr(consp);
+
   if (want_open_paren)
     os << "(";
 
-  os << *cons.car;
+  os << *Car(consp);
 
-  if (Null(cons.cdr))
+  if (Null(Cdr(consp)))
     // End of proper list.
     return os << ")";
 
-  if (Atom(cons.cdr))
+  if (Atom(Cdr(consp)))
     // End of dotted list.
-    return os << " . " << *cons.cdr << ")";
+    return os << " . " << *Cdr(consp) << ")";
 
   os << ", ";
-  return FormatListOnStream(os, *cons.cdr, false);
+  return FormatListOnStream(os, *Cdr(consp), false);
 }
 } // namespace
 

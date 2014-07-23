@@ -306,7 +306,13 @@ INSTANTIATE_TEST_CASE_P(
   "(FOO, BAR, (FOO . BAR))",
   "((FOO, BAR), (BAR, FOO))",
   "((FOO . BAR), (BAR . FOO))",
-  "((FOO, BAR), (BAR, FOO), (FOO, BAR))"
+  "((FOO, BAR), (BAR, FOO), (FOO, BAR))",
+  "'FOO",
+  "'(FOO)",
+  "'((FOO, 'BAR), 'FOO)",
+  "'(FOO, QUOTE, BAR)",
+  "'(FOO, 'QUOTE)",
+  "''''FOO"
   ));
 
 TEST_P(ConsPrintTest, ToString)
