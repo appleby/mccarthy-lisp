@@ -1,5 +1,6 @@
-;;;; Functions from section 3.d, Recursive S-functions.
+;;;; This file is automatically loaded in mclisp main().
 
+;;; Functions from section 3.d, Recursive S-functions.
 (defun, ff, (x),
    (cond, ((atom, x), x),
           (t, (ff, (car, x)))))
@@ -11,32 +12,12 @@
           (t, (cons, (subst, x, y, (car, z)),
                      (subst, x, y, (cdr, z))))))
 
-(defun, not, (x),
-   (cond, (x, nil),
-          (t, t)))
-
-;;; These are poor subsitutes for and/or since they are limited to two
-;;; arguments and don't short-circuit. In the absence of macros, these will
-;;; have to do.
-(defun, or, (x, y),
-   (cond, (x, t),
-          (y, t),
-          (t, nil)))
-
-(defun, and, (x, y),
-   (cond, (x, (cond, (y, t),
-                     (t, nil))),
-          (t, nil)))
-
 (defun, equal, (x, y),
    (cond, ((and, (atom, x), (atom, y)), (eq, x, y)),
           ((and, (not, (atom, x)), (not, (atom, y))),
            (cond, ((equal, (car, x), (car, y)),
                    (equal, (cdr, x), (cdr, y))))),
           (t, nil)))
-
-(defun, null, (x),
-   (and, (atom, x), (eq, x, nil)))
 
 (defun, append, (x, y),
    (cond, ((null, x), y),
@@ -85,3 +66,25 @@
 (defun, appq, (m),
    (cond, ((null, m), nil),
           (t, (cons, (list, 'quote, (car, m)), (appq, (cdr, m))))))
+
+
+;;; Utilities
+(defun, not, (x),
+   (cond, (x, nil),
+          (t, t)))
+
+(defun, null, (x),
+   (cond, ((atom, x), (eq, x, nil))))
+
+;;; These are poor subsitutes for and/or since they don't short-circuit.  In
+;;; the absence of macros, these will have to do.
+(defun, and, args,
+   (cond, ((null, args), t),
+          ((not, (car, args)), nil),
+          (t, (apply, and, (cdr, args)))))
+
+(defun, or, args,
+   (cond, ((null, args), nil),
+          ((car, args), t),
+          (t, (apply, or, (cdr, args)))))
+
