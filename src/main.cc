@@ -59,10 +59,18 @@ int Repl::loop()
 
 } //end namespace
 
-int main()
+int main(int argc, char const *argv[])
 {
   mclisp::InitLisp();
   mclisp::LoadFile("mclisp.lisp");
+
+  if (argc > 1)
+  {
+    for (int i = 1; i < argc; ++i)
+      mclisp::LoadFile(argv[i]);
+
+    return 0;
+  }
 
   Repl repl;
   return repl.loop();
