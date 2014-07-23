@@ -83,6 +83,40 @@
           (t, (cons, (list, 'quote, (car, m)), (appq, (cdr, m))))))
 
 
+;;; Section 3.g Functions with Functions as Arguments
+(defun, maplist, (e, f),
+   ;; Renamed the first argument from x to e to prevent shadowing the x in
+   ;; diff, below.
+   (cond, ((null, e), nil),
+          (t, (cons, (f, e), (maplist, (cdr, e), f)))))
+
+;;; Partial derivative of y w.r.t. x.
+(defun, diff, (y, x),
+ (cond, ((atom, y),
+         (cond, ((eq, y, x), 'one),
+                (t, 'zero))),
+        ((eq, (car, y), 'plus),
+         (cons, 'plus,
+                (maplist, (cdr, y),
+                          '(lambda, (z), (diff, (car, z), x))))),
+        ((eq, (car, y), 'times),
+         (cons, 'plus,
+                (maplist, (cdr, y),
+                          '(lambda, (z),
+                            (cons, 'times,
+                                   (maplist, (cdr, y),
+                                             '(lambda, (w),
+                                               ;; There was a minor bug here.
+                                               ;; McCarthy wrote (eq, z, w),
+                                               ;; but z and w are always lists.
+                                               (cond, ((not, (equal, z, w)), (car, w)),
+                                                      (t, (diff, (car, w), x))))))))))))
+
+(defun, search, (x, p, f, u),
+   (cond, ((null, x), (u)),
+          ((p, x), (f, x)),
+          (t, (search, (cdr, x), p, f, u))))
+
 ;;; Utilities
 (defun, not, (x),
    (cond, (x, nil),
