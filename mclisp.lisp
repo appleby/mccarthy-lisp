@@ -76,3 +76,12 @@
 (defun, sublis, (x, y),
    (cond, ((atom, y), (sub2, x, y)),
           (t, (cons, (sublis, x, (car, y)), (sublis, x, (cdr, y))))))
+
+
+;;; Section 3.f The Universal S-function apply
+(defun, apply, (f, args),
+   (eval, (cons, f, (appq, args))))
+
+(defun, appq, (m),
+   (cond, ((null, m), nil),
+          (t, (cons, (list, 'quote, (car, m)), (appq, (cdr, m))))))

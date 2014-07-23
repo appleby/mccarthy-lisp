@@ -48,6 +48,11 @@
 (equal, (subst, 'x, 'y, '(x, y, z)), '(x, x, z))
 (equal, (sublis, '((x, (a, b)), (y, (b, c))), '(a, x . y)), '(a, (a, b), b, c))
 
+;;; The Universal S-function apply
+(eq, (apply, ff, '(((a, b), c))), 'a)
+(eq, (apply, 'car, '((foo, bar))), 'foo)
+(eq, (apply, '(lambda, (), 'bar), '()), 'bar)
+
 ;;; Not mentioned in McCarthy's paper, but useful nonetheless. Also defined in
 ;;; mclisp.lisp.
 (equal, (list), nil)
