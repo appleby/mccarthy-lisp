@@ -1,5 +1,20 @@
 ;;;; This file is automatically loaded in mclisp main().
 
+;;; Functions from section 3.c, The Elementary S-functions and Predicates.
+;;; These are all implemented as special forms. We wrap them in functions here
+;;; so they can be treated like lambdas.
+(defun, atom, (x), (atom, x))
+(defun, eq, (x, y), (eq, x, y))
+(defun, car, (x), (car, x))
+(defun, cdr, (x), (cdr, x))
+(defun, cons, (x, y), (cons, x, y))
+(defun, eval, (x), (eval, x))
+
+;;; These are not mentioned in the paper.
+(defun, load, (x), (load, x))
+(defun, print, (x), (print, x))
+
+
 ;;; Functions from section 3.d, Recursive S-functions.
 (defun, ff, (x),
    (cond, ((atom, x), x),
