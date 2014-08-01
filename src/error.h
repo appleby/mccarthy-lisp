@@ -15,12 +15,12 @@ class Error: public std::logic_error
     explicit Error(const char* file, const char* func, int line,
                    const std::string& what_arg):
       logic_error(what_arg), file_(file), func_(func), line_(line)
-    {};
+    {}
 
     explicit Error(const char* file, const char* func, int line,
                    const char* what_arg):
       Error(file, func, line, std::string(what_arg))
-    {};
+    {}
 
     virtual const char* what() const noexcept;
 
@@ -39,12 +39,12 @@ class ArgumentError: public Error
     explicit ArgumentError(const char* file, const char* func, int line,
                            const std::string& what_arg):
       Error(file, func, line, std::string(func) + ": " + what_arg)
-    {};
+    {}
 
     explicit ArgumentError(const char* file, const char* func, int line,
                            const char* what_arg):
       ArgumentError(file, func, line, std::string(what_arg))
-    {};
+    {}
 
   protected:
     virtual const char* prefix() const noexcept
@@ -57,7 +57,7 @@ class ParityError: public Error
     explicit ParityError(const char* file, const char* func, int line,
                          ConsCell *formals, ConsCell *actuals):
       Error(file, func, line, ConstructWhat(formals, actuals))
-    {};
+    {}
 
   protected:
     const std::string ConstructWhat(ConsCell *formals, ConsCell *actuals);
@@ -71,19 +71,15 @@ class TypeError: public Error
   public:
     explicit TypeError(const char* file, const char* func, int line,
                        const ConsCell* object, const std::string& should_satisfy):
-      Error(file, func, line, ""), object_str_(ToString(object)),
-      should_satisfy_(should_satisfy)
-    {};
-
-    virtual const char* what() const noexcept;
+      Error(file, func, line, ConstructWhat(object, should_satisfy))
+    {}
 
   protected:
+    const std::string ConstructWhat(const ConsCell *object,
+                                    const std::string& should_satisfy);
+
     virtual const char* prefix() const noexcept
     { return "TypeError:"; }
-
-  private:
-    const std::string object_str_;
-    const std::string should_satisfy_;
 };
 
 #define THROW(etype, args...) \
