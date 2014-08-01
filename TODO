@@ -1,4 +1,3 @@
-* Include symbol name in BadTokenError.
 * GC
 * M-exprs
 * JIT
