@@ -35,18 +35,18 @@ class BadTokenError: public ReadError
 {
   public:
     explicit BadTokenError(const char* file, const char* func, int line,
-                           Token actual, Token expected):
-      ReadError(file, func, line,
-                "expected: " + TokenToString(expected)
-                + ", but found: " + TokenToString(actual)) {};
+                           const std::string& actual, Token expected):
+      ReadError(file, func, line, ConstructWhat(actual, expected)) {}
 
     explicit BadTokenError(const char* file, const char* func, int line,
-                           Token actual, std::set<Token> expected):
-      ReadError(file, func, line,
-                + ": expected: " + ContainerToString<>(expected)
-                + ", but found: " + TokenToString(actual)) {};
+                           const std::string& actual, std::set<Token> expected):
+      ReadError(file, func, line, ConstructWhat(actual, expected)) {}
 
   protected:
+    const std::string ConstructWhat(const std::string& actual, Token expected);
+    const std::string ConstructWhat(const std::string& actual,
+                                    std::set<Token> expected);
+
     virtual const char* prefix() const noexcept
     { return "Bad Token Error:"; }
 };

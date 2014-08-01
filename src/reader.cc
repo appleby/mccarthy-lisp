@@ -41,11 +41,25 @@ ConsCell* Intern(const std::string& name)
 }
 } // namespace reader
 
+const std::string BadTokenError::ConstructWhat(const std::string& actual,
+                                               Token expected)
+{
+  return ("expected: " + TokenToString(expected) +
+          ", but found: " + actual);
+}
+
+const std::string BadTokenError::ConstructWhat(const std::string& actual,
+                                               std::set<Token> expected)
+{
+  return ("expected one of: " + ContainerToString<>(expected) +
+          ", but found: " + actual);
+}
+
 void Reader::AcceptToken(Token expected_token)
 {
   Token token = lexer_.nextToken();
   if (token != expected_token)
-    BAD_TOKEN_ERROR(token, expected_token);
+    BAD_TOKEN_ERROR(lexer_.current_token(), expected_token);
 }
 
 Token Reader::AcceptTokens(std::set<Token> tokens)
@@ -53,7 +67,7 @@ Token Reader::AcceptTokens(std::set<Token> tokens)
   Token token = lexer_.nextToken();
 
   if (tokens.find(token) == tokens.end())
-    BAD_TOKEN_ERROR(token, tokens);
+    BAD_TOKEN_ERROR(lexer_.current_token(), tokens);
 
   return token;
 }
