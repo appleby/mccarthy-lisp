@@ -21,7 +21,7 @@ ConsCell* g_user_env = nullptr;
 
 void Init()
 {
-  bool initialized = false;
+  static bool initialized = false;
 
   if (initialized)
     return;
